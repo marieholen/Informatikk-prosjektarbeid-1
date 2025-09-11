@@ -1,0 +1,44 @@
+name: Documentation Request
+description: Suggest new documentation or improvements to existing docs.
+title: "[Docs]: "
+labels: ["documentation"]
+assignees:
+  - octocat
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us improve our documentation! Please provide as much detail as possible.
+
+  - type: textarea
+    id: area
+    attributes:
+      label: Documentation Area
+      description: Which part of the documentation does this concern?
+      placeholder: e.g., Installation guide, API reference, README, user-stories...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Current Issue
+      description: Describe the problem or gap you see in the documentation.
+      placeholder: The docs are unclear when... (We have no docs for...)
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: What changes or additions would make the documentation better?
+      placeholder: It would help if the docs included...
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context (Optional)
+      description: Add any other context, examples, or screenshots to support your request.
