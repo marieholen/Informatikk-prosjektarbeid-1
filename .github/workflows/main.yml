@@ -1,0 +1,27 @@
+name: Enforce PR approvals
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  require-approval:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if PR has approvals
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: reviews } = await github.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+            });
+
+            const approvals = reviews.filter(r => r.state === "APPROVED");
+            if (approvals.length < 1) {
+              core.setFailed("[ERROR]: This PR needs at least 1 approval before merging.");
+            } else {
+              console.log("[Passed]: At least 1 approval found.");
+            }
