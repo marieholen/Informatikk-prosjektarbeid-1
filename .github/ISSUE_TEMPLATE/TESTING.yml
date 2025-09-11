@@ -1,0 +1,45 @@
+name: Testing Request
+description: Request new tests, improvements to test coverage, or report gaps in testing.
+title: "[Testing]: "
+labels: ["testing"]
+assignees:
+  - octocat
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us improve test quality and coverage!  
+        Please provide details about the testing request.
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Area to Test
+      description: What part of the codebase or feature needs testing?
+      placeholder: e.g., Authentication flow, API endpoints, UI components.
+    validations:
+      required: true
+
+  - type: textarea
+    id: test-type
+    attributes:
+      label: Type of Testing
+      description: What kind of testing are you requesting?
+      placeholder: Unit tests, integration tests, end-to-end tests, performance tests, etc.
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Why is this testing important? What risk does it mitigate?
+      placeholder: This will ensure feature X does not break when Y changes.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other details, references, or links to related issues/PRs here.
