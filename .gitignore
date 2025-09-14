@@ -1,0 +1,4 @@
+.DS_Store
+
+#Change this when we create specific folder for output
+modules-template/ui/recipe.txt
