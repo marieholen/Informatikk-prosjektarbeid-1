@@ -45,7 +45,7 @@ class AppTest extends ApplicationTest {
     // waits until program has finished running
     org.testfx.util.WaitForAsyncUtils.waitForFxEvents();
 
-    // checks if recepe.txt exists
+    // checks if recipe.txt exists
     org.junit.jupiter.api.Assertions.assertTrue(
         java.nio.file.Files.exists(path), "recipe.txt has not been created");
 
