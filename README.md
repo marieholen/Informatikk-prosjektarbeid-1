@@ -10,7 +10,7 @@ Maven setup for Java 17+ and JavaFX 21, and JUnit 5 (Jupiter) and TestFX for tes
 
 ## Trying it out
 
-This project can be tried out by cd-ing into the `modules-template` folder and using `mvn`:
+This project can be tried out by cd-ing into the `modules-template/ui` folder and using `mvn`:
 
 - Since we are using the multi-module template run `mvn clean install` to allow local dependencies to be available
 - compile with `mvn compile`
