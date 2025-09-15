@@ -7,10 +7,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import static java.nio.file.Paths.get;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static java.nio.file.Files.deleteIfExists;
 import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+import static java.nio.file.Files.exists;
 
 /**
  * TestFX App test suite.
@@ -30,16 +32,16 @@ class AppTest extends ApplicationTest {
   }
 
   @Test
-  void createFileWhenButtonClicks() throws Exception {
+  void testFileCreationOnButtonClick() throws Exception {
     // create path for recipe.txt
-    var path = java.nio.file.Paths.get("recipe.txt");
+    var path = get("recipe.txt");
 
     // delete if file already exists before running program
     deleteIfExists(path);
 
     // returns error if file is not deleted
     assertFalse(
-        java.nio.file.Files.exists(path),
+        exists(path),
         "recipe.txt should not exist before the program runs");
 
     // runs program and clicks the button
@@ -50,7 +52,7 @@ class AppTest extends ApplicationTest {
 
     // checks if recipe.txt exists
     assertTrue(
-        java.nio.file.Files.exists(path), "recipe.txt has not been created");
+        exists(path), "recipe.txt has not been created");
 
     // deletes file after test is finished
     deleteIfExists(path);
