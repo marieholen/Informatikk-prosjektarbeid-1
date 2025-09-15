@@ -1,21 +1,18 @@
 package ui;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Stream;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.stage.Stage;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.matcher.control.LabeledMatchers;
+import static java.nio.file.Paths.get;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.nio.file.Files.deleteIfExists;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+import static java.nio.file.Files.exists;
 
 /**
  * TestFX App test suite.
@@ -34,4 +31,30 @@ class AppTest extends ApplicationTest {
     stage.show();
   }
 
+  @Test
+  void testFileCreationOnButtonClick() throws Exception {
+    // create path for recipe.txt
+    var path = get("recipe.txt");
+
+    // delete if file already exists before running program
+    deleteIfExists(path);
+
+    // returns error if file is not deleted
+    assertFalse(
+        exists(path),
+        "recipe.txt should not exist before the program runs");
+
+    // runs program and clicks the button
+    interact(() -> controller.onCreateRecipeButtonClick());
+
+    // waits until program has finished running
+    waitForFxEvents();
+
+    // checks if recipe.txt exists
+    assertTrue(
+        exists(path), "recipe.txt has not been created");
+
+    // deletes file after test is finished
+    deleteIfExists(path);
+  }
 }
