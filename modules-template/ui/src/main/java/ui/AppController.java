@@ -6,6 +6,7 @@ import java.nio.file.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import core.KnitSpace;
 
 
 
@@ -23,11 +24,9 @@ public class AppController {
   @FXML
   protected void onCreateRecipeButtonClick() {
 
-    Path filePath = Paths.get("recipe.txt");
-
     try {
 
-      Files.createFile(filePath);
+      KnitSpace.createFile();
       feedbackTextField.setText("File created successfully!");
 
     } catch (FileAlreadyExistsException f) {
