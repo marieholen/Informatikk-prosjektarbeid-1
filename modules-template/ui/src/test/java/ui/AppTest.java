@@ -7,6 +7,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.nio.file.Files.deleteIfExists;
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
 
 /**
  * TestFX App test suite.
@@ -27,15 +31,14 @@ class AppTest extends ApplicationTest {
 
   @Test
   void createFileWhenButtonClicks() throws Exception {
-
     // create path for recipe.txt
     var path = java.nio.file.Paths.get("recipe.txt");
 
     // delete if file already exists before running program
-    java.nio.file.Files.deleteIfExists(path);
+    deleteIfExists(path);
 
     // returns error if file is not deleted
-    org.junit.jupiter.api.Assertions.assertFalse(
+    assertFalse(
         java.nio.file.Files.exists(path),
         "recipe.txt should not exist before the program runs");
 
@@ -43,13 +46,13 @@ class AppTest extends ApplicationTest {
     interact(() -> controller.onCreateRecipeButtonClick());
 
     // waits until program has finished running
-    org.testfx.util.WaitForAsyncUtils.waitForFxEvents();
+    waitForFxEvents();
 
     // checks if recipe.txt exists
-    org.junit.jupiter.api.Assertions.assertTrue(
+    assertTrue(
         java.nio.file.Files.exists(path), "recipe.txt has not been created");
 
     // deletes file after test is finished
-    java.nio.file.Files.deleteIfExists(path);
+    deleteIfExists(path);
   }
 }
