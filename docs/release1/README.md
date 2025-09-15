@@ -13,5 +13,13 @@ This is the initial release (Sprint 1) of our project. The prototype highlights 
 - [`README.md` in root](../../README.md) with a short description of the application and Maven setup.  
 - [`README.md` in source code](../../modules-template/ui/src/main/java/ui/README.md) with details about the app functionality, user stories, and illustration screenshots.  
 
+## Code quality
+
+We use Jacoco for test coverage to ensure code quality. We have added testing for the `core` and `ui` logic layer.
+
+To ensure cooperation and good communication within the teem we enforce issue/pull request templates. This gives the team structure.
+
+We also tried to add protection rules to the main branch, but this Pull Request is backlogged because we cannot access NTNU resources.
+
 ## Future Plans
 We had initially planned to use an issue board in this release, but it was set up incorrectly. We aim to use it more actively in future releases. 
