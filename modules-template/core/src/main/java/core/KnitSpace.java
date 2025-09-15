@@ -1,8 +1,11 @@
 package core;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+
+import core.persistency.Persistency;
+
+
 
 /**
  * Core logic.
@@ -11,10 +14,19 @@ import java.nio.file.Paths;
 public class KnitSpace {
 
 
-  static Path filePath = Paths.get("recipe.txt");
+  public static String createFile() {
 
-  public static void createFile() throws java.io.IOException {
-    Files.createFile(filePath);
+    try {
+      Persistency.createFile();
+      return "File created successfully!";
+
+    } catch (FileAlreadyExistsException f) {
+      return "File already exists!";
+
+    } catch (IOException e) {
+      return "Something went wrong: " + e.getMessage();
+
+    }
   }
 
 }
