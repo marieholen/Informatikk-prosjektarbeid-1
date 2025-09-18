@@ -112,6 +112,7 @@
     </build>
 
     <modules>
+        <module>persistency</module>
         <module>core</module>
         <module>ui</module>
     </modules>

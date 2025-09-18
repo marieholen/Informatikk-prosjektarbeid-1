@@ -3,7 +3,7 @@ package core;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 
-import core.persistency.Persistency;
+import persistency.Persistency;
 
 
 

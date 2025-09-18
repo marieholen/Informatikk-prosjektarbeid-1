@@ -78,7 +78,7 @@
                 <configuration>
                 <argLine>
                     @{argLine}
-                    --add-opens calc.ui/ui=ALL-UNNAMED
+                    --add-opens ui/ui=ALL-UNNAMED
                     --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                     --add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                 </argLine>
@@ -93,7 +93,7 @@
                 <!-- Usage: mvn javafx:run -->
                 <configuration>
                     <!-- syntax: module-name/full-app-class-name -->
-                    <mainClass>calc.ui/ui.App</mainClass>
+                    <mainClass>ui/ui.App</mainClass>
                 </configuration>
             </plugin>
             <plugin>
