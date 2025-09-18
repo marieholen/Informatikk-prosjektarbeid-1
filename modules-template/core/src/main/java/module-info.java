@@ -1,3 +1,5 @@
-module calc.core {
+module core {
+  requires persistency;
+
   exports core;
 }

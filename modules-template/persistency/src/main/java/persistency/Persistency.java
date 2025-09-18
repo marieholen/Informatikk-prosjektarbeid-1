@@ -1,4 +1,4 @@
-package core.persistency;
+package persistency;
 
 import java.io.IOException;
 import java.nio.file.Files;

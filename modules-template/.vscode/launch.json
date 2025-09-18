@@ -14,11 +14,11 @@
       "type": "java",
       "name": "Launch modules-template - multi-module, multi-package ",
       "request": "launch",
-      "mainClass": "calc.ui/ui.App",
+      "mainClass": "ui/ui.App",
       "projectName": "modules-ui",
       "vmArgs": [
         "--add-opens",
-        "calc.ui/ui=ALL-UNNAMED",
+        "ui/ui=ALL-UNNAMED",
         "--add-exports",
         "javafx.graphics/com.sun.javafx.application=ALL-UNNAMED",
         "--add-opens",
