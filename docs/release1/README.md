@@ -11,7 +11,7 @@ This is the initial release (Sprint 1) of our project. The prototype highlights 
 - Documentation added in [`root/docs/release1`](README.md).  
 - Documentation about our usage of AI-tools: [`ai-tools.md`](ai-tools.md).  
 - [`README.md` in root](../../README.md) with a short description of the application and Maven setup.  
-- [`README.md` in source code](../../modules-template/ui/src/main/java/ui/README.md) with details about the app functionality, user stories, and illustration screenshots.  
+- [`README.md` in source code](../../knitspace/ui/src/main/java/ui/README.md) with details about the app functionality, user stories, and illustration screenshots.  
 
 ## Code quality
 
