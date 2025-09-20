@@ -4,13 +4,13 @@
 
 The purpose of this application is to have a storage space for all your knit work. In this application it’s possible to sort your recipes based on skill level, types of clothing, size of knitting needles, yarn types. There will also be an overview to track your knitting projects (to do, in progress, done).
 
-The source code is in the `core` and `ui` folders within the `modules-template` folder.
+The source code is in the `core` and `ui` folders within the `knitspace` folder.
 
 Maven setup for Java 17+ and JavaFX 21, and JUnit 5 (Jupiter) and TestFX for testing.
 
 ## Trying it out
 
-This project can be tried out by cd-ing into the `modules-template/ui` folder and using `mvn`:
+This project can be tried out by cd-ing into the `knitspace/ui` folder and using `mvn`:
 
 - Since we are using the multi-module template run `mvn clean install` to allow local dependencies to be available
 - compile with `mvn compile`
