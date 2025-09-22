@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           prefWidth="640" prefHeight="480"
+           style="-fx-background-color:#f3f4f6;">
+    <!-- Center the card -->
+    <children>
+        <VBox alignment="CENTER" spacing="0">
+            <children>
+                <Pane prefHeight="20"/> <!-- top breathing room -->
+                <VBox alignment="CENTER" spacing="18">
+                    <children>
+                        <!-- Card -->
+                        <VBox spacing="16" alignment="CENTER"
+                              maxWidth="360"
+                              style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 28;">
+                            <effect>
+                                <DropShadow radius="16" offsetY="2" color="rgba(0,0,0,0.08)"/>
+                            </effect>
+
+                            <!-- Title -->
+                            <Label text="KnitSpace"
+                                   style="-fx-font-size: 28; -fx-font-weight: 700; -fx-text-fill: #111827;"
+                                   alignment="CENTER"/>
+
+                            <!-- Inputs -->
+                            <VBox spacing="10" fillWidth="true">
+                                <children>
+                                    <TextField promptText="Username"
+                                               prefHeight="40"
+                                               style="-fx-background-radius: 8; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-padding: 0 10 0 10;"/>
+                                    <PasswordField promptText="Password"
+                                                   prefHeight="40"
+                                                   style="-fx-background-radius: 8; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-padding: 0 10 0 10;"/>
+                                </children>
+                            </VBox>
+
+                            <!-- Log in button -->
+                            <Button text="Log in"
+                                    prefHeight="44" maxWidth="Infinity"
+                                    style="-fx-background-color: #9ec4d9; -fx-text-fill: white; -fx-font-weight: 600; -fx-background-radius: 8;"/>
+                            
+                            <!-- Create account link -->
+                            <Hyperlink text="Create account"
+                                       focusTraversable="false"
+                                       borderPane.alignment="CENTER"
+                                       style="-fx-text-fill: #111827; -fx-underline: false; -fx-padding: 0;"/>
+                        </VBox>
+                    </children>
+                </VBox>
+                <Pane prefHeight="20"/> <!-- bottom breathing room -->
+            </children>
+        </VBox>
+    </children>
+</StackPane>
