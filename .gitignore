@@ -2,3 +2,5 @@
 
 #Change this when we create specific folder for output
 knitspace/ui/recipe.txt
+knitspace/persistency/users.json
+knitspace/persistency/recipes.json
