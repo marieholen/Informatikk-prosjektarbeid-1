@@ -1,6 +1,7 @@
 package persistency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.User;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
