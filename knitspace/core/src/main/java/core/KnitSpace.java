@@ -2,8 +2,9 @@ package core;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-
-import persistency.Persistency;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 
@@ -13,11 +14,11 @@ import persistency.Persistency;
 @SuppressWarnings({"S4276", "java:S4276"})
 public class KnitSpace {
 
-
   public static String createFile() {
-
+    
     try {
-      Persistency.createFile();
+      Path filePath = Paths.get("recipe.txt");
+      Files.createFile(filePath);
       return "File created successfully!";
 
     } catch (FileAlreadyExistsException f) {
@@ -27,6 +28,7 @@ public class KnitSpace {
       return "Something went wrong: " + e.getMessage();
 
     }
+    
   }
 
 }
