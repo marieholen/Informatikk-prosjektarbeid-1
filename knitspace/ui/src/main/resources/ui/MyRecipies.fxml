@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600" prefWidth="950" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MyPatternsController">
+<BorderPane prefHeight="600" prefWidth="950" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MyRecipesController">
 
     <!-- TOP BAR -->
     <top>
@@ -75,7 +75,7 @@
             <ComboBox fx:id="statusFilter" promptText="All" />
 
             <Pane VBox.vgrow="ALWAYS" /> <!-- push button to bottom -->
-            <Button fx:id="btnNewPattern" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New pattern" textFill="WHITE">
+            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE">
             <font>
                <Font name="Arial Hebrew Scholar Bold" size="18.0" />
             </font>
@@ -88,18 +88,18 @@
         </VBox>
     </left>
 
-    <!-- CENTER: PATTERNS TABLE -->
+    <!-- CENTER: RECIPES TABLE -->
     <center>
         <VBox spacing="8" style="-fx-background-color: ffffff;">
             <padding>
                 <Insets bottom="20" left="20" right="20" top="18" />
             </padding>
 
-            <Label text="My patterns">
+            <Label text="My recipes">
             <font>
                <Font name="Arial Hebrew Scholar" size="36.0" />
             </font></Label>
-            <!-- <TableView fx:id="patternsTable" VBox.vgrow="ALWAYS">
+            <!-- <TableView fx:id="recipesTable" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="colTitle" prefWidth="200.0" style="fx-font-family: Arial;" text="Title" />
                     <TableColumn fx:id="colClothingType" prefWidth="120.0" text="Clothing Type" />
