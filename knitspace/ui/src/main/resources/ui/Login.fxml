@@ -5,7 +5,7 @@
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/17" 
+<StackPane fx:id="mainContainer" xmlns="http://javafx.com/javafx/17" 
            xmlns:fx="http://javafx.com/fxml/1"
            prefWidth="640" 
            prefHeight="480"
@@ -14,13 +14,13 @@
 >
     <!-- Center the card -->
     <children>
-        <VBox alignment="CENTER" spacing="0">
+        <VBox fx:id="centerWrapper" alignment="CENTER" spacing="0">
             <children>
-                <Pane prefHeight="20"/> <!-- top breathing room -->
-                <VBox alignment="CENTER" spacing="18">
+                <Pane fx:id="topSpacer" prefHeight="20"/> <!-- top breathing room -->
+                <VBox fx:id="cardWrapper" alignment="CENTER" spacing="18">
                     <children>
                         <!-- Card -->
-                        <VBox spacing="16" alignment="CENTER"
+                        <VBox fx:id="loginCard" spacing="16" alignment="CENTER"
                               maxWidth="360"
                               style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 28;">
                             <effect>
@@ -28,36 +28,36 @@
                             </effect>
 
                             <!-- Title -->
-                            <Label text="KnitSpace"
+                            <Label fx:id="appTitleLabel" text="KnitSpace"
                                    style="-fx-font-size: 28; -fx-font-weight: 700; -fx-text-fill: #111827;"
                                    alignment="CENTER"/>
 
                             <!-- Inputs -->
-                            <VBox spacing="10" fillWidth="true">
+                            <VBox fx:id="inputContainer" spacing="10" fillWidth="true">
                                 <children>
-                                    <TextField promptText="Username"
+                                    <TextField fx:id="usernameField" promptText="Username"
                                                prefHeight="40"
                                                style="-fx-background-radius: 8; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-padding: 0 10 0 10;"/>
-                                    <PasswordField promptText="Password"
+                                    <PasswordField fx:id="passwordField" promptText="Password"
                                                    prefHeight="40"
                                                    style="-fx-background-radius: 8; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-padding: 0 10 0 10;"/>
                                 </children>
                             </VBox>
 
                             <!-- Log in button -->
-                            <Button text="Log in"
+                            <Button fx:id="loginButton" text="Log in"
                                     prefHeight="44" maxWidth="Infinity"
                                     style="-fx-background-color: #9ec4d9; -fx-text-fill: white; -fx-font-weight: 600; -fx-background-radius: 8;"/>
                             
                             <!-- Create account link -->
-                            <Hyperlink text="Create account"
+                            <Hyperlink fx:id="createAccountLink" text="Create account"
                                        focusTraversable="false"
                                        borderPane.alignment="CENTER"
                                        style="-fx-text-fill: #111827; -fx-underline: false; -fx-padding: 0;"/>
                         </VBox>
                     </children>
                 </VBox>
-                <Pane prefHeight="20"/> <!-- bottom breathing room -->
+                <Pane fx:id="bottomSpacer" prefHeight="20"/> <!-- bottom breathing room -->
             </children>
         </VBox>
     </children>

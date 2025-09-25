@@ -15,11 +15,11 @@
 
     <!-- TOP BAR -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #f5f5f5;">
+        <HBox fx:id="topBar" alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #f5f5f5;">
             <padding>
                 <Insets bottom="15" left="20" right="20" top="15" />
             </padding>
-            <Label text="KnitSpace">
+            <Label fx:id="titleLabel" text="KnitSpace">
             <HBox.margin>
                <Insets />
             </HBox.margin>
@@ -29,7 +29,7 @@
             <font>
                <Font name="Arial Hebrew Scholar Bold" size="55.0" />
             </font></Label>
-            <Pane HBox.hgrow="ALWAYS" /> <!-- spacer -->
+            <Pane fx:id="spacer" HBox.hgrow="ALWAYS" /> <!-- spacer -->
             <Button fx:id="btnLogout" style="-fx-background-color: E6D8C3;" text="Log out">
             <padding>
                <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
@@ -42,7 +42,7 @@
 
     <!-- LEFT: SEARCH & FILTER -->
     <left>
-        <VBox alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: ffffff;">
+        <VBox fx:id="leftPanel" alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: ffffff;">
             <padding>
                 <Insets bottom="18" left="12" right="12" top="18" />
             </padding>
@@ -52,29 +52,29 @@
                <Insets top="5.0" />
             </VBox.margin></TextField>
 
-            <Label text="Filter">
+            <Label fx:id="filterLabel" text="Filter">
             <font>
                <Font name="Arial Hebrew" size="20.0" />
             </font>
             <VBox.margin>
                <Insets top="10.0" />
             </VBox.margin></Label>
-            <Label text="Difficulty level:" />
+            <Label fx:id="difficultyLabel" text="Difficulty level:" />
             <ComboBox fx:id="difficultyFilter" promptText="All">
             <VBox.margin>
                <Insets />
             </VBox.margin></ComboBox>
 
-            <Label text="Yarn type:" />
+            <Label fx:id="yarnLabel" text="Yarn type:" />
             <ComboBox fx:id="yarnFilter" promptText="All" />
 
-            <Label text="Clothing type:" />
+            <Label fx:id="clothingLabel" text="Clothing type:" />
             <ComboBox fx:id="clothingFilter" promptText="All" />
 
-            <Label text="Status:" />
+            <Label fx:id="statusLabel" text="Status:" />
             <ComboBox fx:id="statusFilter" promptText="All" />
 
-            <Pane VBox.vgrow="ALWAYS" /> <!-- push button to bottom -->
+            <Pane fx:id="bottomSpacer" VBox.vgrow="ALWAYS" /> <!-- push button to bottom -->
             <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE">
             <font>
                <Font name="Arial Hebrew Scholar Bold" size="18.0" />
@@ -90,12 +90,12 @@
 
     <!-- CENTER: RECIPES TABLE -->
     <center>
-        <VBox spacing="8" style="-fx-background-color: ffffff;">
+        <VBox fx:id="centerPanel" spacing="8" style="-fx-background-color: ffffff;">
             <padding>
                 <Insets bottom="20" left="20" right="20" top="18" />
             </padding>
 
-            <Label text="My recipes">
+            <Label fx:id="myRecipesLabel" text="My recipes">
             <font>
                <Font name="Arial Hebrew Scholar" size="36.0" />
             </font></Label>
