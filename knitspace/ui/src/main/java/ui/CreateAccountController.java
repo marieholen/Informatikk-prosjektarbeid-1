@@ -58,7 +58,7 @@ public class CreateAccountController {
             UserPersistence.addUser(newUser);
 
             showInfoPopup("User created", "The user was created. You will now be logged in.");
-            goToMyPatterns(signupButton);
+            goToMyRecipies(signupButton);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,16 +101,16 @@ public class CreateAccountController {
         });
     }
 
-    private void goToMyPatterns(Node anyNodeInCurrentScene) {
+    private void goToMyRecipies(Node anyNodeInCurrentScene) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MyPatterns.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MyRecipies.fxml"));
             Scene scene = new Scene(loader.load());
 
             Stage stage = (Stage) anyNodeInCurrentScene.getScene().getWindow();
             stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
-            showErrorPopup("Navigation error", "Could not open the MyPatterns page.");
+            showErrorPopup("Navigation error", "Could not open the MyRecipies page.");
         }
     }
 
