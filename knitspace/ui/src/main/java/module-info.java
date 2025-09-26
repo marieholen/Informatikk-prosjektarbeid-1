@@ -1,5 +1,6 @@
 module ui {
   requires core;
+  requires persistency;
   requires javafx.controls;
   requires javafx.fxml;
   requires javafx.graphics;
