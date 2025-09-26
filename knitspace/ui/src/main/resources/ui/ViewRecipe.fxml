@@ -9,44 +9,44 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="" prefWidth="320" prefHeight="220"
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.ViewRecipeController" prefWidth="320" prefHeight="220"
             style="-fx-background-color: white; -fx-background-radius: 10;">
     <children>
-        <VBox spacing="8" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
+        <VBox fx:id="contentContainer" spacing="8" AnchorPane.leftAnchor="15" AnchorPane.topAnchor="15">
             <children>
                 <Label fx:id="titleLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="This is some title"/>
 
                 <Label fx:id="descriptionLabel" wrapText="True" maxWidth="280" text="This is some description text about some knitting project"/>
 
-                <HBox spacing="5">
+                <HBox fx:id="difficultyContainer" spacing="5">
                     <children>
-                        <Label text="Difficulty level:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="difficultyLabelText" text="Difficulty level:" style="-fx-font-weight: bold;"/>
                         <Label fx:id="difficultyLabel" text="this is some difficulty"/>
                     </children>
                 </HBox>
 
-                <HBox spacing="5">
+                <HBox fx:id="yarnContainer" spacing="5">
                     <children>
-                        <Label text="Yarn:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="yarnLabelText" text="Yarn:" style="-fx-font-weight: bold;"/>
                         <Label fx:id="yarnLabel" text="this is some yarn type"/>
                     </children>
                 </HBox>
 
-                <HBox spacing="5">
+                <HBox fx:id="needleContainer" spacing="5">
                     <children>
-                        <Label text="Needle size:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="needleLabelText" text="Needle size:" style="-fx-font-weight: bold;"/>
                         <Label fx:id="needleLabel" text="this is some needle size"/>
                     </children>
                 </HBox>
 
-                <HBox spacing="5">
+                <HBox fx:id="statusContainer" spacing="5">
                     <children>
-                        <Label text="Status:" style="-fx-font-weight: bold;"/>
+                        <Label fx:id="statusLabelText" text="Status:" style="-fx-font-weight: bold;"/>
                         <Label fx:id="statusLabel" text="this is some project status"/>
                     </children>
                 </HBox>
 
-                <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10 0 10 0;">
+                <HBox fx:id="buttonContainer" spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 10 0 10 0;">
                     <children>
                         <Button fx:id="editButton" text="Edit" 
                                 style="-fx-background-color: #e0e0e0; -fx-text-fill: black; -fx-background-radius: 5;"/>
