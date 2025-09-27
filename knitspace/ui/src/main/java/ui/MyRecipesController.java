@@ -78,7 +78,7 @@ public class MyRecipesController {
             recipe.getDescription() + "  |  " + recipe.getSkillLevel().getDescription());
         details.setStyle("-fx-text-fill: gray;");
 
-        final Label status = new Label(recipe.getProjectStatus().getDisplayName());
+        final Label status = new Label(recipe.getProjectStatus().getLabel());
         status.setStyle(
             "-fx-text-fill: white;" +
             " -fx-padding: 3 8 3 8;" +
@@ -89,7 +89,7 @@ public class MyRecipesController {
             case IN_PROGRESS -> status.setStyle(status.getStyle() + "-fx-background-color: rgba(230, 138, 77, 0.5);");
             case FINISHED -> status.setStyle(status.getStyle() + "-fx-background-color: rgba(163, 178, 124, 0.65);");
             case PLANNED -> status.setStyle(status.getStyle() + "-fx-background-color: rgba(138, 186, 211, 0.7);");
-            case PAUSED -> status.setStyle(status.getStyle() + "-fx-background-color: rgba(200, 206, 210, 0.7);");
+            case PAUSED -> status.setStyle(status.getStyle() + "-fx-background-color: rgba(162, 165, 167, 0.7);");
             case ABANDONED -> status.setStyle(status.getStyle() + "-fx-background-color: rgba(211, 138, 138, 0.7);");
         }
 

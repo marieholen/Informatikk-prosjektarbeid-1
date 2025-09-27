@@ -7,19 +7,17 @@ public enum ProjectStatus {
     FINISHED("Finished", "Finished - project completed!"),
     ABANDONED("Abondoned", "Abandoned - unraveled and abandoned (for now...)");
 
+
+    private final String label;
     private final String description;
 
     ProjectStatus(String label, String description) {
+        this.label = label;
         this.description = description;
     }
 
-    public String getDescription() {
-        return this.description;
-    }
-
-    public String getDisplayName() {
-        String s = this.name().toLowerCase().replace("_", " ");
-        return s.substring(0, 1).toUpperCase() + s.substring(1);
+    public String getLabel() {
+        return this.label;
     }
 
 }
