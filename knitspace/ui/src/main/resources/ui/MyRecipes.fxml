@@ -10,10 +10,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.FlowPane?>
+
 
 <BorderPane prefHeight="600" prefWidth="950" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MyRecipesController">
 
-    <!-- TOP BAR -->
+    <!-- top: title & logout button -->
     <top>
         <HBox fx:id="topBar" alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #f5f5f5;">
             <padding>
@@ -40,7 +43,7 @@
         </HBox>
     </top>
 
-    <!-- LEFT: SEARCH & FILTER -->
+    <!-- left: search and filter recipes -->
     <left>
         <VBox fx:id="leftPanel" alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: ffffff;">
             <padding>
@@ -74,7 +77,7 @@
             <Label fx:id="statusLabel" text="Status:" />
             <ComboBox fx:id="statusFilter" promptText="All" />
 
-            <Pane fx:id="bottomSpacer" VBox.vgrow="ALWAYS" /> <!-- push button to bottom -->
+            <Pane fx:id="bottomSpacer" VBox.vgrow="ALWAYS" /> 
             <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE">
             <font>
                <Font name="Arial Hebrew Scholar Bold" size="18.0" />
@@ -88,31 +91,33 @@
         </VBox>
     </left>
 
-    <!-- CENTER: RECIPES TABLE -->
-    <center>
-        <VBox fx:id="centerPanel" spacing="8" style="-fx-background-color: ffffff;">
-            <padding>
-                <Insets bottom="20" left="20" right="20" top="18" />
-            </padding>
+    <!-- center: recipes flowpane -->
+    <center >
+        <VBox fx:id="centerPanel" spacing="8" style="-fx-background-color: #ffffff;">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="18" />
+        </padding>
 
-            <Label fx:id="myRecipesLabel" text="My recipes">
+        <Label fx:id="myRecipesLabel" text="My recipes">
             <font>
-               <Font name="Arial Hebrew Scholar" size="36.0" />
-            </font></Label>
-            <!-- <TableView fx:id="recipesTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="colTitle" prefWidth="200.0" style="fx-font-family: Arial;" text="Title" />
-                    <TableColumn fx:id="colClothingType" prefWidth="120.0" text="Clothing Type" />
-                    <TableColumn fx:id="colDifficulty" prefWidth="100" text="Difficulty" />
-                    <TableColumn fx:id="colStatus" prefWidth="120" text="Status" />
-                    <TableColumn fx:id="colActions" prefWidth="90" text="Details" />
-                </columns>
-            </TableView> -->
-            
-         <BorderPane.margin>
+                <Font name="Arial Hebrew Scholar" size="36.0" />
+            </font>
+        </Label>
+
+        <!-- container -->
+
+        <ScrollPane fx:id="recipesScrollPane" fitToWidth="true" style="-fx-background-color: #ffffff;" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox fx:id="recipesVBox" spacing="10" style="-fx-background-color: #ffffff;">
+                </VBox>
+            </content>
+        </ScrollPane>
+
+
+        <BorderPane.margin>
             <Insets bottom="15.0" left="10.0" right="15.0" />
-         </BorderPane.margin>
-        </VBox>
+        </BorderPane.margin>
+    </VBox>
     </center>
 
 </BorderPane>
