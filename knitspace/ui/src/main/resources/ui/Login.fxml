@@ -52,7 +52,6 @@
                             <!-- Create account link -->
                             <Hyperlink fx:id="createAccountLink" text="Create account"
                                        focusTraversable="false"
-                                       borderPane.alignment="CENTER"
                                        style="-fx-text-fill: #111827; -fx-underline: false; -fx-padding: 0;"/>
                         </VBox>
                     </children>
