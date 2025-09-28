@@ -20,4 +20,8 @@ public enum ProjectStatus {
         return this.label;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
 }
