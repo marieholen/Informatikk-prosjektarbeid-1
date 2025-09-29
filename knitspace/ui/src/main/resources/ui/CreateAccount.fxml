@@ -28,8 +28,7 @@
 
             <!-- Link til login -->
             <Hyperlink fx:id="loginLink" text="Already have an account? Log in."
-                    style="-fx-font-size: 12px; -fx-text-fill: #2E2E2E;"
-                    onAction="#goToLogin" />
+                    style="-fx-font-size: 12px; -fx-text-fill: #2E2E2E;" />
 
         </VBox>
     </children>
