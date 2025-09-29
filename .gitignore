@@ -4,3 +4,5 @@
 knitspace/ui/recipe.txt
 knitspace/persistency/users.json
 knitspace/persistency/recipes.json
+
+data/

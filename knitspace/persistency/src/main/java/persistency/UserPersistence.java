@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UserPersistence {
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final File file = new File("users.json");
+    private static final File file = new File("../../data/users.json");
 
     public static List<User> loadUsers() throws Exception {
         if (file.exists()) {
