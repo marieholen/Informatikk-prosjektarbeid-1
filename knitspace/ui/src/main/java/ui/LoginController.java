@@ -25,12 +25,17 @@ public class LoginController {
     @FXML
     private Button loginButton;
 
+    @FXML Hyperlink createAccountLink;
+
     @FXML
     private void initialize() {
         loginButton.setOnAction(this::handleLogin);
 
         usernameField.setOnAction(this::handleLogin);
         passwordField.setOnAction(this::handleLogin);
+        
+        createAccountLink.setOnAction(this::handleCreateAccount);
+
     }
 
     @FXML
@@ -73,6 +78,16 @@ public class LoginController {
         return false;
     }
 
+    @FXML
+    private void handleCreateAccount (ActionEvent event) {
+        try {
+        goToCreateAccount();
+        }
+        catch (Exception e) {
+            showAlert("Navigation error", "Could not open the CreateAccount page." + e.getMessage());
+        }
+    }
+
     private void goToMyRecipes() throws IOException {
         Stage stage = (Stage) loginButton.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipies.fxml"));
@@ -87,6 +102,17 @@ public class LoginController {
         stage.setTitle("KnitSpace - My Recipies");
     }
 
+    private void goToCreateAccount() throws IOException {
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("CreateAccount.fxml"));
+        Parent root = fxmlLoader.load();
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Create Account");
+    }
+
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -95,3 +121,4 @@ public class LoginController {
         alert.showAndWait();
     }
 }
+
