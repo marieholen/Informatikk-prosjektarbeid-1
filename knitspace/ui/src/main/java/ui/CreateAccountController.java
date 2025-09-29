@@ -2,7 +2,6 @@ package ui;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -12,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
@@ -20,16 +20,19 @@ import persistency.UserPersistence;
 import core.User;
 
 public class CreateAccountController {
-    @FXML
-    Button signupButton;
-    @FXML
-    TextField usernameField;
-    @FXML
-    PasswordField passwordField, confirmPasswordField;
+    @FXML private Button signupButton;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField, confirmPasswordField;
+    @FXML private Hyperlink loginLink;
 
     @FXML
     private void initialize() {
         signupButton.setOnAction(e -> onSignup());
+        loginLink.setOnAction(e -> onLogIn());
+    }
+
+    private void onLogIn() {
+        goToLogin(loginLink);
     }
 
     private void onSignup() {
@@ -111,6 +114,19 @@ public class CreateAccountController {
         } catch (Exception e) {
             e.printStackTrace();
             showErrorPopup("Navigation error", "Could not open the MyRecipies page.");
+        }
+    }
+
+    private void goToLogin(Node anyNodeInCurrentScene) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/Login.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = (Stage) anyNodeInCurrentScene.getScene().getWindow();
+            stage.setScene(scene);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorPopup("Navigation error", "Could not open the Login page.");
         }
     }
 
