@@ -7,7 +7,7 @@ import core.Recipe;
 
 public class RecipePersistence {
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final File file = new File("../../data/recipes.json");
+    private static final File file = new File("data/recipes.json");
 
     public static void saveRecipes(List<Recipe> recipes) throws Exception {
         mapper.writerWithDefaultPrettyPrinter().writeValue(file, recipes);

@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.FlowPane?>
 
 
 <BorderPane prefHeight="600" prefWidth="950" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.MyRecipesController">
@@ -91,7 +90,7 @@
         </VBox>
     </left>
 
-    <!-- center: recipes flowpane -->
+    <!-- center: recipes scrollpane -->
     <center >
         <VBox fx:id="centerPanel" spacing="8" style="-fx-background-color: #ffffff;">
         <padding>
