@@ -1,5 +1,97 @@
 package ui;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.event.ActionEvent;
+
+import core.User;
+import persistency.UserPersistence;
+
+import java.io.IOException;
+import java.util.List;
+
 public class LoginController {
-    
+
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private void initialize() {
+        loginButton.setOnAction(this::handleLogin);
+
+        usernameField.setOnAction(this::handleLogin);
+        passwordField.setOnAction(this::handleLogin);
+    }
+
+    @FXML
+    private void handleLogin(ActionEvent event) {
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
+
+        if (username.isEmpty()) {
+            showAlert("Input Error", "Please enter a username.");
+            return;
+        }
+
+        if (password.isEmpty()) {
+            showAlert("Input Error", "Please enter a password.");
+            return;
+        }
+
+        if (authenticateUser(username, password)) {
+            try {
+                goToMyRecipes();
+            } catch (IOException e) {
+                showAlert("Navigation Error", "Failed to load the main application: " + e.getMessage());
+            }
+        } else {
+            showAlert("Login Failed", "Invalid username or password. Please try again.");
+        }
+    }
+
+    private boolean authenticateUser(String username, String password) {
+        try {
+            List<User> users = UserPersistence.getAllUsers();
+            for (User user : users) {
+                if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            showAlert("Authentication Error", "Failed to verify credentials: " + e.getMessage());
+        }
+        return false;
+    }
+
+    private void goToMyRecipes() throws IOException {
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipies.fxml"));
+        Parent root = fxmlLoader.load();
+
+        // Pass user information to the main controller if needed
+        // AppController controller = fxmlLoader.getController();
+        // controller.setCurrentUser(currentUser);
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("KnitSpace - My Recipies");
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }
