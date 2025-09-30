@@ -3,5 +3,20 @@
      "userId" : "5803ba69-362f-4598-b9da-e7d69e00cd41",
      "username" : "user",
      "password" : "password"
-  } 
+  },
+  {
+     "userId" : "1c9b7d24-5f6a-4f2e-9b7a-6d3c2a1f0e9d",
+     "username" : "alice",
+     "password" : "alice123"
+  },
+  {
+     "userId" : "3f2a1b0c-7d8e-4a9b-8c7d-5e4f3a2b1c0d",
+     "username" : "bob",
+     "password" : "bob123"
+  },
+  {
+     "userId" : "9a8b7c6d-1e2f-4d3c-8b9a-0f1e2d3c4b5a",
+     "username" : "carol",
+     "password" : "carol123"
+  }
 ]
