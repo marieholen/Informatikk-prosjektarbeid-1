@@ -1,18 +1,27 @@
 package ui;
 
+import java.io.IOException;
 import java.util.List;
 import core.Recipe;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import persistency.RecipePersistence;
 
 public class MyRecipesController {
@@ -94,7 +103,7 @@ public class MyRecipesController {
         }
 
         final Button detailsButton = new Button("Details");
-        detailsButton.setOnAction(e -> openDetails(recipe)); // TODO: unsure of function name, change if needed
+        detailsButton.setOnAction(e -> openRecipeDetails(e, recipe)); // TODO: unsure of function name, change if needed
 
         final HBox row = new HBox(10);
         row.setAlignment(Pos.CENTER_LEFT); 
@@ -108,7 +117,20 @@ public class MyRecipesController {
         return card;
     }
 
-    private void openDetails(Recipe recipe) {
-        // TODO: load Recipe details
+    private void openRecipeDetails(ActionEvent event, Recipe recipe) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewRecipe.fxml"));
+        try {
+            Parent root = fxmlLoader.load();
+
+            ViewRecipeController viewRecipeController = fxmlLoader.getController();
+
+            viewRecipeController.setAndLoadRecipe(recipe);
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR, "Error when loading recipe detail window!:(");
+            alert.showAndWait();
+        }
     }
 }
