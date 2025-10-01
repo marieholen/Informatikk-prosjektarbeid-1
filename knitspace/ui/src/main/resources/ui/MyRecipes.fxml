@@ -61,7 +61,7 @@
             <VBox.margin>
                <Insets top="10.0" />
             </VBox.margin></Label>
-            <Label fx:id="skillLevelLabel" text="Difficulty level:" />
+            <Label fx:id="skillLevelLabel" text="Skill level:" />
             <ComboBox fx:id="skillFilter" promptText="All">
             <VBox.margin>
                <Insets />
