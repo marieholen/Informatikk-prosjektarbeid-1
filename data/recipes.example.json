@@ -5,8 +5,8 @@
     "title": "Cozy Beanie",
     "description": "Simple ribbed beanie",
     "skillLevel": "BEGINNER",
-    "yarnType": "Acrylic",
-    "needleSize": "5mm",
+    "yarnType": "COTTON",
+    "needleSize": "SIZE_2_0",
     "projectStatus": "PLANNED"
   },
   {
@@ -15,8 +15,8 @@
     "title": "Textured Scarf",
     "description": "Moss stitch scarf",
     "skillLevel": "EASY",
-    "yarnType": "Wool",
-    "needleSize": "6mm",
+    "yarnType": "ACRYLIC",
+    "needleSize": "SIZE_6_0",
     "projectStatus": "IN_PROGRESS"
   },
   {
@@ -25,8 +25,8 @@
     "title": "Cable Knit Sweater",
     "description": "Classic aran cables",
     "skillLevel": "ADVANCED",
-    "yarnType": "Merino Wool",
-    "needleSize": "4mm",
+    "yarnType": "WOOL",
+    "needleSize": "SIZE_2_0",
     "projectStatus": "IN_PROGRESS"
   },
   {
@@ -35,8 +35,8 @@
     "title": "Summer Top",
     "description": "Lightweight cotton top",
     "skillLevel": "INTERMEDIATE",
-    "yarnType": "Cotton",
-    "needleSize": "3.5mm",
+    "yarnType": "COTTON",
+    "needleSize": "SIZE_3_5",
     "projectStatus": "PLANNED"
   },
   {
@@ -45,8 +45,8 @@
     "title": "Fair Isle Mittens",
     "description": "Two-color stranded mittens",
     "skillLevel": "ADVANCED",
-    "yarnType": "Wool",
-    "needleSize": "2.75mm",
+    "yarnType": "MERINO",
+    "needleSize": "SIZE_4_0",
     "projectStatus": "PAUSED"
   },
   {
@@ -55,8 +55,8 @@
     "title": "House Socks",
     "description": "Chunky bed socks",
     "skillLevel": "EASY",
-    "yarnType": "Alpaca Blend",
-    "needleSize": "7mm",
+    "yarnType": "ALPACA",
+    "needleSize": "SIZE_7_0",
     "projectStatus": "FINISHED"
   },
   {
@@ -65,8 +65,8 @@
     "title": "Lace Shawl",
     "description": "Delicate lace pattern",
     "skillLevel": "INTERMEDIATE",
-    "yarnType": "Silk",
-    "needleSize": "3mm",
+    "yarnType": "CASHMERE",
+    "needleSize": "SIZE_4_0",
     "projectStatus": "IN_PROGRESS"
   },
   {
@@ -75,8 +75,8 @@
     "title": "Baby Blanket",
     "description": "Soft garter stitch blanket",
     "skillLevel": "BEGINNER",
-    "yarnType": "Bamboo",
-    "needleSize": "5.5mm",
-    "projectStatus": "PLANNED"
+    "yarnType": "LINEN",
+    "needleSize": "SIZE_5_5",
+    "projectStatus": "ABONDONED"
   }
 ]
