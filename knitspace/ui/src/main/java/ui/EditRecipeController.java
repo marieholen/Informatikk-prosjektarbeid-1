@@ -52,14 +52,12 @@ public class EditRecipeController {
     private void onSaveClicked() {
         String title = titleField.getText();
 
-        // 1. Check if title is empty
         if (title == null || title.isBlank()) {
             showError("Title is required.");
             return;
         }
 
         try {
-            // 2. Check if title already exists
             if (RecipePersistence.recipeExists(title)) {
                 showError("A recipe with this title already exists.");
                 return;
@@ -69,7 +67,6 @@ public class EditRecipeController {
             showError("An error occurred: " + e.getMessage());
         }
 
-        // 3. Check if PDF is uploaded
         if (attachedPdf == null) {
             showError("Please upload a PDF before saving.");
             return;
@@ -77,7 +74,6 @@ public class EditRecipeController {
 
         User loggedInUser = SessionManager.getCurrentUser();
 
-        // 4. Create recipe object (other fields optional)
         Recipe recipe = new Recipe(
             loggedInUser.getUserId(),
             title, 
@@ -89,7 +85,6 @@ public class EditRecipeController {
         );
 
         try {
-            // 5. Save via persistency module
             RecipePersistence.addRecipe(recipe);
             showInfo("Recipe saved successfully!");
         } catch (Exception e) {
