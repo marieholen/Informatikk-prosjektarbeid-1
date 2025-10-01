@@ -91,7 +91,7 @@ public class EditRecipeController {
         try {
             // 5. Save via persistency module
             RecipePersistence.addRecipe(recipe);
-            showInfo("Pattern saved successfully!");
+            showInfo("Recipe saved successfully!");
         } catch (Exception e) {
             showError("An error occurred: " + e.getMessage());
         }
