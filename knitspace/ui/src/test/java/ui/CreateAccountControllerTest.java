@@ -157,11 +157,11 @@ public class CreateAccountControllerTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
 
-        FxAssert.verifyThat("#usernameField", NodeMatchers.isVisible());
+        FxAssert.verifyThat("#loginButton", NodeMatchers.isVisible());
     }
 
     @Test
-    void testGoToMyRecipiesAfterSignup() throws Exception {
+    void testGoToMyRecipesAfterSignup() throws Exception {
 
         clickOn("#usernameField").write("testuser");
         clickOn("#passwordField").write("password");
