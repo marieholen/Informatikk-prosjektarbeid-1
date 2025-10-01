@@ -56,7 +56,7 @@
 
                         <Region HBox.hgrow="ALWAYS" />
 
-                        <Button fx:id="backButton" text="Back to Recipes"
+                        <Button fx:id="backButton" text="Back to Recipes" onAction="#handleBackButtonClick"
                                 style="-fx-background-color: #E6D8C3; -fx-background-radius: 10; -fx-font-size: 20px; -fx-pref-width: 250px; -fx-pref-height: 45px;"
                                 maxWidth="250"/>
                     </children>

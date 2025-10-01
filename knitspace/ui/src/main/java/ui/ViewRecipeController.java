@@ -1,7 +1,16 @@
 package ui;
 
+import java.io.IOException;
+
 import core.Recipe;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 public class ViewRecipeController {
     private Recipe selectedRecipe;
@@ -24,6 +33,9 @@ public class ViewRecipeController {
     @FXML
     private Label statusLabel;
 
+    @FXML
+    private Button backButton;
+
     public void setAndLoadRecipe(Recipe recipe) {
 		this.selectedRecipe = new Recipe(
 			recipe.getRecipeId(),
@@ -42,5 +54,19 @@ public class ViewRecipeController {
         yarnLabel.setText(selectedRecipe.getYarnType());
         needleLabel.setText(selectedRecipe.getNeedleSize());
         statusLabel.setText(selectedRecipe.getProjectStatus().getDescription());
+    }
+
+    public void handleBackButtonClick() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipes.fxml"));
+
+        try {
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR, "Error when loading back to My Recipes window!:(");
+            alert.showAndWait();
+        }
+
     }
 }
