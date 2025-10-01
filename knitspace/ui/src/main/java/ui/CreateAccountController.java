@@ -20,10 +20,10 @@ import persistency.UserPersistence;
 import core.User;
 
 public class CreateAccountController {
-    @FXML private Button signupButton;
+    @FXML Button signupButton;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField, confirmPasswordField;
-    @FXML private Hyperlink loginLink;
+    @FXML Hyperlink loginLink;
 
     @FXML
     private void initialize() {
@@ -61,7 +61,7 @@ public class CreateAccountController {
             UserPersistence.addUser(newUser);
 
             showInfoPopup("User created", "The user was created. You will now be logged in.");
-            goToMyRecipies(signupButton);
+            goToMyRecipes(signupButton);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,12 +70,12 @@ public class CreateAccountController {
 
     }
 
-    private Optional<String> validateInput(String username, String password, String confirmPassword) {
-        if (username.isEmpty())
+    Optional<String> validateInput(String username, String password, String confirmPassword) {
+        if (username == null || username.isEmpty())
             return Optional.of("Username must be filled in.");
-        if (password.isEmpty())
+        if (password == null || password.isEmpty())
             return Optional.of("Password must be filled in.");
-        if (confirmPassword.isEmpty())
+        if (confirmPassword == null || confirmPassword.isEmpty())
             return Optional.of("Must confirm password.");
         if (password.length() < 6)
             return Optional.of("Password must be at least 6 characters.");
@@ -84,7 +84,7 @@ public class CreateAccountController {
         return Optional.empty();
     }
 
-    private void showErrorPopup(String title, String message) {
+    void showErrorPopup(String title, String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(title);
@@ -94,7 +94,7 @@ public class CreateAccountController {
         });
     }
 
-    private void showInfoPopup(String title, String message) {
+    void showInfoPopup(String title, String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle(title);
@@ -104,16 +104,16 @@ public class CreateAccountController {
         });
     }
 
-    private void goToMyRecipies(Node anyNodeInCurrentScene) {
+    void goToMyRecipes(Node anyNodeInCurrentScene) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MyRecipies.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/MyRecipes.fxml"));
             Scene scene = new Scene(loader.load());
 
             Stage stage = (Stage) anyNodeInCurrentScene.getScene().getWindow();
             stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
-            showErrorPopup("Navigation error", "Could not open the MyRecipies page.");
+            showErrorPopup("Navigation error", "Could not open the MyRecipes page.");
         }
     }
 
