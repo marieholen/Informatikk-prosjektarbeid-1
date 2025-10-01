@@ -32,7 +32,7 @@
                <Font name="Arial Hebrew Scholar Bold" size="55.0" />
             </font></Label>
             <Pane fx:id="spacer" HBox.hgrow="ALWAYS" /> <!-- spacer -->
-            <Button fx:id="btnLogout" style="-fx-background-color: E6D8C3;" text="Log out">
+            <Button fx:id="btnLogout" style="-fx-background-color: #E6D8C3;" text="Log out" onAction="#handleLogout">
             <padding>
                <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
             </padding>
@@ -44,7 +44,7 @@
 
     <!-- left: search and filter recipes -->
     <left>
-        <VBox fx:id="leftPanel" alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: ffffff;">
+        <VBox fx:id="leftPanel" alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: #ffffff;">
             <padding>
                 <Insets bottom="18" left="12" right="12" top="18" />
             </padding>
