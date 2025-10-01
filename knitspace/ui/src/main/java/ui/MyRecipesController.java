@@ -2,6 +2,7 @@ package ui;
 
 import java.io.IOException;
 import java.util.List;
+
 import core.Recipe;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -13,10 +14,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -131,6 +132,28 @@ public class MyRecipesController {
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR, "Error when loading recipe detail window!:(");
             alert.showAndWait();
+        }
+    }
+
+    @FXML private Button btnLogout;  
+
+    @FXML
+    private void handleLogout() {
+
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/ui/Login.fxml"));
+
+            Stage stage = (Stage) btnLogout.getScene().getWindow();
+            Scene scene = stage.getScene();
+            if (scene != null) {
+                scene.setRoot(root);
+            } else {
+                stage.setScene(new Scene(root));
+            }
+            stage.show();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }
