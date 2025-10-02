@@ -90,7 +90,7 @@ public class LoginController {
 
     private void goToMyRecipes() throws IOException {
         Stage stage = (Stage) loginButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipies.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipes.fxml"));
         Parent root = fxmlLoader.load();
 
         // Pass user information to the main controller if needed
@@ -99,7 +99,7 @@ public class LoginController {
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("KnitSpace - My Recipies");
+        stage.setTitle("KnitSpace - My Recipes");
     }
 
     private void goToCreateAccount() throws IOException {
