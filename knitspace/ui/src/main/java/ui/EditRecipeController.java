@@ -5,8 +5,10 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import java.io.File;
 
+import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
 import core.enums.SkillLevel;
+import core.enums.YarnType;
 import core.User;
 import core.SessionManager;
 
@@ -15,14 +17,22 @@ import persistency.RecipePersistence;
 
 public class EditRecipeController {
 
-    @FXML private TextField titleField;
-    @FXML private TextField descriptionField;
-    @FXML private ComboBox<String> difficultyComboBox;
-    @FXML private ComboBox<String> yarnTypeComboBox;
-    @FXML private ComboBox<String> needleSizeComboBox;
-    @FXML private ComboBox<String> statusComboBox;
-    @FXML private Button uploadPdfButton;
-    @FXML private Button saveButton;
+    @FXML
+    private TextField titleField;
+    @FXML
+    private TextField descriptionField;
+    @FXML
+    private ComboBox<String> difficultyComboBox;
+    @FXML
+    private ComboBox<String> yarnTypeComboBox;
+    @FXML
+    private ComboBox<String> needleSizeComboBox;
+    @FXML
+    private ComboBox<String> statusComboBox;
+    @FXML
+    private Button uploadPdfButton;
+    @FXML
+    private Button saveButton;
 
     private File attachedPdf;
 
@@ -31,8 +41,12 @@ public class EditRecipeController {
         for (SkillLevel level : SkillLevel.values()) {
             difficultyComboBox.getItems().add(level.getDescription());
         }
-        yarnTypeComboBox.getItems().addAll("Wool", "Cotton", "Linen", "Cashmere", "Alpaca", "Merino");
-        needleSizeComboBox.getItems().addAll("2","2,5","3","3,5","4","4,5","5","5,5","6","6,5","7","7,5","8","8,5","9");
+        for (YarnType type : YarnType.values()) {
+            yarnTypeComboBox.getItems().add(type.getLabel());
+        }
+        for (NeedleSize size : NeedleSize.values()) {
+            needleSizeComboBox.getItems().add(size.getLabel());
+        }
         for (ProjectStatus status : ProjectStatus.values()) {
             statusComboBox.getItems().add(status.getDescription());
         }
@@ -43,8 +57,7 @@ public class EditRecipeController {
     private void onUploadPdfClicked() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("PDF Files", "*.pdf")
-        );
+                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
         attachedPdf = fileChooser.showOpenDialog(uploadPdfButton.getScene().getWindow());
     }
 
@@ -62,7 +75,7 @@ public class EditRecipeController {
                 showError("A recipe with this title already exists.");
                 return;
             }
-            
+
         } catch (Exception e) {
             showError("An error occurred: " + e.getMessage());
         }
@@ -75,14 +88,13 @@ public class EditRecipeController {
         User loggedInUser = SessionManager.getCurrentUser();
 
         Recipe recipe = new Recipe(
-            loggedInUser.getUserId(),
-            title, 
-            descriptionField.getText(),
-            getSelectedSkillLevel(),
-            yarnTypeComboBox.getValue(),
-            needleSizeComboBox.getValue(),
-            getSelectedProjectStatus()
-        );
+                loggedInUser.getUserId(),
+                title,
+                descriptionField.getText(),
+                getSelectedSkillLevel(),
+                getSelectedYarnType(),
+                getSelectedNeedleSize(),
+                getSelectedProjectStatus());
 
         try {
             RecipePersistence.addRecipe(recipe);
@@ -147,5 +159,25 @@ public class EditRecipeController {
             selectedRecipe.getNeedleSize(),
             selectedRecipe.getProjectStatus()
         );
+    }
+
+    private YarnType getSelectedYarnType() {
+        String selected = yarnTypeComboBox.getValue();
+        for (YarnType type : YarnType.values()) {
+            if (type.getLabel().equals(selected)) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    private NeedleSize getSelectedNeedleSize() {
+        String selected = needleSizeComboBox.getValue();
+        for (NeedleSize size : NeedleSize.values()) {
+            if (size.getLabel().equals(selected)) {
+                return size;
+            }
+        }
+        return null;
     }
 }
