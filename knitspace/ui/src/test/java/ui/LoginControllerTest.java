@@ -12,7 +12,6 @@ import javafx.stage.Stage;
 
 import org.junit.jupiter.api.*;
 import org.testfx.api.FxAssert;
-import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.matcher.base.NodeMatchers;
 import org.testfx.util.WaitForAsyncUtils;
@@ -24,7 +23,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginControllerTest extends ApplicationTest {
-    
+
     private LoginController controller;
     private Parent root;
     private Stage stage;
@@ -62,7 +61,7 @@ public class LoginControllerTest extends ApplicationTest {
         Path backup = Path.of("data/users.json.bak");
 
         if (Files.exists(backup)) {
-            Files.move(backup, original, StandardCopyOption.REPLACE_EXISTING);
+            //Files.move(backup, original, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
@@ -78,7 +77,7 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testAuthenticateUserException() throws Exception {
-        Path original = Path.of("data/users.json");
+        Path original = Path.of("../../data/users.json");
         Files.writeString(original, "{ not json }", StandardOpenOption.TRUNCATE_EXISTING);
 
         boolean result = controller.authenticateUser("testuser", "password");
@@ -87,7 +86,7 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testHandleLogin() throws Exception {
-        User testUser= new User("testuser", "password");
+        User testUser = new User("testuser", "password");
         UserPersistence.saveUsers(Collections.singletonList(testUser));
 
         controller.usernameField.setText("testuser");
@@ -111,7 +110,7 @@ public class LoginControllerTest extends ApplicationTest {
 
     @Test
     void testGoToMyRecipesAfterLogin() throws Exception {
-        User testUser= new User("testuser", "password");
+        User testUser = new User("testuser", "password");
         UserPersistence.saveUsers(Collections.singletonList(testUser));
 
         clickOn("#usernameField").write("testuser");
@@ -123,7 +122,7 @@ public class LoginControllerTest extends ApplicationTest {
         assertNotNull(stage.getScene().getRoot(), "Root should not be null after navigation");
     }
 
-     @Test
+    @Test
     void testGoToMYRecipes() throws Exception {
         WaitForAsyncUtils.asyncFx(() -> {
             Stage stage = new Stage();
