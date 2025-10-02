@@ -43,6 +43,9 @@ public class ViewRecipeController {
     @FXML
     private Button backButton;
 
+    @FXML
+    private Button editButton;
+
     public void setAndLoadRecipe(Recipe recipe) {
         this.selectedRecipe = new Recipe(
             recipe.getRecipeId(),
@@ -89,6 +92,8 @@ public class ViewRecipeController {
             }
         }
     }
+
+    @FXML
     public void handleBackButtonClick() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipes.fxml"));
 
@@ -101,4 +106,24 @@ public class ViewRecipeController {
             alert.showAndWait();
         }
     }
+
+    @FXML
+    public void handleEditButtonClick() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EditRecipeView.fxml"));
+
+        try {
+            Parent root = fxmlLoader.load();
+
+            EditRecipeController editRecipeController = fxmlLoader.getController();
+
+            editRecipeController.setSelectedRecipe(selectedRecipe);
+
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR, "Error when loading Edit Recipe View :(");
+            alert.showAndWait();
+        }
+    }
+
 }
