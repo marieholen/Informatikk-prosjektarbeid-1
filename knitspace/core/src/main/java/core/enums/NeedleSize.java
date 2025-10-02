@@ -27,5 +27,9 @@ public enum NeedleSize {
         return this.label;
     }
 
-}
+    @Override
+    public String toString() {
+    return label;
+    }
 
+}

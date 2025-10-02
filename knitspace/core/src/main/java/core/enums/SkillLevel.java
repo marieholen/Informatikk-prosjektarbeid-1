@@ -16,4 +16,10 @@ public enum SkillLevel {
     public String getDescription() {
         return this.description;
     }
+
+    @Override
+    public String toString() {
+        return description; 
+    }
 }
+

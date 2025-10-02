@@ -24,4 +24,9 @@ public enum ProjectStatus {
         return this.description;
     }
 
+    @Override
+    public String toString() {
+        return label;
+    }
+
 }
