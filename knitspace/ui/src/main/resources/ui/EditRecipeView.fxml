@@ -47,7 +47,7 @@
       </GridPane>
       <HBox fx:id="buttonContainer" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
          <children>
-            <Button fx:id="uploadPdfButton" mnemonicParsing="false" style="-fx-background-color: #d1d1d1; -fx-padding: 8 16; -fx-background-radius: 5;" text="Upload PDF" />
+            <Button fx:id="uploadPdfButton" mnemonicParsing="false" style="-fx-background-color: #d1d1d1; -fx-padding: 8 16; -fx-background-radius: 5;" text="Upload PDF" onAction="#handleUploadPdf" />
             <Button fx:id="saveButton" mnemonicParsing="false" style="-fx-background-color: #b0c99f; -fx-padding: 8 16; -fx-background-radius: 5;" text="Save" />
          </children>
       </HBox>
