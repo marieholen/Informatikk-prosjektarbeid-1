@@ -13,7 +13,7 @@ public class ViewRecipeController {
     private Label descriptionLabel;
 
     @FXML
-    private Label difficultyLabel;
+    private Label skillLevelLabel;
 
     @FXML
     private Label yarnLabel;
@@ -25,22 +25,22 @@ public class ViewRecipeController {
     private Label statusLabel;
 
     public void setAndLoadRecipe(Recipe recipe) {
-		this.selectedRecipe = new Recipe(
-			recipe.getRecipeId(),
-			recipe.getUserId(),
-			recipe.getTitle(),
-			recipe.getDescription(),
-			recipe.getSkillLevel(),
-			recipe.getYarnType(),
-			recipe.getNeedleSize(),
-			recipe.getProjectStatus()
-		);
+        this.selectedRecipe = new Recipe(
+            recipe.getRecipeId(),
+            recipe.getUserId(),
+            recipe.getTitle(),
+            recipe.getDescription(),
+            recipe.getSkillLevel(),
+            recipe.getYarnType(),
+            recipe.getNeedleSize(),
+            recipe.getProjectStatus()
+        );
 
         titleLabel.setText(selectedRecipe.getTitle());
         descriptionLabel.setText(selectedRecipe.getDescription());
-        difficultyLabel.setText(selectedRecipe.getSkillLevel().getDescription());
-        yarnLabel.setText(selectedRecipe.getYarnType());
-        needleLabel.setText(selectedRecipe.getNeedleSize());
+        skillLevelLabel.setText(selectedRecipe.getSkillLevel().getDescription());
+        yarnLabel.setText(selectedRecipe.getYarnType().getLabel());
+        needleLabel.setText(selectedRecipe.getNeedleSize().getLabel());
         statusLabel.setText(selectedRecipe.getProjectStatus().getDescription());
     }
 }
