@@ -1,9 +1,13 @@
 package ui;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
 import core.Recipe;
+import core.enums.NeedleSize;
+import core.enums.ProjectStatus;
+import core.enums.SkillLevel;
+import core.enums.YarnType;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,10 +18,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -31,17 +36,21 @@ public class MyRecipesController {
     private static final double CARD_PADDING = 10.0;
 
     
-    @FXML
-    private ScrollPane recipesScrollPane;
+    @FXML private ScrollPane recipesScrollPane;
+    @FXML private VBox recipesVBox; 
+    @FXML private ComboBox<ProjectStatus> statusFilter;
+    @FXML private ComboBox<SkillLevel> skillFilter;
+    @FXML private ComboBox<YarnType> yarnFilter;
+    @FXML private ComboBox<NeedleSize> needleFilter;
+    @FXML private Button btnLogout;
 
-    @FXML
-    private VBox recipesVBox;  // <-- definerer recipesVBox
+    @FXML List<Recipe> allRecipes = new ArrayList<>();
 
 
     @FXML
     public void initialize() {
-
         setupScrollPane();
+        setupFilters();
         loadRecipes();
 
         Platform.runLater(() -> {
@@ -51,17 +60,34 @@ public class MyRecipesController {
 
     private void setupScrollPane() {
         recipesScrollPane.setFitToHeight(true);
+        recipesScrollPane.setFitToWidth(true);
+    }
 
+    private void setupFilters() {
+        statusFilter.getItems().add(null);
+        statusFilter.getItems().addAll(ProjectStatus.values());
+
+        skillFilter.getItems().add(null);
+        skillFilter.getItems().addAll(SkillLevel.values());
+
+        yarnFilter.getItems().add(null);
+        yarnFilter.getItems().addAll(YarnType.values());
+
+        needleFilter.getItems().add(null);
+        needleFilter.getItems().addAll(NeedleSize.values());
+
+        statusFilter.setOnAction(e -> applyFilters());
+        skillFilter.setOnAction(e -> applyFilters());
+        yarnFilter.setOnAction(e -> applyFilters());
+        needleFilter.setOnAction(e -> applyFilters());
     }
 
     private void loadRecipes() {
         try {
-            List<Recipe> recipes = RecipePersistence.loadRecipes();
+            allRecipes = RecipePersistence.loadRecipes();
+            System.out.println(allRecipes.size());
+            applyFilters();
 
-            for (Recipe recipe : recipes) {
-                VBox card = createRecipeCard(recipe);
-                recipesVBox.getChildren().add(card);
-            }
         } catch (Exception e) {
             System.err.println("Failed to load recipes: " + e.getMessage());
             e.printStackTrace();
@@ -69,10 +95,39 @@ public class MyRecipesController {
         }
     }
 
-    private VBox createRecipeCard(Recipe recipe) {
-        VBox card = new VBox(CARD_SPACING);
+    private void applyFilters() {
+        recipesVBox.getChildren().clear();
 
+        for (Recipe recipe : allRecipes) {
+            if (!matchesFilters(recipe)) {
+                continue;
+            }
+            recipesVBox.getChildren().add(createRecipeCard(recipe));
+        }
+    }
+
+    private boolean matchesFilters(Recipe recipe) {
+        if (statusFilter.getValue() != null && recipe.getProjectStatus() != statusFilter.getValue()) {
+            return false;
+        }
+        if (skillFilter.getValue() != null && recipe.getSkillLevel() != skillFilter.getValue()) {
+            return false;
+        }
+        if (yarnFilter.getValue() != null && recipe.getYarnType() != yarnFilter.getValue()) {
+            return false;
+        }
+        if (needleFilter.getValue() != null && recipe.getNeedleSize() != needleFilter.getValue()) {
+            return false;
+        }
+
+        return true;
+    }
+    
+
+    private VBox createRecipeCard(Recipe recipe) {
+        final VBox card = new VBox(CARD_SPACING);
         card.setPadding(new Insets(CARD_PADDING));
+
         card.setStyle(
             "-fx-background-color: #ffffff;" + 
             "-fx-border-color: lightgrey;" +
@@ -85,7 +140,8 @@ public class MyRecipesController {
         title.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
 
         final Label details = new Label(
-            recipe.getDescription() + "  |  " + recipe.getSkillLevel().getDescription());
+            recipe.getSkillLevel().getDescription() + "  |  " + recipe.getNeedleSize() + "  |  " + recipe.getYarnType()
+        );
         details.setStyle("-fx-text-fill: gray;");
 
         final Label status = new Label(recipe.getProjectStatus().getLabel());
@@ -104,7 +160,7 @@ public class MyRecipesController {
         }
 
         final Button detailsButton = new Button("Details");
-        detailsButton.setOnAction(e -> openRecipeDetails(e, recipe)); // TODO: unsure of function name, change if needed
+        detailsButton.setOnAction(e -> openRecipeDetails(e, recipe));
 
         final HBox row = new HBox(10);
         row.setAlignment(Pos.CENTER_LEFT); 
@@ -115,6 +171,7 @@ public class MyRecipesController {
         row.getChildren().addAll(title, details, status, spacer, detailsButton);
 
         card.getChildren().add(row);
+
         return card;
     }
 
@@ -134,8 +191,6 @@ public class MyRecipesController {
             alert.showAndWait();
         }
     }
-
-    @FXML private Button btnLogout;  
 
     @FXML
     private void handleLogout() {

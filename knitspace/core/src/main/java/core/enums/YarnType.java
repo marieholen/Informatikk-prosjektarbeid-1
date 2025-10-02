@@ -18,5 +18,9 @@ public enum YarnType {
     public String getLabel() {
         return this.label;
     }
-}
 
+    @Override
+    public String toString() {
+        return label;
+    }
+}
