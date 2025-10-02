@@ -49,7 +49,7 @@
 
                 <HBox fx:id="buttonContainer" spacing="20" alignment="CENTER_LEFT" style="-fx-padding: 20 0 20 0;">
                     <children>
-                        <Button fx:id="editButton" text="Edit"
+                        <Button fx:id="editButton" text="Edit" onAction="#handleEditButtonClick"
                                 style="-fx-background-color: #e0e0e0; -fx-text-fill: black; -fx-background-radius: 10; -fx-font-size: 20px; -fx-pref-width: 120px; -fx-pref-height: 45px;"/>
                         <Button fx:id="deleteButton" text="Delete" onAction="#handleDeleteButtonClick"
                                 style="-fx-background-color: #E67E22; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-size: 20px; -fx-pref-width: 120px; -fx-pref-height: 45px;"/>
