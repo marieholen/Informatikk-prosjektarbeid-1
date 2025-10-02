@@ -140,7 +140,7 @@ public class MyRecipesController {
         title.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
 
         final Label details = new Label(
-            recipe.getNeedleSize() + "  |  " + recipe.getSkillLevel().getDescription()
+            recipe.getSkillLevel().getDescription() + "  |  " + recipe.getNeedleSize() + "  |  " + recipe.getYarnType()
         );
         details.setStyle("-fx-text-fill: gray;");
 
