@@ -2,7 +2,6 @@ package ui;
 
 import java.io.IOException;
 import java.util.Optional;
-
 import core.Recipe;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +11,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import persistency.RecipePersistence;
@@ -25,7 +26,7 @@ public class ViewRecipeController {
     private Label descriptionLabel;
 
     @FXML
-    private Label difficultyLabel;
+    private Label skillLevelLabel;
 
     @FXML
     private Label yarnLabel;
@@ -38,24 +39,27 @@ public class ViewRecipeController {
 
     @FXML
     private Button deleteButton;
+  
+    @FXML
+    private Button backButton;
 
     public void setAndLoadRecipe(Recipe recipe) {
-		this.selectedRecipe = new Recipe(
-			recipe.getRecipeId(),
-			recipe.getUserId(),
-			recipe.getTitle(),
-			recipe.getDescription(),
-			recipe.getSkillLevel(),
-			recipe.getYarnType(),
-			recipe.getNeedleSize(),
-			recipe.getProjectStatus()
-		);
+        this.selectedRecipe = new Recipe(
+            recipe.getRecipeId(),
+            recipe.getUserId(),
+            recipe.getTitle(),
+            recipe.getDescription(),
+            recipe.getSkillLevel(),
+            recipe.getYarnType(),
+            recipe.getNeedleSize(),
+            recipe.getProjectStatus()
+        );
 
         titleLabel.setText(selectedRecipe.getTitle());
         descriptionLabel.setText(selectedRecipe.getDescription());
-        difficultyLabel.setText(selectedRecipe.getSkillLevel().getDescription());
-        yarnLabel.setText(selectedRecipe.getYarnType());
-        needleLabel.setText(selectedRecipe.getNeedleSize());
+        skillLevelLabel.setText(selectedRecipe.getSkillLevel().getDescription());
+        yarnLabel.setText(selectedRecipe.getYarnType().getLabel());
+        needleLabel.setText(selectedRecipe.getNeedleSize().getLabel());
         statusLabel.setText(selectedRecipe.getProjectStatus().getDescription());
     }
 
@@ -83,6 +87,18 @@ public class ViewRecipeController {
                 Alert alert = new Alert(AlertType.ERROR, "Error when loading back to My Recipes window!:(");
                 alert.showAndWait();
             }
+        }
+    }
+    public void handleBackButtonClick() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipes.fxml"));
+
+        try {
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) backButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR, "Error when loading back to My Recipes window!:(");
+            alert.showAndWait();
         }
     }
 }

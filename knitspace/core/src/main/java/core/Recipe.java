@@ -1,6 +1,8 @@
 package core;
 
 import core.enums.SkillLevel;
+import core.enums.YarnType;
+import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
 import java.util.UUID;
 
@@ -10,15 +12,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Recipe {
     private final UUID recipeId;
     private UUID userId;
-    private String title;
+    private String title; 
     private String description;
     private SkillLevel skillLevel;
-    private String yarnType;
-    private String needleSize;
+    private YarnType yarnType;
+    private NeedleSize needleSize;
     private ProjectStatus projectStatus;
 
-    public Recipe(UUID userId, String title, String description, SkillLevel skillLevel, String yarnType,
-            String needleSize, ProjectStatus projectStatus) {
+    public Recipe(UUID userId, String title, String description, SkillLevel skillLevel, YarnType yarnType,
+            NeedleSize needleSize, ProjectStatus projectStatus) {
         this.recipeId = UUID.randomUUID();
         this.userId = userId;
         this.title = title;
@@ -36,8 +38,8 @@ public class Recipe {
         @JsonProperty("title") String title,
         @JsonProperty("description") String description,
         @JsonProperty("skillLevel") SkillLevel skillLevel,
-        @JsonProperty("yarnType") String yarnType,
-        @JsonProperty("needleSize") String needleSize,
+        @JsonProperty("yarnType") YarnType yarnType,
+        @JsonProperty("needleSize") NeedleSize needleSize,
         @JsonProperty("projectStatus") ProjectStatus projectStatus
     ) {
         this.recipeId = recipeId == null ? UUID.randomUUID() : recipeId;
@@ -86,19 +88,19 @@ public class Recipe {
         this.skillLevel = skillLevel;
     }
 
-    public String getYarnType() {
+    public YarnType getYarnType() {
         return yarnType;
     }
 
-    public void setYarnType(String yarnType) {
+    public void setYarnType(YarnType yarnType) {
         this.yarnType = yarnType;
     }
 
-    public String getNeedleSize() {
+    public NeedleSize getNeedleSize() {
         return needleSize;
     }
 
-    public void setNeedleSize(String needleSize) {
+    public void setNeedleSize(NeedleSize needleSize) {
         this.needleSize = needleSize;
     }
 

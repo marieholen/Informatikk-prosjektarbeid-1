@@ -61,17 +61,17 @@
             <VBox.margin>
                <Insets top="10.0" />
             </VBox.margin></Label>
-            <Label fx:id="difficultyLabel" text="Difficulty level:" />
-            <ComboBox fx:id="difficultyFilter" promptText="All">
+            <Label fx:id="skillLevelLabel" text="Skill level:" />
+            <ComboBox fx:id="skillFilter" promptText="All">
             <VBox.margin>
                <Insets />
             </VBox.margin></ComboBox>
 
-            <Label fx:id="yarnLabel" text="Yarn type:" />
+            <Label fx:id="yarnTypeLabel" text="Yarn type:" />
             <ComboBox fx:id="yarnFilter" promptText="All" />
 
-            <Label fx:id="clothingLabel" text="Clothing type:" />
-            <ComboBox fx:id="clothingFilter" promptText="All" />
+            <Label fx:id="needleSizeLabel" text="Needle Size:" />
+            <ComboBox fx:id="needleFilter" promptText="All" />
 
             <Label fx:id="statusLabel" text="Status:" />
             <ComboBox fx:id="statusFilter" promptText="All" />
@@ -120,3 +120,4 @@
     </center>
 
 </BorderPane>
+
