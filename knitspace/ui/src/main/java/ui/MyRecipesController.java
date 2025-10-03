@@ -3,6 +3,7 @@ package ui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import core.Recipe;
 import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
@@ -18,12 +19,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -45,7 +46,7 @@ public class MyRecipesController {
     @FXML private ComboBox<NeedleSize> needleFilter;
     @FXML private TextField searchField;
     @FXML private Button btnLogout;
-
+    @FXML private Button btnNewrecipe;
     @FXML List<Recipe> allRecipes = new ArrayList<>();
 
 
@@ -203,7 +204,6 @@ public class MyRecipesController {
 
     @FXML
     private void handleLogout() {
-
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/ui/Login.fxml"));
 
@@ -218,6 +218,16 @@ public class MyRecipesController {
 
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleNewRecipe() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/ui/EditRecipeView.fxml"));
+            btnNewrecipe.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
