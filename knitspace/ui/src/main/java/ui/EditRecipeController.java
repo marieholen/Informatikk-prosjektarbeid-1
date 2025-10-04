@@ -73,6 +73,16 @@ public class EditRecipeController {
             return;
         }
 
+        try {
+            if (RecipePersistence.recipeExists(title)) {
+                showError("A recipe with this title already exists.");
+                return;
+            }
+
+        } catch (Exception e) {
+            showError("An error occurred: " + e.getMessage());
+        }
+
         if (attachedPdf == null) {
             showError("Please upload a PDF before saving.");
             return;
