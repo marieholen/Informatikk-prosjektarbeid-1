@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import java.io.File;
+import java.util.UUID;
 
 import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
@@ -86,6 +87,11 @@ public class EditRecipeController {
         }
 
         User loggedInUser = SessionManager.getCurrentUser();
+
+        if (loggedInUser == null) {
+            showError("You are not logged in");
+            return;
+        }
 
         Recipe recipe = new Recipe(
                 loggedInUser.getUserId(),
