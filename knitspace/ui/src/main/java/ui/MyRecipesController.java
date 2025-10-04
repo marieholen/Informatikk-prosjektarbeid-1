@@ -24,6 +24,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -43,6 +44,7 @@ public class MyRecipesController {
     @FXML private ComboBox<SkillLevel> skillFilter;
     @FXML private ComboBox<YarnType> yarnFilter;
     @FXML private ComboBox<NeedleSize> needleFilter;
+    @FXML private TextField searchField;
     @FXML private Button btnLogout;
     @FXML private Button btnNewrecipe;
     @FXML List<Recipe> allRecipes = new ArrayList<>();
@@ -53,6 +55,8 @@ public class MyRecipesController {
         setupScrollPane();
         setupFilters();
         loadRecipes();
+
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
 
         Platform.runLater(() -> {
         recipesScrollPane.lookup(".viewport").setStyle("-fx-background-color: #ffffff;");
@@ -119,6 +123,11 @@ public class MyRecipesController {
         }
         if (needleFilter.getValue() != null && recipe.getNeedleSize() != needleFilter.getValue()) {
             return false;
+        }
+
+        String seachText = searchField.getText();
+        if (seachText != null && !seachText.isBlank()) {
+            return recipe.getTitle().toLowerCase().contains(seachText.toLowerCase());
         }
 
         return true;
@@ -222,3 +231,4 @@ public class MyRecipesController {
         }
     }
 }
+
