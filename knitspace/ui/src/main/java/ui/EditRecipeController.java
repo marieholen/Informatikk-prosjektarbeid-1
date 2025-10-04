@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import java.io.File;
-import java.util.UUID;
 
 import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
@@ -64,21 +63,14 @@ public class EditRecipeController {
 
     @FXML
     private void onSaveClicked() {
+
+        Recipe selectedRecipe = getSelectedRecipe();
+
         String title = titleField.getText();
 
         if (title == null || title.isBlank()) {
             showError("Title is required.");
             return;
-        }
-
-        try {
-            if (RecipePersistence.recipeExists(title)) {
-                showError("A recipe with this title already exists.");
-                return;
-            }
-
-        } catch (Exception e) {
-            showError("An error occurred: " + e.getMessage());
         }
 
         if (attachedPdf == null) {
@@ -103,8 +95,8 @@ public class EditRecipeController {
                 getSelectedProjectStatus());
 
         try {
-            RecipePersistence.addRecipe(recipe);
-            showInfo("Recipe saved successfully!");
+            RecipePersistence.updateRecipe(selectedRecipe.getRecipeId().toString(), recipe);
+            showInfo("Recipe successfully updated!");
         } catch (Exception e) {
             showError("An error occurred: " + e.getMessage());
         }
@@ -139,32 +131,31 @@ public class EditRecipeController {
         }
         return null;
     }
-    private Recipe selectedRecipe; //this field will be used later
+
+    private Recipe selectedRecipe; // this field will be used later
 
     public void setSelectedRecipe(Recipe recipe) {
         this.selectedRecipe = new Recipe(
-            recipe.getRecipeId(),
-            recipe.getUserId(),
-            recipe.getTitle(),
-            recipe.getDescription(),
-            recipe.getSkillLevel(),
-            recipe.getYarnType(),
-            recipe.getNeedleSize(),
-            recipe.getProjectStatus()
-        );
+                recipe.getRecipeId(),
+                recipe.getUserId(),
+                recipe.getTitle(),
+                recipe.getDescription(),
+                recipe.getSkillLevel(),
+                recipe.getYarnType(),
+                recipe.getNeedleSize(),
+                recipe.getProjectStatus());
     }
 
-    public Recipe getSelectedRecipe() { //This can be removed when the rest of the controller is implemented
+    public Recipe getSelectedRecipe() { // This can be removed when the rest of the controller is implemented
         return new Recipe(
-            selectedRecipe.getRecipeId(),
-            selectedRecipe.getUserId(),
-            selectedRecipe.getTitle(),
-            selectedRecipe.getDescription(),
-            selectedRecipe.getSkillLevel(),
-            selectedRecipe.getYarnType(),
-            selectedRecipe.getNeedleSize(),
-            selectedRecipe.getProjectStatus()
-        );
+                selectedRecipe.getRecipeId(),
+                selectedRecipe.getUserId(),
+                selectedRecipe.getTitle(),
+                selectedRecipe.getDescription(),
+                selectedRecipe.getSkillLevel(),
+                selectedRecipe.getYarnType(),
+                selectedRecipe.getNeedleSize(),
+                selectedRecipe.getProjectStatus());
     }
 
     private YarnType getSelectedYarnType() {
