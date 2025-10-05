@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.Recipe;
+import core.SessionManager;
 import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
 import core.enums.SkillLevel;
@@ -103,8 +104,18 @@ public class MyRecipesController {
     private void applyFilters() {
         recipesVBox.getChildren().clear();
 
+        var currentUser = SessionManager.getCurrentUser();
+
+        if (currentUser == null) {
+            System.err.println("No user logged in.");
+            return;
+        }
+
         for (Recipe recipe : allRecipes) {
-            if (!matchesFilters(recipe)) {
+            if (!recipe.getUserId().equals(currentUser.getUserId())) {
+                continue;
+            }
+            if (!matchesFilters(recipe)) {  
                 continue;
             }
             recipesVBox.getChildren().add(createRecipeCard(recipe));
