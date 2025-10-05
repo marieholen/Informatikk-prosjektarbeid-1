@@ -70,5 +70,11 @@ public class RecipePersistence {
         return loadRecipes();
 
     }
+
+    public static boolean recipeExists(String title) throws Exception {
+    return loadRecipes().stream()
+        .anyMatch(r -> r.getTitle().equalsIgnoreCase(title));
+}
+
 }
 
