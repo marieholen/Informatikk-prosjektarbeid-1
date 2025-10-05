@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LoginControllerTest extends ApplicationTest {
 
     private LoginController controller;
-    private Parent root;
     private Stage stage;
 
     @Override
@@ -41,8 +40,8 @@ public class LoginControllerTest extends ApplicationTest {
 
     @BeforeEach
     void backupAndClearUserFile() throws Exception {
-        Path original = Path.of("data/users.json");
-        Path backup = Path.of("data/users.json.bak");
+        Path original = Path.of("../../data/users.json");
+        Path backup = Path.of("../../data/users.json.bak");
 
         if (Files.exists(original)) {
             Files.copy(original, backup, StandardCopyOption.REPLACE_EXISTING);
@@ -57,11 +56,11 @@ public class LoginControllerTest extends ApplicationTest {
 
     @AfterEach
     void restoreUserFile() throws Exception {
-        Path original = Path.of("data/users.json");
-        Path backup = Path.of("data/users.json.bak");
+        Path original = Path.of("../../data/users.json");
+        Path backup = Path.of("../../data/users.json.bak");
 
         if (Files.exists(backup)) {
-            //Files.move(backup, original, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(backup, original, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
@@ -80,8 +79,14 @@ public class LoginControllerTest extends ApplicationTest {
         Path original = Path.of("../../data/users.json");
         Files.writeString(original, "{ not json }", StandardOpenOption.TRUNCATE_EXISTING);
 
-        boolean result = controller.authenticateUser("testuser", "password");
-        assertFalse(result, "Should return false if user cannot be loaded");
+        final boolean[] result = new boolean[1];
+        Platform.runLater(() -> {
+            result[0] = controller.authenticateUser("testuser", "password");
+        });
+
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertFalse(result[0], "Should return false if user cannot be loaded");
     }
 
     @Test
