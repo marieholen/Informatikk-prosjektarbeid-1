@@ -63,7 +63,7 @@ public class LoginController {
         }
     }
 
-    private User authenticateUser(String username, String password) {
+    public User authenticateUser(String username, String password) {
         try {
             List<User> users = UserPersistence.getAllUsers();
             for (User user : users) {

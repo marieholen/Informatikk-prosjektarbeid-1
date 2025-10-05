@@ -69,9 +69,9 @@ public class LoginControllerTest extends ApplicationTest {
         User testUser = new User("testuser", "password");
         UserPersistence.saveUsers(Collections.singletonList(testUser));
 
-        assertTrue(controller.authenticateUser("testuser", "password"), "Should find user with correct credentials");
-        assertFalse(controller.authenticateUser("testuser", "wrongpassword"), "Should fail with wrong password");
-        assertFalse(controller.authenticateUser("nonexistingUser", "password"), "Should fail for non-existing user");
+        assertNotNull(controller.authenticateUser("testuser", "password"), "Should find user with correct credentials");
+        assertNull(controller.authenticateUser("testuser", "wrongpassword"), "Should fail with wrong password");
+        assertNull(controller.authenticateUser("nonexistingUser", "password"), "Should fail for non-existing user");
     }
 
     @Test
@@ -79,14 +79,14 @@ public class LoginControllerTest extends ApplicationTest {
         Path original = Path.of("../../data/users.json");
         Files.writeString(original, "{ not json }", StandardOpenOption.TRUNCATE_EXISTING);
 
-        final boolean[] result = new boolean[1];
+        final User[] result = new User[1];
         Platform.runLater(() -> {
             result[0] = controller.authenticateUser("testuser", "password");
         });
 
         WaitForAsyncUtils.waitForFxEvents();
 
-        assertFalse(result[0], "Should return false if user cannot be loaded");
+        assertNull(result[0], "Should return null if user cannot be loaded");
     }
 
     @Test
