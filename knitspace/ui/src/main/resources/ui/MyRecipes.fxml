@@ -61,23 +61,23 @@
             <VBox.margin>
                <Insets top="10.0" />
             </VBox.margin></Label>
-            <Label fx:id="difficultyLabel" text="Difficulty level:" />
-            <ComboBox fx:id="difficultyFilter" promptText="All">
+            <Label fx:id="skillLevelLabel" text="Skill level:" />
+            <ComboBox fx:id="skillFilter" promptText="All">
             <VBox.margin>
                <Insets />
             </VBox.margin></ComboBox>
 
-            <Label fx:id="yarnLabel" text="Yarn type:" />
+            <Label fx:id="yarnTypeLabel" text="Yarn type:" />
             <ComboBox fx:id="yarnFilter" promptText="All" />
 
-            <Label fx:id="clothingLabel" text="Clothing type:" />
-            <ComboBox fx:id="clothingFilter" promptText="All" />
+            <Label fx:id="needleSizeLabel" text="Needle Size:" />
+            <ComboBox fx:id="needleFilter" promptText="All" />
 
             <Label fx:id="statusLabel" text="Status:" />
             <ComboBox fx:id="statusFilter" promptText="All" />
 
             <Pane fx:id="bottomSpacer" VBox.vgrow="ALWAYS" /> 
-            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE">
+            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE" onAction="#handleNewRecipe">
             <font>
                <Font name="Arial Hebrew Scholar Bold" size="18.0" />
             </font>
@@ -120,3 +120,4 @@
     </center>
 
 </BorderPane>
+

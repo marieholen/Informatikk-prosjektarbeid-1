@@ -2,6 +2,8 @@ package persistency;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import core.Recipe;
 
@@ -15,9 +17,9 @@ public class RecipePersistence {
 
     public static List<Recipe> loadRecipes() throws Exception {
         if (file.exists()) {
-            return List.of(mapper.readValue(file, Recipe[].class));
+            return new ArrayList<>(Arrays.asList(mapper.readValue(file, Recipe[].class)));
         }
-        return List.of(); 
+        return new ArrayList<>(); 
     }
 
 
@@ -68,5 +70,11 @@ public class RecipePersistence {
         return loadRecipes();
 
     }
+
+    public static boolean recipeExists(String title) throws Exception {
+    return loadRecipes().stream()
+        .anyMatch(r -> r.getTitle().equalsIgnoreCase(title));
+}
+
 }
 

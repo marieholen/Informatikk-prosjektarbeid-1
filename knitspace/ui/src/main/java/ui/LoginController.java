@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
 import core.User;
+import core.SessionManager;
 import persistency.UserPersistence;
 
 import java.io.IOException;
@@ -49,7 +50,9 @@ public class LoginController {
             return;
         }
 
-        if (authenticateUser(username, password)) {
+            User authenticatedUser = authenticateUser(username, password);
+            if (authenticatedUser != null) {
+                SessionManager.setCurrentUser(authenticatedUser);
             try {
                 goToMyRecipes();
             } catch (IOException e) {
@@ -60,18 +63,18 @@ public class LoginController {
         }
     }
 
-    boolean authenticateUser(String username, String password) {
+    private User authenticateUser(String username, String password) {
         try {
             List<User> users = UserPersistence.getAllUsers();
             for (User user : users) {
                 if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                    return true;
+                    return user;
                 }
             }
         } catch (Exception e) {
             showAlert("Authentication Error", "Failed to verify credentials: " + e.getMessage());
         }
-        return false;
+        return null;
     }
 
     @FXML
