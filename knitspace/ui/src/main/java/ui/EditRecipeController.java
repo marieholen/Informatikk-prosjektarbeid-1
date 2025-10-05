@@ -33,8 +33,9 @@ public class EditRecipeController {
     private Button uploadPdfButton;
     @FXML
     private Button saveButton;
-
-    private File attachedPdf;
+    
+    //Commented out because og spotbugs issue. Field will be used later
+    // private File attachedPdf;
 
     @FXML
     private void initialize() {
@@ -58,7 +59,8 @@ public class EditRecipeController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        attachedPdf = fileChooser.showOpenDialog(uploadPdfButton.getScene().getWindow());
+        //Commented out because og spotbugs issue. Field will be used later
+        // attachedPdf = fileChooser.showOpenDialog(uploadPdfButton.getScene().getWindow());
     }
 
     @FXML
