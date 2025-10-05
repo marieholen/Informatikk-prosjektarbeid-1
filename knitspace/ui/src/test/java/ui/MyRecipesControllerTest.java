@@ -44,7 +44,7 @@ public class MyRecipesControllerTest extends ApplicationTest {
 
 
     @Test
-    void testInitializeSetsUpEverything() throws Exception {
+    void testInitializeSetUp() throws Exception {
         Method init = MyRecipesController.class.getDeclaredMethod("initialize");
         init.setAccessible(true);
         assertDoesNotThrow(() -> {
@@ -57,22 +57,22 @@ public class MyRecipesControllerTest extends ApplicationTest {
     }
 
     @Test
-    void testCreateRecipeCardCoversAllStatuses() throws Exception {
+    void testCreateRecipeCardStatusColors() throws Exception {
         Method m = MyRecipesController.class.getDeclaredMethod("createRecipeCard", Recipe.class);
         m.setAccessible(true);
 
         for (ProjectStatus status : ProjectStatus.values()) {
             Recipe r = new Recipe(SessionManager.getCurrentUser().getUserId(),
-                    "Title " + status, "desc", SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_3_0, status);
+                    "Title " + status, "description", SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_3_0, status);
             VBox card = (VBox) m.invoke(controller, r);
             assertNotNull(card);
-            Label lbl = (Label) ((HBox) card.getChildren().get(0)).getChildren().get(2);
-            assertTrue(lbl.getStyle().contains("-fx-background-color"));
+            Label label = (Label) ((HBox) card.getChildren().get(0)).getChildren().get(2);
+            assertTrue(label.getStyle().contains("-fx-background-color"));
         }
     }
 
     @Test
-    void testMatchesFiltersAllBranches() throws Exception {
+    void testMatchesFilters() throws Exception {
         Method m = MyRecipesController.class.getDeclaredMethod("matchesFilters", Recipe.class);
         m.setAccessible(true);
 
@@ -82,7 +82,7 @@ public class MyRecipesControllerTest extends ApplicationTest {
         ComboBox<NeedleSize> needleFilter = (ComboBox<NeedleSize>) getPrivateField("needleFilter");
         TextField searchField = (TextField) getPrivateField("searchField");
 
-        Recipe recipe = new Recipe(SessionManager.getCurrentUser().getUserId(), "Shawl", "desc",
+        Recipe recipe = new Recipe(SessionManager.getCurrentUser().getUserId(), "Sweater", "description",
                 SkillLevel.ADVANCED, YarnType.COTTON, NeedleSize.SIZE_4_0, ProjectStatus.FINISHED);
 
         interact(() -> statusFilter.setValue(ProjectStatus.PLANNED));
@@ -100,22 +100,22 @@ public class MyRecipesControllerTest extends ApplicationTest {
         interact(() -> { needleFilter.setValue(null); searchField.setText("xyz"); });
         assertFalse((boolean) m.invoke(controller, recipe));
 
-        interact(() -> searchField.setText("shawl"));
+        interact(() -> searchField.setText("Sweater"));
         assertTrue((boolean) m.invoke(controller, recipe));
     }
 
     @Test
-    void testOpenRecipeDetailsHandlesIOExceptionGracefully() throws Exception {
+    void testOpenRecipeDetails() throws Exception {
     Method open = MyRecipesController.class.getDeclaredMethod("openRecipeDetails", ActionEvent.class, Recipe.class);
     open.setAccessible(true);
 
-    Button fake = new Button("Fake");
-    interact(() -> ((Pane) stage.getScene().getRoot()).getChildren().add(fake));
+    Button testBtn = new Button("testBtn");
+    interact(() -> ((Pane) stage.getScene().getRoot()).getChildren().add(testBtn));
     WaitForAsyncUtils.waitForFxEvents();
 
-    Recipe r = new Recipe(SessionManager.getCurrentUser().getUserId(), "R", "desc",
+    Recipe r = new Recipe(SessionManager.getCurrentUser().getUserId(), "R", "description",
             SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.PLANNED);
-    ActionEvent event = new ActionEvent(fake, null);
+    ActionEvent event = new ActionEvent(testBtn, null);
 
     interact(() -> {
         try {
@@ -131,14 +131,14 @@ public class MyRecipesControllerTest extends ApplicationTest {
 
 
     @Test
-    void testHandleLogoutNoException() throws Exception {
+    void testHandleLogout() throws Exception {
         Method logout = MyRecipesController.class.getDeclaredMethod("handleLogout");
         logout.setAccessible(true);
         assertDoesNotThrow(() -> logout.invoke(controller));
     }
 
     @Test
-    void testHandleNewRecipeNoException() throws Exception {
+    void testHandleNewRecipe() throws Exception {
         Method newRecipe = MyRecipesController.class.getDeclaredMethod("handleNewRecipe");
         newRecipe.setAccessible(true);
         assertDoesNotThrow(() -> newRecipe.invoke(controller));
