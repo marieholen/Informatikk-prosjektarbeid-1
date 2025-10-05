@@ -21,6 +21,7 @@ KnitSpace now supports full user interaction, recipe management, and persistent 
         - `persistence` - JSON file storage
         - `ui` - JAVAFX user interface
     - Maven manages dependencies across modules
+    - See [`docs/release2/architecture.mmd`](/docs/release2/architecture.mmd) for a visual diagram of the architecture
 - Testing and Code Quality
     - Unit tests across modules
     - JaCoCo for testing coverage

@@ -1,0 +1,35 @@
+flowchart TB
+
+  subgraph UI ["UI"]
+    direction TB
+    App["App - JavaFX entrypoint"]
+    FXML["FXML files"]
+    Controllers["Controllers (Login, MyRecipes,CreateAccount, ViewRecipe, EditRecipe)"]
+    App -->|loads UI| FXML
+    FXML -->|connected to| Controllers
+  end
+
+  subgraph Domain ["Domain / Core"]
+    direction TB
+    Recipe["Recipe"]
+    User["User"]
+    KnitSpace["KnitSpace (core logic)"]
+    Enums["Enums (NeedleSize, SkillLevel,ProjectStatus, YarnType)"]
+    Recipe --- Enums
+    User --- KnitSpace
+  end
+
+  subgraph Persistency ["Persistence"]
+    direction TB
+    RecipePers["RecipePersistence"]
+    UserPers["UserPersistence"]
+    DataFiles["data/*.json"]
+    RecipePers -->|reads/writes| DataFiles
+    UserPers -->|reads/writes| DataFiles
+  end
+
+  Controllers -->|uses| Recipe
+  Controllers -->|requests| RecipePers
+  Controllers -->|requests| UserPers
+  RecipePers -->|writes/reads JSON| Recipe
+  UserPers -->|writes/reads JSON| User
