@@ -83,11 +83,6 @@ public class EditRecipeController {
             showError("An error occurred: " + e.getMessage());
         }
 
-        if (attachedPdf == null) {
-            showError("Please upload a PDF before saving.");
-            return;
-        }
-
         User loggedInUser = SessionManager.getCurrentUser();
 
         if (loggedInUser == null) {
@@ -142,7 +137,7 @@ public class EditRecipeController {
         return null;
     }
 
-    private Recipe selectedRecipe; // this field will be used later
+    private Recipe selectedRecipe; 
 
     public void setSelectedRecipe(Recipe recipe) {
         this.selectedRecipe = new Recipe(
@@ -156,7 +151,7 @@ public class EditRecipeController {
                 recipe.getProjectStatus());
     }
 
-    public Recipe getSelectedRecipe() { // This can be removed when the rest of the controller is implemented
+    public Recipe getSelectedRecipe() {
         return new Recipe(
                 selectedRecipe.getRecipeId(),
                 selectedRecipe.getUserId(),
