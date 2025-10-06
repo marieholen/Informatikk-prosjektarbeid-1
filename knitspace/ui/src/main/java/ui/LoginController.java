@@ -17,14 +17,11 @@ import java.util.List;
 
 public class LoginController {
 
-    @FXML
-    private TextField usernameField;
+    @FXML TextField usernameField;
 
-    @FXML
-    private PasswordField passwordField;
+    @FXML PasswordField passwordField;
 
-    @FXML
-    private Button loginButton;
+    @FXML Button loginButton;
 
     @FXML Hyperlink createAccountLink;
 
@@ -39,8 +36,7 @@ public class LoginController {
 
     }
 
-    @FXML
-    private void handleLogin(ActionEvent event) {
+    @FXML void handleLogin(ActionEvent event) {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
@@ -67,7 +63,7 @@ public class LoginController {
         }
     }
 
-    private User authenticateUser(String username, String password) {
+    public User authenticateUser(String username, String password) {
         try {
             List<User> users = UserPersistence.getAllUsers();
             for (User user : users) {
@@ -91,7 +87,7 @@ public class LoginController {
         }
     }
 
-    private void goToMyRecipes() throws IOException {
+    void goToMyRecipes() throws IOException {
         Stage stage = (Stage) loginButton.getScene().getWindow();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipes.fxml"));
         Parent root = fxmlLoader.load();
