@@ -1,4 +1,4 @@
-## Release documentation for first delivery
+## Release documentation for release one
 
 ## Overview
 This is the initial release (Sprint 1) of our project. The prototype highlights the core domain layer, a JavaFX user interface, and a basic file-storage solution.
