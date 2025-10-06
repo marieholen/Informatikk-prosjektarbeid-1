@@ -1,11 +1,18 @@
 package persistency;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import core.Recipe;
 import core.enums.NeedleSize;
@@ -14,6 +21,24 @@ import core.enums.SkillLevel;
 import core.enums.YarnType;
 
 public class RecipePersistenceTest {
+    private static Path RECIPE_PATH = Path.of("../../data/recipes.json");
+    private static Path RECIPE_BACKUP_PATH = Path.of("../../data/recipes.backup.json");
+
+    @BeforeAll
+    static void backupRecipes() throws Exception {
+        if (Files.exists(RECIPE_PATH)) {
+            Files.copy(RECIPE_PATH, RECIPE_BACKUP_PATH, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
+    @AfterAll
+    static void restoreRecipes() throws Exception {
+        if (Files.exists(RECIPE_BACKUP_PATH)) {
+            Files.copy(RECIPE_BACKUP_PATH, RECIPE_PATH, StandardCopyOption.REPLACE_EXISTING);
+            Files.deleteIfExists(RECIPE_BACKUP_PATH);
+        }
+    }
+
     @BeforeEach
     void cleanUp()throws Exception {
         List<Recipe> recipes = RecipePersistence.loadRecipes();
