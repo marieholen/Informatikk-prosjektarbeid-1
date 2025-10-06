@@ -56,7 +56,7 @@ Our team divided the project work in release 2 into three sprints:
 All documentation for Release 2 is located in `/docs/release2/`, including:
 - [`workflow.md`](../release2/workflow.md) - sprint process and organization. 
 - [`work-practices.md`](../release2/work-practices.md) - coding standards and collaboration approach. 
-- [`code-quality.md`](../release2/codequality.md) - testing and quality tools. 
+- [`code-quality.md`](../release2/code-quality.md) - testing and quality tools. 
 - [`teamwork.md`](../release2/teamwork.md) - reflection on collaboration. 
 - [`ai-tools.md`](../release2/ai-tools.md) - use of AI tools.
 - [`persistence.md`](../release2/persistence.md) - Discussion of persistency metaphors
