@@ -17,6 +17,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import persistency.UserPersistence;
+import core.SessionManager;
 import core.User;
 
 public class CreateAccountController {
@@ -59,6 +60,8 @@ public class CreateAccountController {
 
             User newUser = new User(username, password);
             UserPersistence.addUser(newUser);
+
+            setSelectedUser(newUser);
 
             showInfoPopup("User created", "The user was created. You will now be logged in.");
             goToMyRecipes(signupButton);
@@ -128,6 +131,10 @@ public class CreateAccountController {
             e.printStackTrace();
             showErrorPopup("Navigation error", "Could not open the Login page.");
         }
+    }
+
+    private void setSelectedUser(User newUser) {
+        SessionManager.setCurrentUser(newUser);
     }
 
 }
