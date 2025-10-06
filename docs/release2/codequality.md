@@ -1,1 +1,0 @@
-## Document choices related to code quality here
