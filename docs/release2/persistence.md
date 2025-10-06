@@ -21,4 +21,4 @@ For this project, we have chosen the **implicit saving (app model)** approach.
 
 In this project we use the implicit saving model. Data is automatically saved to JSON files whenever entities are added, removed, or updated. The user rarely interacts with the storage. This approach aligns with modern app-like behavior, reducing the risk of data loss by ensuring that user actions are immediately persisted, without requiring explicit save commands.
 
-However, there is an element of explicit storage in this application, as recipies are viewed in pdfs, which have to be uploaded from the users computer. This is explicit storage, and different from how we treat the meta-data of recipes and users.
+However, there is an element of explicit storage in this application, as recipes are viewed in pdfs, which have to be uploaded from the user's computer. This is explicit storage, and different from how we treat the meta-data of recipes and users.
