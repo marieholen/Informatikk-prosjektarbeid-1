@@ -2,11 +2,11 @@
 
 ## Version control
 
-We used GitHub as our primary version control system. Each team member worked on branches, which were later merged into the main branch through pull requests. To keep the commit history clean we squash-merge each branch. This practice allowed us to separate ongoing development from stable code, and ensured that changes could be reviewed before integration. Commit messages were generally descriptive, and we use templates for both issues and pull requests to keep a cosistent format.
+We used GitHub as our primary version control system. Each team member worked on branches, which were later merged into the main branch through pull requests. To keep the commit history clean we squash-merge each branch. This practice allowed us to separate ongoing development from stable code, and ensured that changes could be reviewed before integration. Commit messages were generally descriptive, and we use templates for both issues and pull requests to keep a consistent format.
 
 ## Communication
 
-Our team primarily communicated through Messenger for quick updates and daily coordination. We held weekly meetings on thursdays to align on progress, clarify requirements, and identify blockers. We used sprints to plan each week and help somewhat regular meetings on mondays to have standups and identify new blockers. We allocated tasks by documenting their sizes and priority to spread out the work. This combination of synchronous and asynchronous communication allowed us to stay aligned while working on separate tasks.
+Our team primarily communicated through Messenger for quick updates and daily coordination. We held weekly meetings on Thursdays to align on progress, clarify requirements, and identify blockers. We used sprints to plan each week and held somewhat regular meetings on Mondays to have standups and identify new blockers. We allocated tasks by documenting their sizes and priority to spread out the work. This combination of synchronous and asynchronous communication allowed us to stay aligned while working on separate tasks.
 
 We wish to have included larger discussions in GitHub issues, but this may not be doable for this project at all.
 
@@ -22,8 +22,8 @@ We used GitHub Issues and a project board to track tasks. Each feature or bug fi
 
 We organized our work into one-week sprints. At the start of each sprint on thursdays, we held a planning meeting to define goals, break down tasks into issues, and assign responsibilities. At the end of the sprint, we reviewed progress against goals and held a small retrospective to discuss what worked well and what could be improved in our planning. In our sprint reviews we discovered that our first sprint for release 2 was not comprehensive enough, and left too much work to be done in sprint 2, which we did not manage to complete in time.
 
-The goal of sprint 1 was to complete the persistency module, core module and all fxml files. Then we used sprint 2 to write testing and the controllers for the ui module. We did this because the controllers were blocked by the goals of sprint 1. Then sprint 3 focused on the documentation for the delivery of release 2.
+The goal of sprint 1 was to complete the persistency module, core module and all fxml files. Then we used sprint 2 to write testing and the controllers for the UI module. We did this because the controllers were blocked by the goals of sprint 1. Then sprint 3 focused on the documentation for the delivery of release 2.
 
 ## Reflections on effectiveness
 
-Overall, our work practices supported steady progress and collaboration. Version control and issue tracking worked well, and sprint planning gave structure to our workflow. Communication was effective but we could have used GitHub more effectively. Testing practices improved during the project, but we recognize that incorporating tests earlier would have increased confidence in new features. For future iterations, we aim to strengthen our documentation, and refine our testing process.
+Overall, our work practices supported steady progress and collaboration. Version control and issue tracking worked well, and sprint planning gave structure to our workflow. Communication was effective but we could have used GitHub more effectively. Testing practices improved during the project, but we recognize that incorporating tests earlier would have increased confidence in new features. For future iterations, we aim to strengthen our documentation and refine our testing process.
