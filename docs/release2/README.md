@@ -16,6 +16,10 @@ KnitSpace now supports full user interaction, recipe management, and persistent 
 - Persistence
     - All user and recipe data stored as JSON-files ([`UserPersistence.json`](/knitspace/persistency/src/main/java/persistency/UserPersistence.java) and [`RecipePersistence.json`](/knitspace/persistency/src/main/java/persistency/RecipePersistence.java))
 - Architecture
+
+![alt text](/docs/release2/architecture.png)
+
+    - For the mermaid source code of the architecture diagram, see [`docs/release2/architecture.mmd`](/docs/release2/architecture.mmd).
     - Implemented a three-layer structure:
         - `core` - domain logic and models
         - `persistence` - JSON file storage
