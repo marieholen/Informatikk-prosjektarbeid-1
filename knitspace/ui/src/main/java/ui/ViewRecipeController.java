@@ -44,7 +44,16 @@ public class ViewRecipeController {
     private Button editButton;
 
     public void setAndLoadRecipe(Recipe recipe) {
-        this.selectedRecipe = recipe;
+        this.selectedRecipe = new Recipe(
+            recipe.getRecipeId(),
+            recipe.getUserId(),
+            recipe.getTitle(),
+            recipe.getDescription(),
+            recipe.getSkillLevel(),
+            recipe.getYarnType(),
+            recipe.getNeedleSize(),
+            recipe.getProjectStatus()
+        );
 
         titleLabel.setText(recipe.getTitle());
         descriptionLabel.setText(recipe.getDescription());

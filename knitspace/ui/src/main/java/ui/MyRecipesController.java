@@ -239,7 +239,7 @@ public class MyRecipesController {
         Parent root = loader.load();
 
         EditRecipeController controller = loader.getController();
-        controller.NewRecipeMode(); // aktiver "ny oppskrift"-modus
+        controller.newRecipeMode(); // aktiver "ny oppskrift"-modus
 
         btnNewrecipe.getScene().setRoot(root);
     } catch (Exception e) {

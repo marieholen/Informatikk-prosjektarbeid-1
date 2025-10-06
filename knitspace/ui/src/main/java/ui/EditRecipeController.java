@@ -51,7 +51,7 @@ public class EditRecipeController {
         }
     }
 
-    public void NewRecipeMode() {
+    public void newRecipeMode() {
         isNewRecipe = true;
         currentRecipe = null;
 
@@ -65,7 +65,16 @@ public class EditRecipeController {
 
     public void setSelectedRecipe(Recipe recipe) {
         isNewRecipe = false;
-        this.currentRecipe = recipe;
+        this.currentRecipe = new Recipe(
+            recipe.getRecipeId(),
+            recipe.getUserId(),
+            recipe.getTitle(),
+            recipe.getDescription(),
+            recipe.getSkillLevel(),
+            recipe.getYarnType(),
+            recipe.getNeedleSize(),
+            recipe.getProjectStatus()
+        );
 
         titleField.setText(recipe.getTitle());
         descriptionField.setText(recipe.getDescription());

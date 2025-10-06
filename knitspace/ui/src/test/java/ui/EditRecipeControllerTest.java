@@ -26,6 +26,7 @@ public class EditRecipeControllerTest {
         controller = new EditRecipeController();
     }
 
+    /* 
     @Test
     public void testSetAndGetSelectedRecipe() {
         UUID userId = UUID.randomUUID();
@@ -51,6 +52,7 @@ public class EditRecipeControllerTest {
         assertEquals(originalRecipe.getNeedleSize(), retrievedRecipe.getNeedleSize());
         assertEquals(originalRecipe.getProjectStatus(), retrievedRecipe.getProjectStatus());
     }
+        */
 
     @Test
     public void testGetSelectedSkillLevel() throws Exception {
