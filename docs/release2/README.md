@@ -59,3 +59,10 @@ All documentation for Release 2 is located in `/docs/release2/`, including:
 - [`code-quality.md`](../release2/codequality.md) - testing and quality tools. 
 - [`teamwork.md`](../release2/teamwork.md) - reflection on collaboration. 
 - [`ai-tools.md`](../release2/ai-tools.md) - use of AI tools. 
+
+Additional documentation: 
+- [`REAME.md` in persistency](../../knitspace/persistency/README.md) - Data handling and JSON storage. 
+- [`REAME.me`in core](../../knitspace/core/README.md) - Domain logic and main data models.
+- [`REAME.md` in ui](../../knitspace/ui/README.md) - JavaFX UI structure and controllers.
+- [`README.md` in source code](../../knitspace/ui/src/main/java/ui/README.md) - App features, user stories, and UI screenshots.
+- [`README.md` in root](../../README.md) - App overview, technologies, and Maven setup.
