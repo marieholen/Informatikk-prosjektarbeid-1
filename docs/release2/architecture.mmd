@@ -13,10 +13,9 @@ flowchart TB
     direction TB
     Recipe["Recipe"]
     User["User"]
-    KnitSpace["KnitSpace (core logic)"]
     Enums["Enums (NeedleSize, SkillLevel,ProjectStatus, YarnType)"]
     Recipe --- Enums
-    User --- KnitSpace
+
   end
 
   subgraph Persistency ["Persistence"]
