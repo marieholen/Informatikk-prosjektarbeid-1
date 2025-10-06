@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 
 import core.User;
+import core.SessionManager;
 import persistency.UserPersistence;
 
 import java.io.IOException;
@@ -16,14 +17,11 @@ import java.util.List;
 
 public class LoginController {
 
-    @FXML
-    private TextField usernameField;
+    @FXML TextField usernameField;
 
-    @FXML
-    private PasswordField passwordField;
+    @FXML PasswordField passwordField;
 
-    @FXML
-    private Button loginButton;
+    @FXML Button loginButton;
 
     @FXML Hyperlink createAccountLink;
 
@@ -38,8 +36,7 @@ public class LoginController {
 
     }
 
-    @FXML
-    private void handleLogin(ActionEvent event) {
+    @FXML void handleLogin(ActionEvent event) {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
@@ -53,7 +50,9 @@ public class LoginController {
             return;
         }
 
-        if (authenticateUser(username, password)) {
+            User authenticatedUser = authenticateUser(username, password);
+            if (authenticatedUser != null) {
+                SessionManager.setCurrentUser(authenticatedUser);
             try {
                 goToMyRecipes();
             } catch (IOException e) {
@@ -64,18 +63,18 @@ public class LoginController {
         }
     }
 
-    private boolean authenticateUser(String username, String password) {
+    public User authenticateUser(String username, String password) {
         try {
             List<User> users = UserPersistence.getAllUsers();
             for (User user : users) {
                 if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                    return true;
+                    return user;
                 }
             }
         } catch (Exception e) {
             showAlert("Authentication Error", "Failed to verify credentials: " + e.getMessage());
         }
-        return false;
+        return null;
     }
 
     @FXML
@@ -88,9 +87,9 @@ public class LoginController {
         }
     }
 
-    private void goToMyRecipes() throws IOException {
+    void goToMyRecipes() throws IOException {
         Stage stage = (Stage) loginButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipies.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MyRecipes.fxml"));
         Parent root = fxmlLoader.load();
 
         // Pass user information to the main controller if needed
@@ -99,7 +98,7 @@ public class LoginController {
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("KnitSpace - My Recipies");
+        stage.setTitle("KnitSpace - My Recipes");
     }
 
     private void goToCreateAccount() throws IOException {

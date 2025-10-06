@@ -32,7 +32,7 @@
                <Font name="Arial Hebrew Scholar Bold" size="55.0" />
             </font></Label>
             <Pane fx:id="spacer" HBox.hgrow="ALWAYS" /> <!-- spacer -->
-            <Button fx:id="btnLogout" style="-fx-background-color: E6D8C3;" text="Log out">
+            <Button fx:id="btnLogout" style="-fx-background-color: #E6D8C3;" text="Log out" onAction="#handleLogout">
             <padding>
                <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
             </padding>
@@ -44,7 +44,7 @@
 
     <!-- left: search and filter recipes -->
     <left>
-        <VBox fx:id="leftPanel" alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: ffffff;">
+        <VBox fx:id="leftPanel" alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: #ffffff;">
             <padding>
                 <Insets bottom="18" left="12" right="12" top="18" />
             </padding>
@@ -61,23 +61,23 @@
             <VBox.margin>
                <Insets top="10.0" />
             </VBox.margin></Label>
-            <Label fx:id="difficultyLabel" text="Difficulty level:" />
-            <ComboBox fx:id="difficultyFilter" promptText="All">
+            <Label fx:id="skillLevelLabel" text="Skill level:" />
+            <ComboBox fx:id="skillFilter" promptText="All">
             <VBox.margin>
                <Insets />
             </VBox.margin></ComboBox>
 
-            <Label fx:id="yarnLabel" text="Yarn type:" />
+            <Label fx:id="yarnTypeLabel" text="Yarn type:" />
             <ComboBox fx:id="yarnFilter" promptText="All" />
 
-            <Label fx:id="clothingLabel" text="Clothing type:" />
-            <ComboBox fx:id="clothingFilter" promptText="All" />
+            <Label fx:id="needleSizeLabel" text="Needle Size:" />
+            <ComboBox fx:id="needleFilter" promptText="All" />
 
             <Label fx:id="statusLabel" text="Status:" />
             <ComboBox fx:id="statusFilter" promptText="All" />
 
             <Pane fx:id="bottomSpacer" VBox.vgrow="ALWAYS" /> 
-            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE">
+            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE" onAction="#handleNewRecipe">
             <font>
                <Font name="Arial Hebrew Scholar Bold" size="18.0" />
             </font>
@@ -120,3 +120,4 @@
     </center>
 
 </BorderPane>
+
