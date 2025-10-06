@@ -58,7 +58,8 @@ All documentation for Release 2 is located in `/docs/release2/`, including:
 - [`work-practices.md`](../release2/work-practices.md) - coding standards and collaboration approach. 
 - [`code-quality.md`](../release2/codequality.md) - testing and quality tools. 
 - [`teamwork.md`](../release2/teamwork.md) - reflection on collaboration. 
-- [`ai-tools.md`](../release2/ai-tools.md) - use of AI tools. 
+- [`ai-tools.md`](../release2/ai-tools.md) - use of AI tools.
+- [`persistence.md`](../release2/persistence.md) - Discussion of persistency metaphors
 
 Additional documentation: 
 - [`REAME.md` in persistency](../../knitspace/persistency/README.md) - Data handling and JSON storage. 
