@@ -1,21 +1,33 @@
 package ui;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.FileChooser;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
-
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+import core.Recipe;
+import core.SessionManager;
+import core.User;
 import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
 import core.enums.SkillLevel;
 import core.enums.YarnType;
-import core.User;
-import core.SessionManager;
-import core.Recipe;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import persistency.RecipePersistence;
 
 public class EditRecipeController {
@@ -29,11 +41,11 @@ public class EditRecipeController {
     @FXML private Button uploadPdfButton;
     @FXML private Button saveButton;
     @FXML private Button backButton;
-    //Commented out because og spotbugs issue. Field will be used later
-    // private File attachedPdf;
 
+    // State
     private Recipe currentRecipe;
     private boolean isNewRecipe = false;
+    private Path storedPdfPath; // optional: persist later if you add this to Recipe or another store
 
     @FXML
     private void initialize() {
@@ -51,6 +63,7 @@ public class EditRecipeController {
         }
     }
 
+    /** Called when opening the screen to create a brand new recipe */
     public void newRecipeMode() {
         isNewRecipe = true;
         currentRecipe = null;
@@ -61,8 +74,11 @@ public class EditRecipeController {
         yarnTypeComboBox.setValue(null);
         needleSizeComboBox.setValue(null);
         statusComboBox.setValue(null);
+        storedPdfPath = null;
+        if (uploadPdfButton != null) uploadPdfButton.setText("Upload PDF");
     }
 
+    /** Called when opening the screen to edit an existing recipe */
     public void setSelectedRecipe(Recipe recipe) {
         isNewRecipe = false;
         this.currentRecipe = new Recipe(
@@ -85,12 +101,61 @@ public class EditRecipeController {
     }
 
     @FXML
-    private void onUploadPdfClicked() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
-        //Commented out because og spotbugs issue. Field will be used later
-        // attachedPdf = fileChooser.showOpenDialog(uploadPdfButton.getScene().getWindow());
+    private void handleUploadPdf(ActionEvent event) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Select recipe PDF");
+        chooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf")
+        );
+
+        File docs = Paths.get(System.getProperty("user.home"), "Documents").toFile();
+        if (docs.exists()) chooser.setInitialDirectory(docs);
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        File selected = chooser.showOpenDialog(stage);
+        if (selected == null) return; // user cancelled
+
+        Path selectedPath = selected.toPath();
+
+        if (!looksLikePdf(selectedPath)) {
+            showError("That file doesn’t look like a valid PDF.");
+            return;
+        }
+
+        try {
+            Path appDir = Paths.get(System.getProperty("user.dir"), "..", "..", "data", "pdfs")
+                .normalize()
+                .toAbsolutePath();
+            Files.createDirectories(appDir);
+
+            String title = titleField.getText() == null ? "" : titleField.getText().trim();
+            if (title.isEmpty()) {
+                showError("Recipe needs a title!");
+                return;
+            }
+
+            String titleEdited = title.replaceAll("[^a-zA-Z0-9-_ ]", "").replace(" ", "_");
+            String pdfName = titleEdited + ".pdf";
+
+            Path dest = appDir.resolve(pdfName);
+            Files.copy(selectedPath, dest, StandardCopyOption.REPLACE_EXISTING);
+
+            storedPdfPath = dest;
+            uploadPdfButton.setText(pdfName);
+        } catch (IOException ex) {
+            showError("Could not copy the PDF to the app folder.\n" + ex.getMessage());
+        }
+    }
+
+    // Minimal file signature check for PDFs
+    private boolean looksLikePdf(Path path) {
+        try (InputStream in = Files.newInputStream(path)) {
+            byte[] header = new byte[5];
+            if (in.read(header) == 5) {
+                return "%PDF-".equals(new String(header, StandardCharsets.US_ASCII));
+            }
+        } catch (IOException ignored) { }
+        return false;
     }
 
     @FXML
@@ -98,6 +163,15 @@ public class EditRecipeController {
         String title = titleField.getText();
         if (title == null || title.isBlank()) {
             showError("Title is required.");
+            return;
+        }
+
+        // Make sure selections are made to avoid null enums
+        if (difficultyComboBox.getValue() == null ||
+            yarnTypeComboBox.getValue() == null ||
+            needleSizeComboBox.getValue() == null ||
+            statusComboBox.getValue() == null) {
+            showError("Please select difficulty, yarn type, needle size, and status.");
             return;
         }
 
@@ -127,6 +201,11 @@ public class EditRecipeController {
                 RecipePersistence.addRecipe(newRecipe);
                 showInfo("Recipe successfully created!");
             } else {
+                if (currentRecipe == null) {
+                    showError("No recipe selected to update.");
+                    return;
+                }
+
                 Recipe updated = new Recipe(
                     currentRecipe.getRecipeId(),
                     currentRecipe.getUserId(),
@@ -156,7 +235,8 @@ public class EditRecipeController {
 
     private void goToMyRecipesView() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("MyRecipes.fxml"));
+            // Use leading slash if your FXML is under resources/ui
+            Parent root = FXMLLoader.load(getClass().getResource("/ui/MyRecipes.fxml"));
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.setScene(new Scene(root));
         } catch (Exception e) {
@@ -165,14 +245,13 @@ public class EditRecipeController {
         }
     }
 
+    // Helpers
     private void showError(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR, msg);
-        alert.showAndWait();
+        new Alert(Alert.AlertType.ERROR, msg).showAndWait();
     }
 
     private void showInfo(String msg) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, msg);
-        alert.showAndWait();
+        new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
     }
 
     private SkillLevel getSelectedSkillLevel() {
