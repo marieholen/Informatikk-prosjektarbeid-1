@@ -3,39 +3,37 @@ package ui;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
-import java.io.File;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
 
+import java.io.File;
 import core.enums.NeedleSize;
 import core.enums.ProjectStatus;
 import core.enums.SkillLevel;
 import core.enums.YarnType;
 import core.User;
 import core.SessionManager;
-
 import core.Recipe;
 import persistency.RecipePersistence;
 
 public class EditRecipeController {
 
-    @FXML
-    private TextField titleField;
-    @FXML
-    private TextField descriptionField;
-    @FXML
-    private ComboBox<String> difficultyComboBox;
-    @FXML
-    private ComboBox<String> yarnTypeComboBox;
-    @FXML
-    private ComboBox<String> needleSizeComboBox;
-    @FXML
-    private ComboBox<String> statusComboBox;
-    @FXML
-    private Button uploadPdfButton;
-    @FXML
-    private Button saveButton;
-    
+    @FXML private TextField titleField;
+    @FXML private TextField descriptionField;
+    @FXML private ComboBox<String> difficultyComboBox;
+    @FXML private ComboBox<String> yarnTypeComboBox;
+    @FXML private ComboBox<String> needleSizeComboBox;
+    @FXML private ComboBox<String> statusComboBox;
+    @FXML private Button uploadPdfButton;
+    @FXML private Button saveButton;
+    @FXML private Button backButton;
     //Commented out because og spotbugs issue. Field will be used later
     // private File attachedPdf;
+
+    private Recipe currentRecipe;
+    private boolean isNewRecipe = false;
 
     @FXML
     private void initialize() {
@@ -51,7 +49,30 @@ public class EditRecipeController {
         for (ProjectStatus status : ProjectStatus.values()) {
             statusComboBox.getItems().add(status.getDescription());
         }
+    }
 
+    public void NewRecipeMode() {
+        isNewRecipe = true;
+        currentRecipe = null;
+
+        titleField.clear();
+        descriptionField.clear();
+        difficultyComboBox.setValue(null);
+        yarnTypeComboBox.setValue(null);
+        needleSizeComboBox.setValue(null);
+        statusComboBox.setValue(null);
+    }
+
+    public void setSelectedRecipe(Recipe recipe) {
+        isNewRecipe = false;
+        this.currentRecipe = recipe;
+
+        titleField.setText(recipe.getTitle());
+        descriptionField.setText(recipe.getDescription());
+        difficultyComboBox.setValue(recipe.getSkillLevel().getDescription());
+        yarnTypeComboBox.setValue(recipe.getYarnType().getLabel());
+        needleSizeComboBox.setValue(recipe.getNeedleSize().getLabel());
+        statusComboBox.setValue(recipe.getProjectStatus().getDescription());
     }
 
     @FXML
@@ -65,47 +86,73 @@ public class EditRecipeController {
 
     @FXML
     private void onSaveClicked() {
-
-        Recipe selectedRecipe = getSelectedRecipe();
-
         String title = titleField.getText();
-
         if (title == null || title.isBlank()) {
             showError("Title is required.");
             return;
         }
 
-        try {
-            if (RecipePersistence.recipeExists(title)) {
-                showError("A recipe with this title already exists.");
-                return;
-            }
-
-        } catch (Exception e) {
-            showError("An error occurred: " + e.getMessage());
-        }
-
-        User loggedInUser = SessionManager.getCurrentUser();
-
-        if (loggedInUser == null) {
-            showError("You are not logged in");
+        User user = SessionManager.getCurrentUser();
+        if (user == null) {
+            showError("You are not logged in.");
             return;
         }
 
-        Recipe recipe = new Recipe(
-                loggedInUser.getUserId(),
-                title,
-                descriptionField.getText(),
-                getSelectedSkillLevel(),
-                getSelectedYarnType(),
-                getSelectedNeedleSize(),
-                getSelectedProjectStatus());
-
         try {
-            RecipePersistence.updateRecipe(selectedRecipe.getRecipeId().toString(), recipe);
-            showInfo("Recipe successfully updated!");
+            if (isNewRecipe) {
+                if (RecipePersistence.recipeExists(title)) {
+                    showError("A recipe with this title already exists.");
+                    return;
+                }
+
+                Recipe newRecipe = new Recipe(
+                    user.getUserId(),
+                    title,
+                    descriptionField.getText(),
+                    getSelectedSkillLevel(),
+                    getSelectedYarnType(),
+                    getSelectedNeedleSize(),
+                    getSelectedProjectStatus()
+                );
+
+                RecipePersistence.addRecipe(newRecipe);
+                showInfo("Recipe successfully created!");
+            } else {
+                Recipe updated = new Recipe(
+                    currentRecipe.getRecipeId(),
+                    currentRecipe.getUserId(),
+                    title,
+                    descriptionField.getText(),
+                    getSelectedSkillLevel(),
+                    getSelectedYarnType(),
+                    getSelectedNeedleSize(),
+                    getSelectedProjectStatus()
+                );
+
+                RecipePersistence.updateRecipe(currentRecipe.getRecipeId().toString(), updated);
+                showInfo("Recipe successfully updated!");
+            }
+
+            goToMyRecipesView();
+
         } catch (Exception e) {
-            showError("An error occurred: " + e.getMessage());
+            showError("Error saving recipe: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void onBackClicked() {
+        goToMyRecipesView();
+    }
+
+    private void goToMyRecipesView() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("MyRecipes.fxml"));
+            Stage stage = (Stage) saveButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load recipe overview.");
         }
     }
 
@@ -122,55 +169,15 @@ public class EditRecipeController {
     private SkillLevel getSelectedSkillLevel() {
         String selected = difficultyComboBox.getValue();
         for (SkillLevel level : SkillLevel.values()) {
-            if (level.getDescription().equals(selected)) {
-                return level;
-            }
+            if (level.getDescription().equals(selected)) return level;
         }
         return null;
-    }
-
-    private ProjectStatus getSelectedProjectStatus() {
-        String selected = statusComboBox.getValue();
-        for (ProjectStatus status : ProjectStatus.values()) {
-            if (status.getDescription().equals(selected)) {
-                return status;
-            }
-        }
-        return null;
-    }
-
-    private Recipe selectedRecipe; 
-
-    public void setSelectedRecipe(Recipe recipe) {
-        this.selectedRecipe = new Recipe(
-                recipe.getRecipeId(),
-                recipe.getUserId(),
-                recipe.getTitle(),
-                recipe.getDescription(),
-                recipe.getSkillLevel(),
-                recipe.getYarnType(),
-                recipe.getNeedleSize(),
-                recipe.getProjectStatus());
-    }
-
-    public Recipe getSelectedRecipe() {
-        return new Recipe(
-                selectedRecipe.getRecipeId(),
-                selectedRecipe.getUserId(),
-                selectedRecipe.getTitle(),
-                selectedRecipe.getDescription(),
-                selectedRecipe.getSkillLevel(),
-                selectedRecipe.getYarnType(),
-                selectedRecipe.getNeedleSize(),
-                selectedRecipe.getProjectStatus());
     }
 
     private YarnType getSelectedYarnType() {
         String selected = yarnTypeComboBox.getValue();
         for (YarnType type : YarnType.values()) {
-            if (type.getLabel().equals(selected)) {
-                return type;
-            }
+            if (type.getLabel().equals(selected)) return type;
         }
         return null;
     }
@@ -178,9 +185,15 @@ public class EditRecipeController {
     private NeedleSize getSelectedNeedleSize() {
         String selected = needleSizeComboBox.getValue();
         for (NeedleSize size : NeedleSize.values()) {
-            if (size.getLabel().equals(selected)) {
-                return size;
-            }
+            if (size.getLabel().equals(selected)) return size;
+        }
+        return null;
+    }
+
+    private ProjectStatus getSelectedProjectStatus() {
+        String selected = statusComboBox.getValue();
+        for (ProjectStatus status : ProjectStatus.values()) {
+            if (status.getDescription().equals(selected)) return status;
         }
         return null;
     }
