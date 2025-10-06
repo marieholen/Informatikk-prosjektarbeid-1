@@ -100,7 +100,6 @@ public class EditRecipeController {
         statusComboBox.setValue(recipe.getProjectStatus().getDescription());
     }
 
-    // ===== PDF Upload (from your HEAD) =====
     @FXML
     private void handleUploadPdf(ActionEvent event) {
         FileChooser chooser = new FileChooser();
@@ -124,7 +123,9 @@ public class EditRecipeController {
         }
 
         try {
-            Path appDir = Paths.get(System.getProperty("user.dir"), "data", "pdfs");
+            Path appDir = Paths.get(System.getProperty("user.dir"), "..", "..", "data", "pdfs")
+                .normalize()
+                .toAbsolutePath();
             Files.createDirectories(appDir);
 
             String title = titleField.getText() == null ? "" : titleField.getText().trim();
@@ -157,7 +158,6 @@ public class EditRecipeController {
         return false;
     }
 
-    // ===== Save logic (from origin/main), with small safety checks =====
     @FXML
     private void onSaveClicked() {
         String title = titleField.getText();
