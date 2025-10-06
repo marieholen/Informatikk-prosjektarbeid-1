@@ -234,12 +234,17 @@ public class MyRecipesController {
 
     @FXML
     private void handleNewRecipe() {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/ui/EditRecipeView.fxml"));
-            btnNewrecipe.getScene().setRoot(root);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/EditRecipeView.fxml"));
+        Parent root = loader.load();
+
+        EditRecipeController controller = loader.getController();
+        controller.newRecipeMode(); // aktiver "ny oppskrift"-modus
+
+        btnNewrecipe.getScene().setRoot(root);
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 }
 
