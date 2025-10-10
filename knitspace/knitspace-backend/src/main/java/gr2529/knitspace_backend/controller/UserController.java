@@ -40,7 +40,7 @@ public class UserController {
      * @param user The user data
      * @return The created user in response code 201 (CREATED) if the username is unique, 409 (CONFLICT) if username already exists
      */
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {
             User newUser = userService.createUser(user.getUsername(), user.getPassword());
