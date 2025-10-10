@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane fx:id="mainContainer" xmlns="http://javafx.com/javafx/17" 
+           xmlns:fx="http://javafx.com/fxml/1"
+           prefWidth="640" 
+           prefHeight="480"
+           style="-fx-background-color:#f3f4f6;"
+           fx:controller="knitspace_frontend.LoginController"
+>
+    <!-- Center the card -->
+    <children>
+        <VBox fx:id="centerWrapper" alignment="CENTER" spacing="0">
+            <children>
+                <Pane fx:id="topSpacer" prefHeight="20"/> <!-- top breathing room -->
+                <VBox fx:id="cardWrapper" alignment="CENTER" spacing="18">
+                    <children>
+                        <!-- Card -->
+                        <VBox fx:id="loginCard" spacing="16" alignment="CENTER"
+                              maxWidth="360"
+                              style="-fx-background-color: white; -fx-background-radius: 14; -fx-padding: 28;">
+                            <effect>
+                                <DropShadow radius="16" offsetY="2" color="rgba(0,0,0,0.08)"/>
+                            </effect>
+
+                            <!-- Title -->
+                            <Label fx:id="appTitleLabel" text="KnitSpace"
+                                   style="-fx-font-size: 28; -fx-font-weight: 700; -fx-text-fill: #111827;"
+                                   alignment="CENTER"/>
+
+                            <!-- Inputs -->
+                            <VBox fx:id="inputContainer" spacing="10" fillWidth="true">
+                                <children>
+                                    <TextField fx:id="usernameField" promptText="Username"
+                                               prefHeight="40"
+                                               style="-fx-background-radius: 8; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-padding: 0 10 0 10;"/>
+                                    <PasswordField fx:id="passwordField" promptText="Password"
+                                                   prefHeight="40"
+                                                   style="-fx-background-radius: 8; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-radius: 8; -fx-padding: 0 10 0 10;"/>
+                                </children>
+                            </VBox>
+
+                            <!-- Log in button -->
+                            <Button fx:id="loginButton" text="Log in"
+                                    prefHeight="44" maxWidth="Infinity"
+                                    style="-fx-background-color: #9ec4d9; -fx-text-fill: white; -fx-font-weight: 600; -fx-background-radius: 8;"/>
+                            
+                            <!-- Create account link -->
+                            <Hyperlink fx:id="createAccountLink" text="Create account"
+                                       focusTraversable="false"
+                                       style="-fx-text-fill: #111827; -fx-underline: false; -fx-padding: 0;"/>
+                        </VBox>
+                    </children>
+                </VBox>
+                <Pane fx:id="bottomSpacer" prefHeight="20"/> <!-- bottom breathing room -->
+            </children>
+        </VBox>
+    </children>
+</StackPane>
