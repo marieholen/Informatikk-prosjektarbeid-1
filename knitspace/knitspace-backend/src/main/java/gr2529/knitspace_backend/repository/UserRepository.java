@@ -24,7 +24,7 @@ import java.util.UUID;
 public class UserRepository {
     
     private final ObjectMapper mapper = new ObjectMapper();
-    private final File file = new File("../../data/users.json");
+    private final File file = new File("data/users.json");
 
     /**
      * Find all users
