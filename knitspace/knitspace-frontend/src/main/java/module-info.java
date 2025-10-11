@@ -1,4 +1,4 @@
-module knitspace_frontend {
+module knitspace {
   requires javafx.controls;
   requires javafx.fxml;
   requires javafx.graphics;
@@ -9,6 +9,6 @@ module knitspace_frontend {
   requires com.fasterxml.jackson.core;
   requires com.fasterxml.jackson.annotation;
 
-  opens knitspace_frontend to javafx.graphics, javafx.fxml;
-  opens knitspace_frontend.model to com.fasterxml.jackson.databind;
+  opens knitspace to javafx.graphics, javafx.fxml;
+  opens knitspace.model to com.fasterxml.jackson.databind;
 }

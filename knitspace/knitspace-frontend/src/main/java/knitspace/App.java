@@ -1,4 +1,4 @@
-package knitspace_frontend;
+package knitspace;
 
 import java.io.IOException;
 import javafx.application.Application;
@@ -14,7 +14,9 @@ public class App extends Application {
 
   @Override
   public void start(Stage stage) throws IOException {
-    FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/knitspace_frontend/Login.fxml"));
+    FXMLLoader fxmlLoader = new FXMLLoader(
+        this.getClass().getResource("/knitspace_frontend/Login.fxml")
+    );
     Parent parent = fxmlLoader.load();
     stage.setScene(new Scene(parent));
     stage.show();
