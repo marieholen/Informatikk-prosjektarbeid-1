@@ -15,6 +15,9 @@ public class LoginController {
     private Hyperlink createAccountLink;
 
     @FXML
+    private Button loginButton;
+
+    @FXML
     private void initialize() {
         createAccountLink.setOnAction(this::handleCreateAccount);
     }
