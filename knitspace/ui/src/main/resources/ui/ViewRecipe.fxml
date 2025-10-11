@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 
 
-<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.ViewRecipeController" prefWidth="600" prefHeight="450"
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.ViewRecipeController" prefWidth="750" prefHeight="450"
             style="-fx-background-color: white; -fx-background-radius: 20;">
     <children>
         <VBox fx:id="contentContainer" spacing="16" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30">
@@ -59,6 +59,8 @@
                         <Button fx:id="backButton" text="Back to Recipes" onAction="#handleBackButtonClick"
                                 style="-fx-background-color: #E6D8C3; -fx-background-radius: 10; -fx-font-size: 20px; -fx-pref-width: 250px; -fx-pref-height: 45px;"
                                 maxWidth="250"/>
+                        <Button fx:id="openPDF" text="Open PDF" onAction="#handleOpenPDF"
+                                style="-fx-background-color: #e0e0e0; -fx-text-fill: black; -fx-background-radius: 10; -fx-font-size: 20px; -fx-pref-width: 120px; -fx-pref-height: 45px;" />
                     </children>
                 </HBox>
             </children>
