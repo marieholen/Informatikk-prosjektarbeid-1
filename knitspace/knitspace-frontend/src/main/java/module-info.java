@@ -3,5 +3,12 @@ module knitspace_frontend {
   requires javafx.fxml;
   requires javafx.graphics;
 
+  requires java.net.http;
+
+  requires com.fasterxml.jackson.databind;
+  requires com.fasterxml.jackson.core;
+  requires com.fasterxml.jackson.annotation;
+
   opens knitspace_frontend to javafx.graphics, javafx.fxml;
+  opens knitspace_frontend.model to com.fasterxml.jackson.databind;
 }
