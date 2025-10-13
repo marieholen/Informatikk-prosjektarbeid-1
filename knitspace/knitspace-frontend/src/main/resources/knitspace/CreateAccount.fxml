@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml" prefWidth="400" prefHeight="350" fx:controller="knitspace_frontend.CreateAccountController">
+<AnchorPane fx:id="mainPane" xmlns:fx="http://javafx.com/fxml" prefWidth="400" prefHeight="350" fx:controller="knitspace.CreateAccountController">
     <children>
         <VBox fx:id="formContainer" spacing="12" alignment="CENTER" AnchorPane.topAnchor="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20">
             <!-- Tittel -->

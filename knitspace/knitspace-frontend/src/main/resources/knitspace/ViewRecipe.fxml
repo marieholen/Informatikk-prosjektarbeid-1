@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Region?>
 
 
-<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="knitspace_frontend.ViewRecipeController" prefWidth="600" prefHeight="450"
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="knitspace.ViewRecipeController" prefWidth="600" prefHeight="450"
             style="-fx-background-color: white; -fx-background-radius: 20;">
     <children>
         <VBox fx:id="contentContainer" spacing="16" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="30">

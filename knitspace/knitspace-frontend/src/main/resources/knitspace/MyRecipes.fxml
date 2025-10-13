@@ -13,7 +13,7 @@
 <?import javafx.scene.control.ScrollPane?>
 
 
-<BorderPane prefHeight="600" prefWidth="950" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="knitspace_frontend.MyRecipesController">
+<BorderPane prefHeight="600" prefWidth="950" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="knitspace.MyRecipesController">
 
     <!-- top: title & logout button -->
     <top>

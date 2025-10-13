@@ -10,7 +10,7 @@
            prefWidth="640" 
            prefHeight="480"
            style="-fx-background-color:#f3f4f6;"
-           fx:controller="knitspace_frontend.LoginController"
+           fx:controller="knitspace.LoginController"
 >
     <!-- Center the card -->
     <children>

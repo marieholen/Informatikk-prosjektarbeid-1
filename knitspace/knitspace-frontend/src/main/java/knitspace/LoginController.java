@@ -37,7 +37,7 @@ public class LoginController {
   private void goToCreateAccount() throws IOException {
     Stage stage = (Stage) loginButton.getScene().getWindow();
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-        "/knitspace_frontend/CreateAccount.fxml"));
+        "/knitspace/CreateAccount.fxml"));
     Parent root = fxmlLoader.load();
 
     Scene scene = new Scene(root);
