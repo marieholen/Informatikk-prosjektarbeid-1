@@ -33,6 +33,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import persistency.RecipePersistence;
 
+/**
+ * Controller class for the MyRecipe view.
+ */
 public class MyRecipesController {
 
     private static final double CARD_SPACING = 5.0;
@@ -50,7 +53,12 @@ public class MyRecipesController {
     @FXML private Button btnNewrecipe;
     @FXML List<Recipe> allRecipes = new ArrayList<>();
 
-
+    /**
+     * Initilize the controller.
+     * 
+     * Calls {@code setupScrollPane()}, {@code setupFilters()} and {@code loadRecipes()} to configure the scroll pane, set up filters and load recipes.
+     * Also applies initial filtrering and styling.
+     */
     @FXML
     public void initialize() {
         setupScrollPane();
@@ -64,11 +72,17 @@ public class MyRecipesController {
         });
     }
 
+    /**
+     * Configures the scroll pane so that the content fits both vertically and horizontally.
+     */
     private void setupScrollPane() {
         recipesScrollPane.setFitToHeight(true);
         recipesScrollPane.setFitToWidth(true);
     }
-
+    
+    /**
+     * Sets up all filter ComboBoces and attaches listeners to automatically update the recipe list when filters change.
+     */
     private void setupFilters() {
         statusFilter.getItems().add(null);
         statusFilter.getItems().addAll(ProjectStatus.values());
@@ -88,6 +102,9 @@ public class MyRecipesController {
         needleFilter.setOnAction(e -> applyFilters());
     }
 
+    /**
+     * Loads alle recipes from RecipePersistence, and displays only those that belong to the currently logged-in user.
+     */
     private void loadRecipes() {
         try {
             allRecipes = RecipePersistence.loadRecipes();
@@ -101,6 +118,9 @@ public class MyRecipesController {
         }
     }
 
+    /**
+     * Applies the selected filters and search criteria to the recipe list, and displaying only the matching recipes.
+     */
     private void applyFilters() {
         recipesVBox.getChildren().clear();
 
@@ -122,6 +142,13 @@ public class MyRecipesController {
         }
     }
 
+    /**
+     * Checks if a recipe matches the selected filters and search query.
+     * 
+     * @param recipe the recipe to test
+     * @return {@code true} if the recipe matches all the filters that are activated and search criteria,
+     * @return {@code false} otherwhise
+     */
     private boolean matchesFilters(Recipe recipe) {
         if (statusFilter.getValue() != null && recipe.getProjectStatus() != statusFilter.getValue()) {
             return false;
@@ -144,7 +171,12 @@ public class MyRecipesController {
         return true;
     }
     
-
+    /**
+     * Creates a styled recipe card. Containing recipe details and a new button called "Details".
+     * 
+     * @param recipe the recipe to display.
+     * @return a VBox representing the recipe card.
+     */
     private VBox createRecipeCard(Recipe recipe) {
         final VBox card = new VBox(CARD_SPACING);
         card.setPadding(new Insets(CARD_PADDING));
@@ -196,6 +228,12 @@ public class MyRecipesController {
         return card;
     }
 
+    /**
+     * Opens the ViewRecipe view for the selected recipe.
+     * 
+     * @param event the trigged actiuon event.
+     * @param recipe the selected recipe to display the details for.
+     */
     private void openRecipeDetails(ActionEvent event, Recipe recipe) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewRecipe.fxml"));
         try {
@@ -213,6 +251,9 @@ public class MyRecipesController {
         }
     }
 
+    /**
+     * Logs out the current user and navigates to the Login view.
+     */
     @FXML
     private void handleLogout() {
         try {
@@ -232,6 +273,9 @@ public class MyRecipesController {
         }
     }
 
+    /**
+     * Opens EditRecipeView and activates the new recipe mode with {@code newRecipeMode()}.
+     */
     @FXML
     private void handleNewRecipe() {
     try {
@@ -239,7 +283,7 @@ public class MyRecipesController {
         Parent root = loader.load();
 
         EditRecipeController controller = loader.getController();
-        controller.newRecipeMode(); // aktiver "ny oppskrift"-modus
+        controller.newRecipeMode();
 
         btnNewrecipe.getScene().setRoot(root);
     } catch (Exception e) {
