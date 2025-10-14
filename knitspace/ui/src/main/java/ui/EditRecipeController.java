@@ -31,7 +31,7 @@ import javafx.stage.Stage;
 import persistency.RecipePersistence;
 
 /**
- * 
+ * Controller class for the EditRecipe view.
  */
 public class EditRecipeController {
 
