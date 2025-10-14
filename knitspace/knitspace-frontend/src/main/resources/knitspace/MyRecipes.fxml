@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ScrollPane?>
+
+
+<BorderPane prefHeight="600" prefWidth="950" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="knitspace.MyRecipesController">
+
+    <!-- top: title & logout button -->
+    <top>
+        <HBox fx:id="topBar" alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #f5f5f5;">
+            <padding>
+                <Insets bottom="15" left="20" right="20" top="15" />
+            </padding>
+            <Label fx:id="titleLabel" text="KnitSpace">
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+            <padding>
+               <Insets right="10.0" />
+            </padding>
+            <font>
+               <Font name="Arial Hebrew Scholar Bold" size="55.0" />
+            </font></Label>
+            <Pane fx:id="spacer" HBox.hgrow="ALWAYS" /> <!-- spacer -->
+            <Button fx:id="btnLogout" style="-fx-background-color: #E6D8C3;" text="Log out" onAction="#handleLogout">
+            <padding>
+               <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+            </padding>
+            <font>
+               <Font size="16.0" />
+            </font></Button>
+        </HBox>
+    </top>
+
+    <!-- left: search and filter recipes -->
+    <left>
+        <VBox fx:id="leftPanel" alignment="TOP_LEFT" prefWidth="230.0" spacing="12" style="-fx-background-color: #ffffff;">
+            <padding>
+                <Insets bottom="18" left="12" right="12" top="18" />
+            </padding>
+
+            <TextField fx:id="searchField" promptText="Search...">
+            <VBox.margin>
+               <Insets top="5.0" />
+            </VBox.margin></TextField>
+
+            <Label fx:id="filterLabel" text="Filter">
+            <font>
+               <Font name="Arial Hebrew" size="20.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin></Label>
+            <Label fx:id="skillLevelLabel" text="Skill level:" />
+            <ComboBox fx:id="skillFilter" promptText="All">
+            <VBox.margin>
+               <Insets />
+            </VBox.margin></ComboBox>
+
+            <Label fx:id="yarnTypeLabel" text="Yarn type:" />
+            <ComboBox fx:id="yarnFilter" promptText="All" />
+
+            <Label fx:id="needleSizeLabel" text="Needle Size:" />
+            <ComboBox fx:id="needleFilter" promptText="All" />
+
+            <Label fx:id="statusLabel" text="Status:" />
+            <ComboBox fx:id="statusFilter" promptText="All" />
+
+            <Pane fx:id="bottomSpacer" VBox.vgrow="ALWAYS" /> 
+            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE" onAction="#handleNewRecipe">
+            <font>
+               <Font name="Arial Hebrew Scholar Bold" size="18.0" />
+            </font>
+            <padding>
+               <Insets bottom="8.0" left="50.0" right="50.0" top="8.0" />
+            </padding></Button>
+         <BorderPane.margin>
+            <Insets bottom="15.0" left="15.0" right="10.0" />
+         </BorderPane.margin>
+        </VBox>
+    </left>
+
+    <!-- center: recipes scrollpane -->
+    <center >
+        <VBox fx:id="centerPanel" spacing="8" style="-fx-background-color: #ffffff;">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="18" />
+        </padding>
+
+        <Label fx:id="myRecipesLabel" text="My recipes">
+            <font>
+                <Font name="Arial Hebrew Scholar" size="36.0" />
+            </font>
+        </Label>
+
+        <!-- container -->
+
+        <ScrollPane fx:id="recipesScrollPane" fitToWidth="true" style="-fx-background-color: #ffffff;" VBox.vgrow="ALWAYS">
+            <content>
+                <VBox fx:id="recipesVBox" spacing="10" style="-fx-background-color: #ffffff;">
+                </VBox>
+            </content>
+        </ScrollPane>
+
+
+        <BorderPane.margin>
+            <Insets bottom="15.0" left="10.0" right="15.0" />
+        </BorderPane.margin>
+    </VBox>
+    </center>
+
+</BorderPane>
+
