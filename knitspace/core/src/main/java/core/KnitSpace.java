@@ -6,14 +6,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
-
 /**
- * Core logic.
+ * Handles basic file creation logic.
  */
 @SuppressWarnings({"S4276", "java:S4276"})
 public class KnitSpace {
 
+  /** 
+   * Retrieves the filepath for {@code recipe.txt} and creates a file in that filepath.
+   * @return "File created successfully!" if file is created or "File already exists!" if file already exists
+   * @throws IOException if something goes wrong in the process
+   */
   public static String createFile() {
     
     try {
