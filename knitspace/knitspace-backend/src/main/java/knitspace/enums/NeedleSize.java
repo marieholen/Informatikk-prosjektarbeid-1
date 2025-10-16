@@ -25,7 +25,7 @@ public enum NeedleSize {
   private final String label;
 
   /**
-   * Constructs a {@code NeedleSize} with the specified label
+   * Constructs a {@code NeedleSize} with the specified label.
    *
    * @param label a short descriptive label for the needle size (size in mm)
    */

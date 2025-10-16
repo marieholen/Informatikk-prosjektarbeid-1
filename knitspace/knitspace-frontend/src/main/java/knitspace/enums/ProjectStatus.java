@@ -1,32 +1,34 @@
-package core.enums;
+package knitspace.enums;
 
+/**
+ * Represents the different statuses a knitting project can have.
+ */
 public enum ProjectStatus {
-    PLANNED("Planned", "Planned - not started yet"),
-    IN_PROGRESS("In Progress", "In Progress - currently knitting"),
-    PAUSED("Paused", "Paused - project on hold"),
-    FINISHED("Finished", "Finished - project completed!"),
-    ABANDONED("Abondoned", "Abandoned - unraveled and abandoned (for now...)");
+  PLANNED("Planned", "Planned - not started yet"),
+  IN_PROGRESS("In Progress", "In Progress - currently knitting"),
+  PAUSED("Paused", "Paused - project on hold"),
+  FINISHED("Finished", "Finished - project completed!"),
+  ABANDONED("Abondoned", "Abandoned - unraveled and abandoned (for now...)");
 
+  private final String label;
+  private final String description;
 
-    private final String label;
-    private final String description;
+  ProjectStatus(String label, String description) {
+    this.label = label;
+    this.description = description;
+  }
 
-    ProjectStatus(String label, String description) {
-        this.label = label;
-        this.description = description;
-    }
+  public String getLabel() {
+    return this.label;
+  }
 
-    public String getLabel() {
-        return this.label;
-    }
+  public String getDescription() {
+    return this.description;
+  }
 
-    public String getDescription() {
-        return this.description;
-    }
-
-    @Override
-    public String toString() {
-        return label;
-    }
+  @Override
+  public String toString() {
+    return label;
+  }
 
 }

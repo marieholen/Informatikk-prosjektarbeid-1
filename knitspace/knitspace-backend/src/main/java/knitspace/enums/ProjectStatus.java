@@ -1,5 +1,8 @@
 package knitspace.enums;
 
+/**
+ * Represents the different statuses a knitting project can have.
+ */
 public enum ProjectStatus {
   PLANNED("Planned", "Planned - not started yet"),
   IN_PROGRESS("In Progress", "In Progress - currently knitting"),
