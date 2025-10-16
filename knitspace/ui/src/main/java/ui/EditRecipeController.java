@@ -30,6 +30,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import persistency.RecipePersistence;
 
+/**
+ * Controller class for the EditRecipe view.
+ */
 public class EditRecipeController {
 
     @FXML private TextField titleField;
@@ -42,11 +45,14 @@ public class EditRecipeController {
     @FXML private Button saveButton;
     @FXML private Button backButton;
 
-    // State
     private Recipe currentRecipe;
     private boolean isNewRecipe = false;
     private Path storedPdfPath; // optional: persist later if you add this to Recipe or another store
 
+    /**
+     * Initalize the controller.
+     * Fills the combo boxes with values from {@link SkillLevel}, {@link YarnType}, {@link NeedleSize}, and {@link ProjectStatus} enums.
+     */
     @FXML
     private void initialize() {
         for (SkillLevel level : SkillLevel.values()) {
@@ -63,7 +69,10 @@ public class EditRecipeController {
         }
     }
 
-    /** Called when opening the screen to create a brand new recipe */
+    /** 
+     * Create a brand new recipe.
+     * Sets up the screen for creating a new recipe. Clears all fields and resets UI state.
+     */
     public void newRecipeMode() {
         isNewRecipe = true;
         currentRecipe = null;
@@ -78,7 +87,12 @@ public class EditRecipeController {
         if (uploadPdfButton != null) uploadPdfButton.setText("Upload PDF");
     }
 
-    /** Called when opening the screen to edit an existing recipe */
+    /** 
+     * Edit an existing recipe.
+     * Sets the recipe to be edited and pre-fills the form fields with the already excisting data.
+     * 
+     * @param recipe the recipe to edit.
+     */
     public void setSelectedRecipe(Recipe recipe) {
         isNewRecipe = false;
         this.currentRecipe = new Recipe(
@@ -100,6 +114,12 @@ public class EditRecipeController {
         statusComboBox.setValue(recipe.getProjectStatus().getDescription());
     }
 
+    /**
+     * Handle uploadiung of a recipe PDF file.
+     * opens a FileChooser, validates the file, and copies the file to the application directory.
+     * 
+     * @param event the action event when clicking the upload PDF button.
+     */
     @FXML
     private void handleUploadPdf(ActionEvent event) {
         FileChooser chooser = new FileChooser();
@@ -147,7 +167,9 @@ public class EditRecipeController {
         }
     }
 
-    // Minimal file signature check for PDFs
+    /**
+     * Minimal file signature check for PDFs.
+     */
     private boolean looksLikePdf(Path path) {
         try (InputStream in = Files.newInputStream(path)) {
             byte[] header = new byte[5];
@@ -158,6 +180,11 @@ public class EditRecipeController {
         return false;
     }
 
+    /**
+     * Called when the save button is clicked. 
+     * Ensure that all the selections are made to prevent null enum.
+     * Validates user inputs, creates or updates recipe, and navigates back to MyRecipe view.
+     */
     @FXML
     private void onSaveClicked() {
         String title = titleField.getText();
@@ -166,7 +193,6 @@ public class EditRecipeController {
             return;
         }
 
-        // Make sure selections are made to avoid null enums
         if (difficultyComboBox.getValue() == null ||
             yarnTypeComboBox.getValue() == null ||
             needleSizeComboBox.getValue() == null ||
@@ -228,14 +254,20 @@ public class EditRecipeController {
         }
     }
 
+    /**
+     * Navigates back to MyRecipes view when back button is clicked.
+     */
     @FXML
     private void onBackClicked() {
         goToMyRecipesView();
     }
 
+    /**
+     * Loads and displays the MyRecipes view when function is called.
+     * Shows error alert "Failed to load recipe overview." if loading fails.
+     */
     private void goToMyRecipesView() {
         try {
-            // Use leading slash if your FXML is under resources/ui
             Parent root = FXMLLoader.load(getClass().getResource("/ui/MyRecipes.fxml"));
             Stage stage = (Stage) saveButton.getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -245,15 +277,29 @@ public class EditRecipeController {
         }
     }
 
-    // Helpers
+    /**
+     * Displays an error alert whith the given message.
+     * 
+     * @param msg the message to show.
+     */
     private void showError(String msg) {
         new Alert(Alert.AlertType.ERROR, msg).showAndWait();
     }
 
+    /**
+     * Displays an information alert whith the given message.
+     * 
+     * @param msg the message to show.
+     */
     private void showInfo(String msg) {
         new Alert(Alert.AlertType.INFORMATION, msg).showAndWait();
     }
 
+    /**
+     * Returns the {@link Skillevel} currently selected in the combo box.
+     * 
+     * @return the selected {@link Skillevel}, or {@code null} if none is selected.
+     */
     private SkillLevel getSelectedSkillLevel() {
         String selected = difficultyComboBox.getValue();
         for (SkillLevel level : SkillLevel.values()) {
@@ -262,6 +308,11 @@ public class EditRecipeController {
         return null;
     }
 
+    /**
+     * Returns the {@link YarnType} currently selected in the combo box.
+     * 
+     * @return the selected {@link YarnType}, or {@code null} if none is selected.
+     */
     private YarnType getSelectedYarnType() {
         String selected = yarnTypeComboBox.getValue();
         for (YarnType type : YarnType.values()) {
@@ -270,6 +321,11 @@ public class EditRecipeController {
         return null;
     }
 
+    /**
+     * Returns the {@link NeedleSize} currently selected in the combo box.
+     * 
+     * @return the selected {@link NeedleSize}, or {@code null} if none is selected.
+     */
     private NeedleSize getSelectedNeedleSize() {
         String selected = needleSizeComboBox.getValue();
         for (NeedleSize size : NeedleSize.values()) {
@@ -278,6 +334,11 @@ public class EditRecipeController {
         return null;
     }
 
+    /**
+     * Returns the {@link ProjectStatus} currently selected in the combo box.
+     * 
+     * @return the selected {@link ProjectStatus}, or {@code null} if none is selected.
+     */
     private ProjectStatus getSelectedProjectStatus() {
         String selected = statusComboBox.getValue();
         for (ProjectStatus status : ProjectStatus.values()) {
