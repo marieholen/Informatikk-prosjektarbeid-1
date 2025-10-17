@@ -1,7 +1,9 @@
 package knitspace;
 
+import java.util.ArrayList;
 import java.util.List;
 import knitspace.client.RecipeClient;
+import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
 import knitspace.model.User;
@@ -37,8 +39,14 @@ public class MyRecipesController {
    */
   private List<Recipe> loadRecipes() {
     User currentUser = SessionManager.getCurrentUser();
-    List<Recipe> recipesForUser = recipeClient.getRecipesForUser(currentUser);
-    return applyFilters(recipesForUser);
+
+    try {
+      List<Recipe> recipesForUser = recipeClient.getRecipesForUser(currentUser);
+      return applyFilters(recipesForUser);
+    } catch (ApiException e) {
+      showAlert("Client Error", "Could not load recipes: " + e.getMessage());
+      return new ArrayList<>();
+    }
   }
 
   /**
@@ -49,5 +57,20 @@ public class MyRecipesController {
    */
   private List<Recipe> applyFilters(List<Recipe> recipes) {
     return recipes;
+  }
+
+  /**
+   * Shows an alert with the given title and message. Often used to show errors.
+   *
+   * @param title   The title of the alert.
+   * @param message The message to display in the alert.
+   */
+  private void showAlert(String title, String message) {
+    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+        javafx.scene.control.Alert.AlertType.ERROR);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
   }
 }

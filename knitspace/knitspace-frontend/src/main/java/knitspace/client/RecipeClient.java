@@ -4,6 +4,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+
+import knitspace.exception.ApiException;
 import knitspace.model.Recipe;
 import knitspace.model.User;
 
@@ -20,7 +22,7 @@ public class RecipeClient extends ApiClient {
    * @param user The user whose recipes to fetch.
    * @return List of recipes for the user.
    */
-  public List<Recipe> getRecipesForUser(User user) {
+  public List<Recipe> getRecipesForUser(User user) throws ApiException {
     try {
       HttpRequest request = createRequestBuilder(
           RECIPES_ENDPOINT + "/user/" + user.userId().toString()).GET().build();
@@ -37,8 +39,7 @@ public class RecipeClient extends ApiClient {
       }
       return new ArrayList<>(java.util.Arrays.asList(recipes));
     } catch (Exception e) {
-      System.err.println("Failed to fetch recipes for user: " + e.getMessage());
+      throw new ApiException("Failed to fetch recipes for user: " + e.getMessage(), e);
     }
-    return new ArrayList<>();
   }
 }
