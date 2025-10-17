@@ -11,6 +11,24 @@ import knitspace.model.User;
  */
 public class MyRecipesController {
 
+  private final RecipeClient recipeClient;
+
+  /**
+   * Constructor for MyRecipesController.
+   */
+  public MyRecipesController() {
+    this.recipeClient = new RecipeClient();
+  }
+
+  /**
+   * Constructor used in testing when mocking.
+   *
+   * @param recipeClient The RecipeClient to use for API calls
+   */
+  public MyRecipesController(RecipeClient recipeClient) {
+    this.recipeClient = recipeClient;
+  }
+
   /**
    * Loads all the recipes for the current user from by using an API call from
    * RecipeClient.
@@ -19,7 +37,7 @@ public class MyRecipesController {
    */
   private List<Recipe> loadRecipes() {
     User currentUser = SessionManager.getCurrentUser();
-    List<Recipe> recipesForUser = RecipeClient.getRecipesForUser(currentUser);
+    List<Recipe> recipesForUser = recipeClient.getRecipesForUser(currentUser);
     return applyFilters(recipesForUser);
   }
 

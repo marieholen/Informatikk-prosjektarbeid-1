@@ -20,7 +20,7 @@ public class RecipeClient extends ApiClient {
    * @param user The user whose recipes to fetch.
    * @return List of recipes for the user.
    */
-  public static List<Recipe> getRecipesForUser(User user) {
+  public List<Recipe> getRecipesForUser(User user) {
     try {
       HttpRequest request = createRequestBuilder(
           RECIPES_ENDPOINT + "/user/" + user.userId().toString()).GET().build();
