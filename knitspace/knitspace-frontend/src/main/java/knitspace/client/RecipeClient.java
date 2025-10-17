@@ -4,7 +4,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
-
 import knitspace.exception.ApiException;
 import knitspace.model.Recipe;
 import knitspace.model.User;
