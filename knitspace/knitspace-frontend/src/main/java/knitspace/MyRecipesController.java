@@ -2,6 +2,7 @@ package knitspace;
 
 import java.util.List;
 import knitspace.client.RecipeClient;
+import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
 import knitspace.model.User;
 
