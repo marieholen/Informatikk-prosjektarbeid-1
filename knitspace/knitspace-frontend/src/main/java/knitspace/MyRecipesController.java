@@ -32,5 +32,11 @@ public class MyRecipesController {
         }
     }
 
+
+    @FXML
+    private void handleLogout() {
+        System.out.println("Logout clicked (not implemented)");
+    }
+
 }
 
