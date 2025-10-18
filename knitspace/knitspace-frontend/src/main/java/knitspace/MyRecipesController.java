@@ -9,11 +9,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Controller for MyRecipes.fxml.
+ * Controller for {@code MyRecipes.fxml}.
+ * Handles user interaction on the "My recipes" page.  
  */
 public class MyRecipesController {
     
 
+    /**
+     * Handles the "New Recipe" button click by redirecting to the 
+     * {@code EditRecipeView.fxml} page to create a new recipe. 
+     * 
+     * @param event {@link ActionEvent} triggered by the cutton press
+     */
     @FXML
     private void handleNewRecipe(ActionEvent event) {
 
@@ -32,7 +39,9 @@ public class MyRecipesController {
         }
     }
 
-
+    /**
+     * Handles the "Logout" button click. 
+     */
     @FXML
     private void handleLogout() {
         System.out.println("Logout clicked (not implemented)");
