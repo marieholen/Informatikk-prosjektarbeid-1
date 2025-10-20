@@ -31,8 +31,8 @@ class MyRecipesControllerTest {
         User user = new User("user1", "tester", "password");
         SessionManager.setCurrentUser(user);
 
-        Recipe r1 = new Recipe("r1", "Title1", "Desc1", null, null, null, null, "user1");
-        Recipe r2 = new Recipe("r2", "Title2", "Desc2", null, null, null, null, "user1");
+        Recipe r1 = new Recipe("r1", "user1", "Title1", "Desc1", null, null, null, null);
+        Recipe r2 = new Recipe("r2", "user1", "Title2", "Desc2", null, null, null, null);
 
         List<Recipe> expected = List.of(r1, r2);
 
