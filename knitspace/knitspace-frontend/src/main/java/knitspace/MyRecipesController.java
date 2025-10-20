@@ -2,6 +2,8 @@ package knitspace;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import knitspace.client.RecipeClient;
 import knitspace.exception.ApiException;
@@ -30,6 +32,21 @@ public class MyRecipesController {
    */
   public MyRecipesController(RecipeClient recipeClient) {
     this.recipeClient = recipeClient;
+  }
+
+  @FXML
+  private void initialize() {
+    List<Recipe> recipes = loadRecipes();
+  }
+
+  @FXML
+  private void handleLogout() {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  @FXML
+  private void handleNewRecipe() {
+    throw new UnsupportedOperationException("Not implemented yet");
   }
 
   /**
