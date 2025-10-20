@@ -2,7 +2,6 @@ package knitspace;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import knitspace.client.RecipeClient;
