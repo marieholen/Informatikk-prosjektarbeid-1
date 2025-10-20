@@ -2,6 +2,7 @@ package knitspace;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.control.Alert;
 import knitspace.client.RecipeClient;
 import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
@@ -66,8 +67,7 @@ public class MyRecipesController {
    * @param message The message to display in the alert.
    */
   private void showAlert(String title, String message) {
-    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-        javafx.scene.control.Alert.AlertType.ERROR);
+    Alert alert = new Alert(Alert.AlertType.ERROR);
     alert.setTitle(title);
     alert.setHeaderText(null);
     alert.setContentText(message);

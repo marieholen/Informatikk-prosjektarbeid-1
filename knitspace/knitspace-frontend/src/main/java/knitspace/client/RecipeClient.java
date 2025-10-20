@@ -13,7 +13,7 @@ import knitspace.model.User;
  * Handles READ operation of CRUD for recipes.
  */
 public class RecipeClient extends ApiClient {
-  private static final String RECIPES_ENDPOINT = "api/recipes";
+  private static final String RECIPES_ENDPOINT = "/api/recipes";
 
   /**
    * Fetches all recipes for a given user.
