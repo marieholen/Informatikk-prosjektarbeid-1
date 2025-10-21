@@ -1,14 +1,19 @@
 package knitspace;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import java.io.IOException;
+import knitspace.enums.*;
+
+import knitspace.model.Recipe;
+import javafx.event.ActionEvent;
+import javafx.scene.Parent; 
 
 /**
  * Controller for Viewrecipe.fxml.
@@ -16,55 +21,68 @@ import javafx.stage.Stage;
  */
 public class ViewRecipeController {
     @FXML
-    private Button editButton;
+    Button editButton;
+    @FXML
+    private Label titleLabel;
+    @FXML
+    private Label descriptionLabel;
+    @FXML
+    private Label skillLevelLabel;
+    @FXML
+    private Label yarnLabel;
+    @FXML
+    private Label needleLabel;
+    @FXML
+    private Label statusLabel; 
+    
+    private Recipe selectedRecipe;
 
     /**
      * Initialize the controller and set up event handlers.
      */
     @FXML
     private void initialize() {
-        editButton.setOnAction(this::handleEditButtonClick);
+        editButton.setOnAction(e -> handleEditButtonClick());
     }
 
     /**
-     * Handle the Edit Recipe button click.
+     * Set and load the recipe details into the view.
      * 
-     * @param event the ActionEvent triggered by clicking the button.
+     * @param recipe the Recipe object to load data from.
      */
-    @FXML
-    private void handleEditButtonClick(ActionEvent event) {
-        try {
-            goToEditRecipe((Node) event.getSource(), "ViewRecipe");
-        } catch (Exception e) {
-            showAlert("Navigation error", "Could not open the EditRecipe page." + e.getMessage());
-        }
+    public void setAndLoadRecipe(Recipe recipe) {
+        this.selectedRecipe = recipe;
+
+        titleLabel.setText(recipe.title());
+        descriptionLabel.setText(recipe.description());
+        skillLevelLabel.setText(recipe.skillLevel().getDescription());
+        yarnLabel.setText(recipe.yarnType().getLabel());
+        needleLabel.setText(recipe.needleSize().getLabel());
+        statusLabel.setText(recipe.projectStatus().getDescription());
     }
 
+
     /**
-     * Navigate to the EditRecipeView page.
-     * 
-     * @param anyNodeInCurrentScene any Node from the current scene to get the Stage.
+     * Handle the Edit button click event.
+     * Loads the EditRecipeView and passes the selected recipe to it.
      */
     @FXML
-    public void goToEditRecipe(Node anyNodeInCurrentScene, String source) {
+    private void handleEditButtonClick() {
         try {
-            if (anyNodeInCurrentScene == null || anyNodeInCurrentScene.getScene() == null){
-                throw new IllegalArgumentException("Node cannot be null");
-            }
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/EditRecipeView.fxml"));
-            Scene scene = new Scene(loader.load());
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EditRecipeView.fxml"));
+            Parent root = fxmlLoader.load();
 
-            EditRecipeController controller = loader.getController();
-            controller.setSource(source);
+            EditRecipeController editRecipeController = fxmlLoader.getController();
+            editRecipeController.loadFromViewRecipe(selectedRecipe);
 
-            Stage stage = (Stage) anyNodeInCurrentScene.getScene().getWindow();
-            stage.setScene(scene);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Navigation error", "Could not open the EditRecipeView page.");
-        }
-    } 
+            Stage stage = (Stage) editButton.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+            System.out.println("editButton clicked");
+        } catch (IOException e) {
+            showAlert("Error", "Error loading EditRecipeView: " + e.getMessage());
+        };
+    }
     
     /**
      * Show an error alert dialog.
@@ -73,14 +91,36 @@ public class ViewRecipeController {
      * @param message the message to display
      */
     @FXML
-    private void showAlert(String title, String message) {
+    public void showAlert(String title, String message) {
         Platform.runLater(() -> {
-            Alert alert = new javafx.scene.control.Alert(Alert.AlertType.ERROR);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle(title);
             alert.setHeaderText(null);
             alert.setContentText(message);
             alert.showAndWait();
         });
+    }
+
+    /**
+     * Getters for testing purposes.
+     */
+    public Label getTitleLabel() {
+        return titleLabel;
+    }
+    public Label getDescriptionLabel() {
+        return descriptionLabel;
+    }
+    public Label getSkillLevelLabel() {
+        return skillLevelLabel;
+    }
+    public Label getYarnLabel() {
+        return yarnLabel;
+    }
+    public Label getNeedleLabel() {
+        return needleLabel;
+    }
+    public Label getStatusLabel() {
+        return statusLabel;
     }
 
     @FXML
@@ -92,6 +132,5 @@ public class ViewRecipeController {
     private void handleBackButtonClick(ActionEvent event) {
         // TODO: implement later. Stub for TestFX tests
     }
-
 
 }
