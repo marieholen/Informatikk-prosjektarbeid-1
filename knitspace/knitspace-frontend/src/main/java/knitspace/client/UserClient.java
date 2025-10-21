@@ -3,7 +3,6 @@ package knitspace.client;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
-
 import knitspace.exception.ApiException;
 import knitspace.model.User;
 
@@ -64,8 +63,8 @@ public class UserClient extends ApiClient {
   }
 
   /**
-   * Logs in a user 
-   * 
+   * Logs in a user.
+   *
    * @param username The username for the account
    * @param password The password for the account
    * @return The authenticated User object
@@ -76,12 +75,12 @@ public class UserClient extends ApiClient {
       String requestBody = objectMapper.writeValueAsString(new User(null, username, password));
 
       HttpRequest request = createRequestBuilder(USERS_ENDPOINT + "/login")
-        .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-        .build();
+          .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+          .build();
       
       System.out.println("Sending request to " + USERS_ENDPOINT + "/login");
-      HttpResponse<String> response = httpClient.send(request,
-        HttpResponse.BodyHandlers.ofString());
+      HttpResponse<String> response = httpClient.send(
+          request, HttpResponse.BodyHandlers.ofString());
 
       System.out.println("Received response with status code: " + response.statusCode());
       return handleResponse(response, User.class);
@@ -94,8 +93,8 @@ public class UserClient extends ApiClient {
   }
 
   /**
-   * Asynchronously logs a user in
-   * 
+   * Asynchronously logs a user in.
+   *
    * @param username The username of user trying to log in
    * @param password The user's password
    * @return CompleteableFuture containing the authenticated user object

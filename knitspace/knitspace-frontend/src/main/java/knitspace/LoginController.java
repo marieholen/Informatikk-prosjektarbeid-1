@@ -2,7 +2,6 @@ package knitspace;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,16 +28,37 @@ public class LoginController {
 
   private final UserClient userClient;
 
-  public LoginController() {
-    this.userClient = new UserClient();
+  /**
+   * Constructor for dependency injection which (used in testing when mocking UserClient).
+   *
+   * @param userClient The UserClient to use for API calls
+   */
+  public LoginController(UserClient userClient) {
+    this.userClient = userClient;
   }
 
+  /**
+   * Default constructor - initializes the controller by creating a new UserClient instance.
+   */
+  public LoginController() {
+    this(new UserClient());
+  }
+
+  /**
+   * Initializes the controller and sets up event handlers.
+   */
   @FXML
   private void initialize() {
     createAccountLink.setOnAction(this::handleCreateAccount);
     loginButton.setOnAction(this::handleLogin);
   }
 
+  /**
+   * Handles the "Create Account" hyprlink action.
+   * Navigates to the create Account page.
+   *
+   * @param event Triggered by clicking the create account button
+   */
   @FXML
   private void handleCreateAccount(ActionEvent event) {
     try {
@@ -48,6 +68,13 @@ public class LoginController {
     }
   }
 
+  /**
+   * Handles the login button action.
+   * Validates user input, attempts to authenticate asynchronously.
+   * Navigates to the "My Recipes" page if successful.
+   *
+   * @param event Triggered by clicking the login button
+   */
   @FXML
   private void handleLogin(ActionEvent event) {
     final String username = usernameField.getText();
@@ -65,7 +92,7 @@ public class LoginController {
     fut.thenAccept(user -> Platform.runLater(() -> {
       setUiBusy(false);
       try {
-          goToMyRecipes();
+        goToMyRecipes();
       } catch (Exception e) {
         showAlert("Navigation error", "Could not open MyRecipes." + e.getMessage());
       }
@@ -79,11 +106,21 @@ public class LoginController {
     });
   }
 
+  /**
+   * Converts an exception into a user-friendly error message.
+   *
+   * @param ex The thrown exception
+   * @return An error message if validation fails
+   */
   private String friendlyError(Throwable ex) {
     Throwable cause = ex;
-    while (cause.getCause() != null) cause = cause.getCause();
-    if (cause instanceof ApiException a) {
+    while (cause.getCause() != null) {
+      cause = cause.getCause();
+    }
+    if (cause instanceof ApiException) {
+      ApiException a = (ApiException) cause;
       return a.getMessage() != null ? a.getMessage() : "Invalid username or password.";
+    } else {
     }
     String msg = cause.getMessage();
     if (msg != null && msg.contains("401")) {
@@ -92,6 +129,11 @@ public class LoginController {
     return (msg == null || msg.isBlank()) ? "Something went wrong. Try again." : msg;
   }
 
+  /**
+   * Enables or disables all UI elements to indicate that a background process is running.
+   *
+   * @param busy Disables input fields and buttons
+   */
   private void setUiBusy(boolean busy) {
     loginButton.setDisable(busy);
     createAccountLink.setDisable(busy);
@@ -99,6 +141,11 @@ public class LoginController {
     passwordField.setDisable(busy);
   }
 
+  /**
+   * Navigates to the Create Account scene.
+   *
+   * @throws IOException If the FXML can't be loaded
+   */
   private void goToCreateAccount() throws IOException {
     Stage stage = (Stage) loginButton.getScene().getWindow();
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -110,6 +157,11 @@ public class LoginController {
     stage.setTitle("Create Account");
   }
 
+  /**
+   * Navigates to the My Recipes scene.
+   *
+   * @throws IOException If the FXML file can't be loaded
+   */
   private void goToMyRecipes() throws IOException {
     Stage stage = (Stage) loginButton.getScene().getWindow();
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/knitspace/MyRecipes.fxml"));
@@ -120,6 +172,12 @@ public class LoginController {
     stage.setTitle("My Recipes");
   }
 
+  /**
+   * Displays an alert with title and message.
+   *
+   * @param title Title of alert dialog
+   * @param messgae Message of alert dialog
+   */
   private void showAlert(String title, String message) {
     javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
         javafx.scene.control.Alert.AlertType.ERROR);
