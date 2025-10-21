@@ -1,0 +1,121 @@
+package knitspace.service;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+import knitspace.enums.NeedleSize;
+import knitspace.enums.ProjectStatus;
+import knitspace.enums.SkillLevel;
+import knitspace.enums.YarnType;
+import knitspace.model.Recipe;
+import knitspace.model.User;
+import knitspace.repository.RecipeRepository;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+/**
+ * Unit tests for RecipeService.
+ */
+@ExtendWith(MockitoExtension.class)
+public class RecipeServiceTest {
+    @Mock
+    private RecipeRepository recipeRepository;
+
+    @InjectMocks
+    private RecipeService recipeService;
+
+    @Test
+    void getRecipesByUserIdWithUuidReturnsRecipesWhenPresent() throws Exception {
+        UUID userId = UUID.randomUUID();
+        Recipe recipe = new Recipe(
+            userId,
+            "Test title",
+            "A test description",
+            SkillLevel.BEGINNER,
+            YarnType.WOOL,
+            NeedleSize.SIZE_7_0,
+            ProjectStatus.ABANDONED
+        );
+        when(recipeRepository.findByUserId(userId)).thenReturn(List.of(recipe));
+
+        Optional<List<Recipe>> result = recipeService.getRecipesByUserId(userId);
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).hasSize(1);
+        assertThat(result.get().get(0).getUserId()).isEqualTo(userId);
+    }
+
+    @Test
+    void getRecipesByUserIdWithUuidReturnsEmptyWhenNoRecipes() throws Exception {
+        UUID userId = UUID.randomUUID();
+        when(recipeRepository.findByUserId(userId)).thenReturn(List.of());
+
+        Optional<List<Recipe>> result = recipeService.getRecipesByUserId(userId);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void getRecipesByUserIdWithUuidReturnsEmptyOnException() throws Exception {
+        UUID userId = UUID.randomUUID();
+        when(recipeRepository.findByUserId(userId)).thenThrow(new IOException("Exception!:-("));
+
+        Optional<List<Recipe>> result = recipeService.getRecipesByUserId(userId);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void getRecipesByUserWithUserReturnsRecipesWhenPresent() throws Exception {
+        UUID userId = UUID.randomUUID();
+        User user = new User(userId, "myUser", "myPassword");
+        Recipe recipe = new Recipe(
+            userId,
+            "My Title",
+            "My Description",
+            SkillLevel.BEGINNER,
+            YarnType.WOOL,
+            NeedleSize.SIZE_2_0,
+            ProjectStatus.PLANNED
+        );
+        when(recipeRepository.findByUserId(userId)).thenReturn(List.of(recipe));
+
+        Optional<List<Recipe>> result = recipeService.getRecipesByUserId(user);
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).hasSize(1);
+        assertThat(result.get().get(0).getUserId()).isEqualTo(userId);
+    }
+
+    @Test
+    void getRecipesByUser_withUser_returnsEmptyWhenNoRecipes() throws Exception {
+        UUID userId = UUID.randomUUID();
+        User user = new User(userId, "testUser", "testPassword");
+        when(recipeRepository.findByUserId(userId)).thenReturn(List.of());
+
+        Optional<List<Recipe>> result = recipeService.getRecipesByUserId(user);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void getRecipesByUser_withUser_returnsEmptyOnException() throws Exception {
+        UUID userId = UUID.randomUUID();
+        User user = new User(userId, "myFriend", "theirPassword");
+        when(recipeRepository.findByUserId(any(UUID.class))).thenThrow(new IOException("EXCEPTION!!"));
+
+        Optional<List<Recipe>> result = recipeService.getRecipesByUserId(user);
+
+        assertThat(result).isEmpty();
+    }
+}
