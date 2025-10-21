@@ -50,4 +50,12 @@ public class RecipeService {
     }
     return recipes.isEmpty() ? Optional.empty() : Optional.of(recipes);
   }
+
+  /**
+   * Sace a new recipe or update an existing one.
+   */
+  public Recipe saveRecipe(Recipe recipe) throws Exception {
+    return recipeRepository.save(recipe);
+  }
+
 }
