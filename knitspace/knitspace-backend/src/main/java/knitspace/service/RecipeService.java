@@ -52,10 +52,23 @@ public class RecipeService {
   }
 
   /**
-   * Sace a new recipe or update an existing one.
+   * Save a new recipe or update an existing one.
    */
   public Recipe saveRecipe(Recipe recipe) throws Exception {
-    return recipeRepository.save(recipe);
+    if (recipe.getRecipeId() == null) {
+      Recipe newRecipe = new Recipe(
+          recipe.getUserId(),
+          recipe.getTitle(),
+          recipe.getDescription(),
+          recipe.getSkillLevel(),
+          recipe.getYarnType(),
+          recipe.getNeedleSize(),
+          recipe.getProjectStatus()
+      );
+      return recipeRepository.save(newRecipe);
+    } else {
+      return recipeRepository.save(recipe);
+    }
   }
 
 }

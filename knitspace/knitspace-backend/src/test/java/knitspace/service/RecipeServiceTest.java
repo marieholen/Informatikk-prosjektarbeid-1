@@ -1,13 +1,18 @@
 package knitspace.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
@@ -16,12 +21,6 @@ import knitspace.enums.YarnType;
 import knitspace.model.Recipe;
 import knitspace.model.User;
 import knitspace.repository.RecipeRepository;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
  * Unit tests for RecipeService.
@@ -117,5 +116,37 @@ public class RecipeServiceTest {
         Optional<List<Recipe>> result = recipeService.getRecipesByUserId(user);
 
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void saveRecipe_savesAndReturnsRecipe() throws Exception {
+        UUID userId = UUID.randomUUID();
+        Recipe recipeToSave = new Recipe(
+            userId,
+            "Test Title",
+            "Test Description",
+            SkillLevel.INTERMEDIATE,
+            YarnType.COTTON,
+            NeedleSize.SIZE_5_0,
+            ProjectStatus.IN_PROGRESS
+        );
+        Recipe savedRecipe = new Recipe(
+            recipeToSave.getUserId(),
+            recipeToSave.getTitle(),
+            recipeToSave.getDescription(),
+            recipeToSave.getSkillLevel(),
+            recipeToSave.getYarnType(),
+            recipeToSave.getNeedleSize(),
+            recipeToSave.getProjectStatus()
+        );
+        savedRecipe.setRecipeId(UUID.randomUUID());
+
+        when(recipeRepository.save(recipeToSave)).thenReturn(savedRecipe);
+
+        Recipe result = recipeService.saveRecipe(recipeToSave);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getRecipeId()).isEqualTo(savedRecipe.getRecipeId());
+        assertThat(result.getTitle()).isEqualTo("Test Title");
     }
 }
