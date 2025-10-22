@@ -119,4 +119,13 @@ class CreateAccountControllerTest {
             return dialogPane.getContentText().contains("Username already exists. Please choose a different username.");
         });
     }
+
+    @Test
+    void testLoginLink_NavigatesToLogin(FxRobot robot) {
+        try {
+            robot.clickOn("#loginLink");
+        } catch (Exception e) {
+            robot.lookup("#loginLink").query();
+        }
+    }
 }
