@@ -1,5 +1,6 @@
 package knitspace;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -9,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
 import knitspace.exception.ApiException;
@@ -65,6 +67,29 @@ public class MyRecipesController {
 
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  /**
+   * Opens the ViewRecipe view for the selected recipe. Used when the "Details" button is pressed.
+   *
+   * @param event  the triggered action event.
+   * @param recipe the selected recipe to display the details for.
+   */
+  private void openRecipeDetails(ActionEvent event, Recipe recipe) {
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewRecipe.fxml"));
+    try {
+      Parent root = fxmlLoader.load();
+
+      ViewRecipeController viewRecipeController = fxmlLoader.getController();
+
+      viewRecipeController.setAndLoadRecipe(recipe);
+
+      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+      stage.setScene(new Scene(root));
+    } catch (IOException e) {
+      Alert alert = new Alert(AlertType.ERROR, "Error when loading recipe detail window!:(");
+      alert.showAndWait();
     }
   }
 
