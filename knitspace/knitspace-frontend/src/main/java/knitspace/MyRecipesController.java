@@ -2,8 +2,14 @@ package knitspace;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
 import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
@@ -11,10 +17,10 @@ import knitspace.model.Recipe;
 import knitspace.model.User;
 
 /**
- * Controller for MyRecipes.fxml.
+ * Controller for {@code MyRecipes.fxml}.
+ * Handles user interaction on the "My recipes" page.
  */
 public class MyRecipesController {
-
   private final RecipeClient recipeClient;
 
   /**
@@ -38,14 +44,36 @@ public class MyRecipesController {
     List<Recipe> recipes = loadRecipes();
   }
 
+  /**
+   * Handles the "New Recipe" button click by redirecting to the
+   * {@code EditRecipeView.fxml} page to create a new recipe.
+   *
+   * @param event {@link ActionEvent} triggered by the button press
+   */
   @FXML
-  private void handleLogout() {
-    throw new UnsupportedOperationException("Not implemented yet");
+  private void handleNewRecipe(ActionEvent event) {
+
+    System.out.println(getClass().getResource("/knitspace/EditRecipeView.fxml"));
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/EditRecipeView.fxml"));
+      Parent root = loader.load();
+
+      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+      stage.setScene(new Scene(root));
+      stage.setTitle("Create New Recipe");
+      stage.show();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
+  /**
+   * Handles the "Logout" button click.
+   */
   @FXML
-  private void handleNewRecipe() {
-    throw new UnsupportedOperationException("Not implemented yet");
+  private void handleLogout() {
+    throw new UnsupportedOperationException("Logout clicked (not implemented)");
   }
 
   /**
