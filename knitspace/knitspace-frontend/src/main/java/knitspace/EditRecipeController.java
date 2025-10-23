@@ -25,10 +25,13 @@ public class EditRecipeController {
   @FXML
   private ComboBox<String> yarnTypeComboBox;
 
-  @FXML private ComboBox<String> difficultyComboBox;
-  @FXML private ComboBox<String> yarnTypeComboBox;
-  @FXML private ComboBox<String> needleSizeComboBox;
-  @FXML private ComboBox<String> statusComboBox;
+  @FXML 
+  private ComboBox<String> needleSizeComboBox;
+
+  @FXML 
+  private ComboBox<String> statusComboBox;
+
+  private Recipe currentRecipe;
 
   /**
    * Initializes the edit recipe view.
@@ -82,35 +85,6 @@ public class EditRecipeController {
       for (ProjectStatus status : ProjectStatus.values()) {
         statusComboBox.getItems().add(status.getDescription());
       }
-    }
-  }
-
-  @FXML
-  private ComboBox<String> needleSizeComboBox;
-
-  @FXML
-  private ComboBox<String> statusComboBox;
-
-  private Recipe currentRecipe;
-
-  /**
-  * Initalize the controller. Fills the combo boxes with values from
-  * {@link SkillLevel}, {@link YarnType}, {@link NeedleSize}, and
-  * {@link ProjectStatus} enums.
-  */
-  @FXML
-  private void initialize() {
-    for (SkillLevel level : SkillLevel.values()) {
-      difficultyComboBox.getItems().add(level.getDescription());
-    }
-    for (YarnType type : YarnType.values()) {
-      yarnTypeComboBox.getItems().add(type.getLabel());
-    }
-    for (NeedleSize size : NeedleSize.values()) {
-      needleSizeComboBox.getItems().add(size.getLabel());
-    }
-    for (ProjectStatus status : ProjectStatus.values()) {
-      statusComboBox.getItems().add(status.getDescription());
     }
   }
 
