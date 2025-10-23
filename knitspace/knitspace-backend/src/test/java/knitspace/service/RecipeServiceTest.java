@@ -22,6 +22,15 @@ import knitspace.model.Recipe;
 import knitspace.model.User;
 import knitspace.repository.RecipeRepository;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+
+
 /**
  * Unit tests for RecipeService.
  */
@@ -149,4 +158,42 @@ public class RecipeServiceTest {
         assertThat(result.getRecipeId()).isEqualTo(savedRecipe.getRecipeId());
         assertThat(result.getTitle()).isEqualTo("Test Title");
     }
+    void deleteRecipeByIdReturnsTrueWhenRecipeExists() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+    Recipe recipe = new Recipe(recipeId, UUID.randomUUID(), "title", "desc",
+            SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    when(recipeRepository.findById(recipeId)).thenReturn(recipe);
+
+    boolean result = recipeService.deleteRecipeById(recipeId);
+
+    assertThat(result).isTrue();
+    verify(recipeRepository).deleteById(recipeId);
+    }
+
+    @Test
+    void deleteRecipeByIdReturnsFalseWhenRecipeNotFound() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeRepository.findById(recipeId)).thenReturn(null);
+
+    boolean result = recipeService.deleteRecipeById(recipeId);
+
+    assertThat(result).isFalse();
+    verify(recipeRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void deleteRecipeByIdReturnsFalseWhenExceptionThrown() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeRepository.findById(recipeId)).thenThrow(new IOException("disk error!"));
+
+    boolean result = recipeService.deleteRecipeById(recipeId);
+
+    assertThat(result).isFalse();
+    verify(recipeRepository, never()).deleteById(any());
+    }
+
+
 }

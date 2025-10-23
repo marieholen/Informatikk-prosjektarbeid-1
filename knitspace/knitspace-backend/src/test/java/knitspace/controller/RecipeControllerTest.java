@@ -23,6 +23,8 @@ import knitspace.enums.SkillLevel;
 import knitspace.enums.YarnType;
 import knitspace.model.Recipe;
 import knitspace.service.RecipeService;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 /**
  * Unit tests for RecipeController
  */
@@ -196,4 +198,30 @@ public class RecipeControllerTest {
                 .content("{\"userId\":\"" + UUID.randomUUID() + "\",\"title\":\"Updated title\",\"description\":\"Updated description\",\"skillLevel\":\"EXPERT\",\"yarnType\":\"COTTON\",\"needleSize\":\"SIZE_8_5\",\"projectStatus\":\"FINISHED\"}"))
                 .andExpect(status().isInternalServerError());
     }
+    void shouldReturnNoContentWhenRecipeIsDeleted() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeService.deleteRecipeById(recipeId)).thenReturn(true);
+
+    mockMvc.perform(delete("/api/recipes/" + recipeId))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenRecipeDoesNotExist() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeService.deleteRecipeById(recipeId)).thenReturn(false);
+
+    mockMvc.perform(delete("/api/recipes/" + recipeId))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenRecipeIdIsInvalid() throws Exception {
+    mockMvc.perform(delete("/api/recipes/not-a-valid-uuid"))
+            .andExpect(status().isBadRequest());
+    }
+
+
 }
