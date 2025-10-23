@@ -6,9 +6,15 @@ import java.util.UUID;
 import knitspace.model.Recipe;
 import knitspace.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST Controller for Recipe operations.
@@ -42,8 +48,8 @@ public class RecipeController {
 
   /**
    * Create a new recipe.
-   * 
-   * @param recipe The recipe data
+   *
+   * @param recipe The recipe data.
    * @return 200 OK with created recipe, 400 Bad Request on failure.
    */
   @PostMapping
@@ -51,26 +57,32 @@ public class RecipeController {
     try {
       Recipe saved = recipeService.saveRecipe(recipe);
       return ResponseEntity.ok(saved);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().build();
-    }
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    } 
   }
 
   /**
    * Update an existing recipe.
-   * 
-   * @param resipeId The recipe id
-   * @param recipe The updated recipe data
-   * @return 200 OK with updated recipe, 400 Bad Request on failure.
+   *
+   * @param recipeId The id of the recipe to update.
+   * @param recipe The updated recipe data.
+   * @return 200 OK with updated recipe, 400 Bad Request on failure,
+   *          and 500 Internal Server Error on server error.
    */
   @PutMapping("/{recipeId}")
-  public ResponseEntity<Recipe> updateRecipe(@PathVariable String recipeId, @RequestBody Recipe recipe) {
+  public ResponseEntity<Recipe> updateRecipe(
+      @PathVariable String recipeId, @RequestBody Recipe recipe) {
     try {
-      recipe.setRecipeId(UUID.fromString(recipeId));
-      Recipe updated = recipeService.saveRecipe(recipe);
+      UUID id = UUID.fromString(recipeId);
+      Recipe updated = recipeService.updateRecipe(id, recipe);
       return ResponseEntity.ok(updated);
-    } catch (Exception e) {
+    } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().build();
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
-  }
+  }  
 }

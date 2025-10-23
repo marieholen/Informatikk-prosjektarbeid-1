@@ -71,4 +71,28 @@ public class RecipeService {
     }
   }
 
+  /**
+   * Update an existing recipe.
+   *
+   * @param recipeId The recipe id.
+   * @param updatedRecipe The updated recipe data.
+   * @return The updated recipe.
+   * @throws Exception if the recipe is not found.
+   * @throws RuntimeException if the recipe with the given id does not exist. 
+   */
+  public Recipe updateRecipe(UUID recipeId, Recipe updatedRecipe) throws Exception {
+    Recipe existingRecipe = recipeRepository.findById(recipeId);
+    if (existingRecipe == null) {
+      throw new RuntimeException("Recipe with id " + recipeId + " not found.");
+    }
+
+    existingRecipe.setTitle(updatedRecipe.getTitle());
+    existingRecipe.setDescription(updatedRecipe.getDescription());
+    existingRecipe.setSkillLevel(updatedRecipe.getSkillLevel());
+    existingRecipe.setYarnType(updatedRecipe.getYarnType());
+    existingRecipe.setNeedleSize(updatedRecipe.getNeedleSize());
+    existingRecipe.setProjectStatus(updatedRecipe.getProjectStatus());
+
+    return recipeRepository.save(existingRecipe);
+  }
 }

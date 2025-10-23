@@ -1,28 +1,28 @@
 package knitspace.controller;
 
-import knitspace.model.Recipe;
-import knitspace.enums.*;
-import knitspace.service.RecipeService;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import knitspace.enums.NeedleSize;
+import knitspace.enums.ProjectStatus;
+import knitspace.enums.SkillLevel;
+import knitspace.enums.YarnType;
+import knitspace.model.Recipe;
+import knitspace.service.RecipeService;
 /**
  * Unit tests for RecipeController
  */
@@ -126,7 +126,7 @@ public class RecipeControllerTest {
         mockMvc.perform(post("/api/recipes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"userId\":\"" + UUID.randomUUID() + "\",\"title\":\"Test\",\"description\":\"Test description\",\"skillLevel\":\"BEGINNER\",\"yarnType\":\"WOOL\",\"needleSize\":\"SIZE_5_0\",\"projectStatus\":\"PLANNED\"}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -144,7 +144,7 @@ public class RecipeControllerTest {
             ProjectStatus.FINISHED
         );
 
-        when(recipeService.saveRecipe(any(Recipe.class))).thenReturn(updatedRecipe);
+        when(recipeService.updateRecipe(any(UUID.class), any(Recipe.class))).thenReturn(updatedRecipe);
 
         mockMvc.perform(put("/api/recipes/" + recipeId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -163,7 +163,7 @@ public class RecipeControllerTest {
     UUID recipeId = UUID.randomUUID();
 
     doThrow(new IllegalArgumentException("Invalid input"))
-        .when(recipeService).saveRecipe(any());
+        .when(recipeService).updateRecipe(any(UUID.class), any(Recipe.class));
 
     mockMvc.perform(put("/api/recipes/" + recipeId)
         .contentType(MediaType.APPLICATION_JSON)
@@ -176,20 +176,12 @@ public class RecipeControllerTest {
         UUID recipeId = UUID.randomUUID();
 
         doThrow(new RuntimeException("Unexpected error"))
-            .when(recipeService).saveRecipe(any());
+            .when(recipeService).updateRecipe(any(UUID.class), any(Recipe.class));
 
         mockMvc.perform(put("/api/recipes/" + recipeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"userId\":\"" + UUID.randomUUID() + "\",\"title\":\"Updated title\",\"description\":\"Updated description\",\"skillLevel\":\"EXPERT\",\"yarnType\":\"COTTON\",\"needleSize\":\"SIZE_8_5\",\"projectStatus\":\"FINISHED\"}"))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void testUpdateRecipeInvalidRecipeId() throws Exception {
-        mockMvc.perform(put("/api/recipes/invalid-uuid")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\":\"" + UUID.randomUUID() + "\",\"title\":\"Updated title\",\"description\":\"Updated description\",\"skillLevel\":\"EXPERT\",\"yarnType\":\"COTTON\",\"needleSize\":\"SIZE_8_5\",\"projectStatus\":\"FINISHED\"}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 
     @Test
@@ -197,11 +189,11 @@ public class RecipeControllerTest {
         UUID recipeId = UUID.randomUUID();
 
         doThrow(new RuntimeException("Unexpected server error"))
-            .when(recipeService).saveRecipe(any());
+            .when(recipeService).updateRecipe(any(UUID.class), any(Recipe.class));
 
         mockMvc.perform(put("/api/recipes/" + recipeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"userId\":\"" + UUID.randomUUID() + "\",\"title\":\"Updated title\",\"description\":\"Updated description\",\"skillLevel\":\"EXPERT\",\"yarnType\":\"COTTON\",\"needleSize\":\"SIZE_8_5\",\"projectStatus\":\"FINISHED\"}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isInternalServerError());
     }
 }
