@@ -6,6 +6,7 @@ import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 import knitspace.client.UserClient;
 import knitspace.exception.ApiException;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,6 +18,10 @@ import org.testfx.framework.junit5.Start;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
+
+import static org.testfx.util.WaitForAsyncUtils.waitForFxEvents;
+
+import javafx.application.Platform;
 
 
 @ExtendWith({ MockitoExtension.class, ApplicationExtension.class })
@@ -40,6 +45,13 @@ class CreateAccountControllerTest {
 
         stage.setScene(scene);
         stage.show();
+
+        Platform.runLater(() -> {
+            stage.toFront();
+            stage.requestFocus();
+        });
+
+        waitForFxEvents();
     }
 
     @Test
