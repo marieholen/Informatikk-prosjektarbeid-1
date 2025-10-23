@@ -14,6 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import knitspace.client.UserClient;
 import knitspace.exception.ApiException;
+import knitspace.meta.SessionManager;
+import knitspace.model.User;
 
 /**
  * Controller for the Create Account page in the frontend application.
@@ -84,13 +86,18 @@ public class CreateAccountController {
    * Creates a new user account.
    * This method will be called by handleSignup after validation.
    * Makes an API call to the backend service to create the account.
+   * If creation is successfull it updates SessionManagers current user.
+   * Then redirects to myRecipes.
    *
    * @param username The username for the new account
    * @param password The password for the new account
    */
   private void createUserAccount(String username, String password) {
     try {
-      userClient.createAccount(username, password);
+      User createdUser = userClient.createAccount(username, password);
+
+      SessionManager.setCurrentUser(createdUser);
+
       goToMyRecipes(signupButton);
 
     } catch (ApiException e) {
