@@ -19,6 +19,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 /**
  * Unit tests for RecipeController
  */
@@ -82,4 +84,32 @@ public class RecipeControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void shouldReturnNoContentWhenRecipeIsDeleted() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeService.deleteRecipeById(recipeId)).thenReturn(true);
+
+    mockMvc.perform(delete("/api/recipes/" + recipeId))
+            .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenRecipeDoesNotExist() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeService.deleteRecipeById(recipeId)).thenReturn(false);
+
+    mockMvc.perform(delete("/api/recipes/" + recipeId))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenRecipeIdIsInvalid() throws Exception {
+    mockMvc.perform(delete("/api/recipes/not-a-valid-uuid"))
+            .andExpect(status().isBadRequest());
+    }
+
+
 }
