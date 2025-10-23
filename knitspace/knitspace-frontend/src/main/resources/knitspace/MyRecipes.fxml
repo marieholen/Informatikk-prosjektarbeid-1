@@ -32,7 +32,7 @@
                <Font name="Arial Hebrew Scholar Bold" size="55.0" />
             </font></Label>
             <Pane fx:id="spacer" HBox.hgrow="ALWAYS" /> <!-- spacer -->
-            <Button fx:id="btnLogout" style="-fx-background-color: #E6D8C3;" text="Log out">
+            <Button fx:id="btnLogout" style="-fx-background-color: #E6D8C3;" text="Log out" onAction="#handleLogout">
             <padding>
                <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
             </padding>
@@ -77,7 +77,7 @@
             <ComboBox fx:id="statusFilter" promptText="All" />
 
             <Pane fx:id="bottomSpacer" VBox.vgrow="ALWAYS" /> 
-            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE">
+            <Button fx:id="btnNewrecipe" alignment="TOP_LEFT" contentDisplay="CENTER" style="-fx-background-color: #a7cbe4;" text="New recipes" textFill="WHITE" onAction="#handleNewRecipe">
             <font>
                <Font name="Arial Hebrew Scholar Bold" size="18.0" />
             </font>
