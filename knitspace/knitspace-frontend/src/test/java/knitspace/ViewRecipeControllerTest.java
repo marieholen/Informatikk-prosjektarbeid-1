@@ -1,93 +1,87 @@
 package knitspace;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
-import javafx.scene.Parent;
-
-import knitspace.enums.*;
-import knitspace.model.Recipe;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.mockito.Mock;
+import static org.mockito.Mockito.lenient;
 import org.mockito.junit.jupiter.MockitoExtension;
-
+import static org.testfx.api.FxAssert.verifyThat;
+import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import org.testfx.api.FxRobot;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import javafx.application.Platform;
-import org.testfx.util.WaitForAsyncUtils;
-import static org.mockito.Mockito.*;
-
-import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
+import org.testfx.util.WaitForAsyncUtils;
+
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import knitspace.enums.NeedleSize;
+import knitspace.enums.ProjectStatus;
+import knitspace.enums.SkillLevel;
+import knitspace.enums.YarnType;
+import knitspace.model.Recipe;
 
 @ExtendWith({MockitoExtension.class, ApplicationExtension.class})
 public class ViewRecipeControllerTest {
-   
-    private ViewRecipeController controller;
 
-    @Mock
-    private Recipe mockRecipe;
+  private ViewRecipeController controller;
 
-    @Start
-    public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/ViewRecipe.fxml"));
-        Scene scene = new Scene(loader.load());
-        controller = loader.getController();
+  @Mock
+  private Recipe mockRecipe;
 
-        stage.setScene(scene);
-        stage.show();
-    }
+  @Start
+  public void start(Stage stage) throws Exception {
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/ViewRecipe.fxml"));
+    Scene scene = new Scene(loader.load());
+    controller = loader.getController();
 
-    @BeforeEach
-    void setupMocks() {
-        lenient().when(mockRecipe.title()).thenReturn("Test Title");
-        lenient().when(mockRecipe.description()).thenReturn("Test Description");
-        lenient().when(mockRecipe.skillLevel()).thenReturn(SkillLevel.BEGINNER);
-        lenient().when(mockRecipe.yarnType()).thenReturn(YarnType.WOOL);
-        lenient().when(mockRecipe.needleSize()).thenReturn(NeedleSize.SIZE_8_0);
-        lenient().when(mockRecipe.projectStatus()).thenReturn(ProjectStatus.IN_PROGRESS);
-    }
+    stage.setScene(scene);
+    stage.show();
+  }
 
-    @Test
-    void testLabelsAreUpdatedWithRecipe(FxRobot robot) {
-        Platform.runLater(() -> controller.setAndLoadRecipe(mockRecipe));
-        WaitForAsyncUtils.waitForFxEvents();
+  @BeforeEach
+  void setupMocks() {
+    lenient().when(mockRecipe.title()).thenReturn("Test Title");
+    lenient().when(mockRecipe.description()).thenReturn("Test Description");
+    lenient().when(mockRecipe.skillLevel()).thenReturn(SkillLevel.BEGINNER);
+    lenient().when(mockRecipe.yarnType()).thenReturn(YarnType.WOOL);
+    lenient().when(mockRecipe.needleSize()).thenReturn(NeedleSize.SIZE_8_0);
+    lenient().when(mockRecipe.projectStatus()).thenReturn(ProjectStatus.IN_PROGRESS);
+  }
 
-        assertEquals("Test Title", controller.getTitleLabel().getText());
-        assertEquals("Test Description", controller.getDescriptionLabel().getText());
+  @Test
+  void testLabelsAreUpdatedWithRecipe(FxRobot robot) {
+    Platform.runLater(() -> controller.setAndLoadRecipe(mockRecipe));
+    WaitForAsyncUtils.waitForFxEvents();
 
-        assertEquals("Beginner", controller.getSkillLevelLabel().getText());
-        assertEquals("Wool", controller.getYarnLabel().getText());
-        assertEquals("8.0 mm", controller.getNeedleLabel().getText());
-        assertEquals("In Progress - currently knitting", controller.getStatusLabel().getText());
-    }
+    assertEquals("Test Title", controller.getTitleLabel().getText());
+    assertEquals("Test Description", controller.getDescriptionLabel().getText());
 
-    @Test
-    void testHandleEditButtonClick(FxRobot robot) {
-        Platform.runLater(() -> controller.setAndLoadRecipe(mockRecipe));
-        WaitForAsyncUtils.waitForFxEvents();
+    assertEquals("Beginner", controller.getSkillLevelLabel().getText());
+    assertEquals("Wool", controller.getYarnLabel().getText());
+    assertEquals("8.0 mm", controller.getNeedleLabel().getText());
+    assertEquals("In Progress - currently knitting", controller.getStatusLabel().getText());
+  }
 
-        robot.clickOn("#editButton");
-        WaitForAsyncUtils.waitForFxEvents();
-        
-        verifyThat("#saveButton", isVisible());
-    }
+  @Test
+  void testHandleEditButtonClick(FxRobot robot) {
+    Platform.runLater(() -> controller.setAndLoadRecipe(mockRecipe));
+    WaitForAsyncUtils.waitForFxEvents();
 
-    @Test
-    public void testShowAlertOnError(FxRobot robot) throws InterruptedException {
-        controller.showAlert("Error", "This is a test alert");
-        Thread.sleep(500);
-        verifyThat(".dialog-pane", isVisible());
-    }
+    robot.clickOn("#editButton");
+    WaitForAsyncUtils.waitForFxEvents();
 
+    verifyThat("#saveButton", isVisible());
+  }
+
+  @Test
+  public void testShowAlertOnError(FxRobot robot) throws InterruptedException {
+    controller.showAlert("Error", "This is a test alert");
+    Thread.sleep(500);
+    verifyThat(".dialog-pane", isVisible());
+  }
 
 }
