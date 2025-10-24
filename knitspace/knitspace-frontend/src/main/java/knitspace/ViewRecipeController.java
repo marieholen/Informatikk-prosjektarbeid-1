@@ -71,16 +71,20 @@ public class ViewRecipeController {
   @FXML
   private void handleEditButtonClick() {
     try {
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EditRecipeView.fxml"));
+      FXMLLoader fxmlLoader = new FXMLLoader(getClass()
+          .getResource("/knitspace/EditRecipeView.fxml"));
       Parent root = fxmlLoader.load();
 
       EditRecipeController editRecipeController = fxmlLoader.getController();
       editRecipeController.loadFromViewRecipe(selectedRecipe);
 
-      Stage stage = (Stage) editButton.getScene().getWindow();
-      stage.setScene(new Scene(root));
+      Platform.runLater(() -> {
+        Stage stage = (Stage) editButton.getScene().getWindow();
+        stage.setScene(new Scene(root));
+      });
 
       System.out.println("editButton clicked");
+
     } catch (IOException e) {
       showAlert("Error", "Error loading EditRecipeView: " + e.getMessage());
     }
@@ -99,9 +103,15 @@ public class ViewRecipeController {
       alert.setTitle(title);
       alert.setHeaderText(null);
       alert.setContentText(message);
-      alert.showAndWait();
+
+      if (Platform.isFxApplicationThread()) {
+        alert.show();
+      } else {
+        Platform.runLater(alert::show);
+      }
     });
   }
+
 
   /**
   * Getters for testing purposes.
@@ -130,13 +140,13 @@ public class ViewRecipeController {
     return statusLabel;
   }
 
-  /*     @FXML
-  private void handleDeleteButtonClick(ActionEvent event) {
+  @FXML
+  private void handleDeleteButton() {
     // TODO: implement later. Currently a stub for TestFX tests.
   }
 
   @FXML
-  private void handleBackButtonClick(ActionEvent event) {
+  private void handleBackButton() {
     // TODO: implement later. Stub for TestFX tests
-  } */
+  }
 }

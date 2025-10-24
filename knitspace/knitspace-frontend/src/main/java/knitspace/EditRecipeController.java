@@ -1,6 +1,8 @@
 package knitspace;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import knitspace.enums.NeedleSize;
@@ -30,6 +32,9 @@ public class EditRecipeController {
 
   @FXML 
   private ComboBox<String> statusComboBox;
+
+  @FXML
+  private Button saveButton;
 
   private Recipe currentRecipe;
 
@@ -126,23 +131,17 @@ public class EditRecipeController {
     // storedPdfPath = null;
   }
 
-  /*     @FXML
+  @FXML
   private void handleUploadPdf(ActionEvent event) {
     // TODO: implement later. Currently a stub for TestFX tests.
   }
 
   @FXML
-  private void onSaveClicked(ActionEvent event) {
+  private void handleSaveButton(ActionEvent event) {
     // TODO: implement later. Currently a stub for TestFX tests.
   }
 
-  @FXML
-  private void handleUploadPdf(ActionEvent event) {
-  System.out.println("Upload PDF button clicked (not implemented)");
+  public Button getSaveButton() {
+    return saveButton;
   }
-
-  @FXML
-  private void onSaveClicked(ActionEvent event) {
-  System.out.println("Save button clicked (not implemented)");
-  } */
 }

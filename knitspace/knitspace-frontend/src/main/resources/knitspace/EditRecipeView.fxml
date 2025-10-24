@@ -56,7 +56,7 @@
                     mnemonicParsing="false"
                     style="-fx-background-color: #b0c99f; -fx-padding: 8 16; -fx-background-radius: 5;"
                     text="Save"
-                    onAction="#onSaveClicked" />
+                    onAction="#handleSaveButton" />
          </children>
       </HBox>
    </children>
