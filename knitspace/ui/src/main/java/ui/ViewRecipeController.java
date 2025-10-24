@@ -65,7 +65,7 @@ public class ViewRecipeController {
 
 
     @FXML
-    public void handleDeleteButtonClick() throws Exception {
+    public void handleDeleteButton() throws Exception {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Delete Recipe");
         confirmationAlert.setHeaderText("Are you sure you want to delete this recipe?");
@@ -92,7 +92,7 @@ public class ViewRecipeController {
     }
 
     @FXML
-    private void handleBackButtonClick() {
+    private void handleBackButton() {
         navigateToMyRecipes();
     }
 
