@@ -181,11 +181,12 @@ public class CreateAccountController {
   }
 
   /**
-   * Navigates the user to the login page.
-   *
-   * @param anyNodeInCurrentScene a reference to any node in the current scene,
-   * used to obtain the current {@link Stage}
-   */
+  * Navigates the user to the login page.
+  *
+  * @param anyNodeInCurrentScene a reference to any node in the current scene,
+  *                              used to obtain the current {@link Stage}.
+ */
+
   private void goToLogin(Node anyNodeInCurrentScene) {
     try {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/Login.fxml"));

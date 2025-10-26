@@ -17,6 +17,7 @@ import org.testfx.framework.junit5.Start;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.testfx.api.FxAssert.verifyThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith({ MockitoExtension.class, ApplicationExtension.class })
@@ -122,10 +123,20 @@ class CreateAccountControllerTest {
 
     @Test
     void testLoginLink_NavigatesToLogin(FxRobot robot) {
-        try {
-            robot.clickOn("#loginLink");
-        } catch (Exception e) {
-            robot.lookup("#loginLink").query();
-        }
+        assertDoesNotThrow(() -> robot.lookup("#signupButton").query(), 
+            "Should start on create account page");
+        
+        robot.clickOn("#loginLink");
+
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, 
+            () -> robot.lookup("#signupButton").query(), 
+            "Signup button should not be present after navigation");
+        
+        assertDoesNotThrow(() -> robot.lookup("#loginButton").query(), 
+            "Login page should have login button");
+        assertDoesNotThrow(() -> robot.lookup("#createAccountLink").query(), 
+            "Login page should have create account link");
+        assertDoesNotThrow(() -> robot.lookup("#appTitleLabel").query(), 
+            "Login page should have app title label");
     }
 }
