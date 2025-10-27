@@ -114,4 +114,32 @@ public class RecipeService {
       return false;
     }
   }
+
+  /**
+   * Updates an existing recipe by its unique recipe id.
+   *
+   * @param recipeId the ID of the recipe to update
+   * @param updatedRecipe the recipe data to update with
+   * @return true if the recipe was updated, false if not found or error
+   */
+  public boolean updateRecipeById(UUID recipeId, Recipe updatedRecipe) {
+    try {
+      Recipe existingRecipe = recipeRepository.findById(recipeId);
+      if (existingRecipe == null) {
+        return false;
+      }
+
+      if (existingRecipe.getRecipeId() != updatedRecipe.getRecipeId()) {
+        return false;
+      }
+      
+      recipeRepository.save(updatedRecipe);
+      return true;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+
 }

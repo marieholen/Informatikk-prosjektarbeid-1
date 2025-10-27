@@ -195,5 +195,51 @@ public class RecipeServiceTest {
     verify(recipeRepository, never()).deleteById(any());
     }
 
+    @Test
+    void updateRecipeByIdReturnsTrueWhenRecipeExistsAndIdsMatch() throws Exception {
+        UUID recipeId = UUID.randomUUID();
+        Recipe existingRecipe = new Recipe(recipeId, UUID.randomUUID(), "old title", "old desc",
+                SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_3_0, ProjectStatus.PLANNED);
+        Recipe updatedRecipe = new Recipe(recipeId, UUID.randomUUID(), "new title", "new desc",
+                SkillLevel.EXPERT, YarnType.COTTON, NeedleSize.SIZE_5_0, ProjectStatus.FINISHED);
+
+        when(recipeRepository.findById(recipeId)).thenReturn(existingRecipe);
+
+        boolean result = recipeService.updateRecipeById(recipeId, updatedRecipe);
+
+        assertThat(result).isTrue();
+        verify(recipeRepository).save(updatedRecipe);
+    }
+
+    @Test
+    void updateRecipeByIdReturnsFalseWhenRecipeNotFound() throws Exception {
+        UUID recipeId = UUID.randomUUID();
+        Recipe updatedRecipe = new Recipe(recipeId, UUID.randomUUID(), "title", "desc",
+                SkillLevel.INTERMEDIATE, YarnType.ACRYLIC, NeedleSize.SIZE_4_0, ProjectStatus.IN_PROGRESS);
+
+        when(recipeRepository.findById(recipeId)).thenReturn(null);
+
+        boolean result = recipeService.updateRecipeById(recipeId, updatedRecipe);
+
+        assertThat(result).isFalse();
+        verify(recipeRepository, never()).save(any());
+    }
+
+    @Test
+    void updateRecipeByIdReturnsFalseWhenRecipeIdsMismatch() throws Exception {
+        UUID recipeId = UUID.randomUUID();
+        UUID differentId = UUID.randomUUID();
+        Recipe existingRecipe = new Recipe(recipeId, UUID.randomUUID(), "title", "desc",
+                SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.PLANNED);
+        Recipe updatedRecipe = new Recipe(differentId, UUID.randomUUID(), "new title", "new desc",
+                SkillLevel.EXPERT, YarnType.COTTON, NeedleSize.SIZE_6_0, ProjectStatus.FINISHED);
+
+        when(recipeRepository.findById(recipeId)).thenReturn(existingRecipe);
+
+        boolean result = recipeService.updateRecipeById(recipeId, updatedRecipe);
+
+        assertThat(result).isFalse();
+        verify(recipeRepository, never()).save(any());
+    }
 
 }
