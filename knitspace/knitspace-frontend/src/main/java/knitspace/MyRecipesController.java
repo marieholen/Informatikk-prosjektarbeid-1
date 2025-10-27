@@ -80,8 +80,19 @@ public class MyRecipesController {
    * Handles the "Logout" button click.
    */
   @FXML
-  private void handleLogout() {
-    throw new UnsupportedOperationException("Logout clicked (not implemented)");
+  private void handleLogout(ActionEvent event) {
+    System.out.println(getClass().getResource("/knitspace/Login.fxml"));
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/Login.fxml"));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Log out");
+        stage.show();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   /**
