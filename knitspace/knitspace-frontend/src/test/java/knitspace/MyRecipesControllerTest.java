@@ -20,21 +20,32 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import javafx.scene.control.TextField;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import org.testfx.util.WaitForAsyncUtils;
 
 @ExtendWith(ApplicationExtension.class)
 @ExtendWith(MockitoExtension.class)
 class MyRecipesControllerTest {
+
     @Mock
     private RecipeClient recipeClient;
 
     private Stage stage;
+    private MyRecipesController controller;
 
     @BeforeEach
     void setup() {
         SessionManager.setCurrentUser(null);
+        controller = new MyRecipesController(recipeClient);
+        controller.searchField = new TextField(); 
     }
-
+    
     @Start
     void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/MyRecipes.fxml"));
@@ -78,4 +89,21 @@ class MyRecipesControllerTest {
         assertNotNull(robot.lookup("#saveButton").query(),
                 "EditRecipeView.fxml should be loaded and contain a Save button");
     }
+
+    @Test
+    void testMatchesSearchField() {
+    MyRecipesController controller = new MyRecipesController();
+    controller.searchField = new TextField();
+    Recipe recipe = new Recipe("recipeId", "userId", "Wool Sweater", "A warm sweater", null, null, null, null);
+
+    controller.searchField.setText("");
+    assertTrue(controller.matchesSearchField(recipe), "Blank search should match all recipes");
+
+    controller.searchField.setText("wool");
+    assertTrue(controller.matchesSearchField(recipe), "Matching text should return true");
+
+    controller.searchField.setText("socks");
+    assertFalse(controller.matchesSearchField(recipe), "Non-matching text should return false");
+    }
+
 }
