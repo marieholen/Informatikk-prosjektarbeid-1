@@ -94,7 +94,9 @@ public class RecipeService {
     existingRecipe.setProjectStatus(updatedRecipe.getProjectStatus());
 
     return recipeRepository.save(existingRecipe);
-   * Deletes a recipe by its unique recipe id.
+  }
+
+  /** Deletes a recipe by its unique recipe id.
    *
    * @param recipeId the ID of the recipe to delete
    * @return true if the recipe was deleted, false if not found or error.
