@@ -2,6 +2,7 @@ package knitspace;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
 import knitspace.exception.ApiException;
@@ -21,6 +23,9 @@ import knitspace.model.User;
  * Handles user interaction on the "My recipes" page.
  */
 public class MyRecipesController {
+  @FXML
+  private Button btnNewrecipe;
+
   private final RecipeClient recipeClient;
 
   /**
@@ -58,10 +63,11 @@ public class MyRecipesController {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/EditRecipeView.fxml"));
       Parent root = loader.load();
 
-      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-      stage.setScene(new Scene(root));
-      stage.setTitle("Create New Recipe");
-      stage.show();
+      Platform.runLater(() -> {
+        Stage stage = (Stage) btnNewrecipe.getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Create New Recipe");
+      });
 
     } catch (Exception e) {
       e.printStackTrace();
