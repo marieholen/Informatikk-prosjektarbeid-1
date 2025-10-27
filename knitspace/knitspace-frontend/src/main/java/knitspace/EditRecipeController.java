@@ -1,6 +1,8 @@
 package knitspace;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import knitspace.enums.NeedleSize;
@@ -25,10 +27,16 @@ public class EditRecipeController {
   @FXML
   private ComboBox<String> yarnTypeComboBox;
 
-  @FXML private ComboBox<String> difficultyComboBox;
-  @FXML private ComboBox<String> yarnTypeComboBox;
-  @FXML private ComboBox<String> needleSizeComboBox;
-  @FXML private ComboBox<String> statusComboBox;
+  @FXML 
+  private ComboBox<String> needleSizeComboBox;
+
+  @FXML 
+  private ComboBox<String> statusComboBox;
+
+  @FXML
+  private Button saveButton;
+
+  private Recipe currentRecipe;
 
   /**
    * Initializes the edit recipe view.
@@ -85,35 +93,6 @@ public class EditRecipeController {
     }
   }
 
-  @FXML
-  private ComboBox<String> needleSizeComboBox;
-
-  @FXML
-  private ComboBox<String> statusComboBox;
-
-  private Recipe currentRecipe;
-
-  /**
-  * Initalize the controller. Fills the combo boxes with values from
-  * {@link SkillLevel}, {@link YarnType}, {@link NeedleSize}, and
-  * {@link ProjectStatus} enums.
-  */
-  @FXML
-  private void initialize() {
-    for (SkillLevel level : SkillLevel.values()) {
-      difficultyComboBox.getItems().add(level.getDescription());
-    }
-    for (YarnType type : YarnType.values()) {
-      yarnTypeComboBox.getItems().add(type.getLabel());
-    }
-    for (NeedleSize size : NeedleSize.values()) {
-      needleSizeComboBox.getItems().add(size.getLabel());
-    }
-    for (ProjectStatus status : ProjectStatus.values()) {
-      statusComboBox.getItems().add(status.getDescription());
-    }
-  }
-
   /**
   * Load recipe data from ViewRecipeController.
   *
@@ -152,23 +131,17 @@ public class EditRecipeController {
     // storedPdfPath = null;
   }
 
-  /*     @FXML
+  @FXML
   private void handleUploadPdf(ActionEvent event) {
     // TODO: implement later. Currently a stub for TestFX tests.
   }
 
   @FXML
-  private void onSaveClicked(ActionEvent event) {
+  private void handleSaveButton(ActionEvent event) {
     // TODO: implement later. Currently a stub for TestFX tests.
   }
 
-  @FXML
-  private void handleUploadPdf(ActionEvent event) {
-  System.out.println("Upload PDF button clicked (not implemented)");
+  public Button getSaveButton() {
+    return saveButton;
   }
-
-  @FXML
-  private void onSaveClicked(ActionEvent event) {
-  System.out.println("Save button clicked (not implemented)");
-  } */
 }

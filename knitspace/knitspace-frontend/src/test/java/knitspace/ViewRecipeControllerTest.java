@@ -13,9 +13,9 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import org.testfx.util.WaitForAsyncUtils;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import knitspace.enums.NeedleSize;
@@ -35,10 +35,10 @@ public class ViewRecipeControllerTest {
   @Start
   public void start(Stage stage) throws Exception {
     FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/ViewRecipe.fxml"));
-    Scene scene = new Scene(loader.load());
+    Parent root = loader.load();
     controller = loader.getController();
 
-    stage.setScene(scene);
+    stage.setScene(new Scene(root));
     stage.show();
   }
 
@@ -79,8 +79,9 @@ public class ViewRecipeControllerTest {
 
   @Test
   public void testShowAlertOnError(FxRobot robot) throws InterruptedException {
-    controller.showAlert("Error", "This is a test alert");
-    Thread.sleep(500);
+    Platform.runLater(() -> controller.showAlert("Error", "This is a test alert"));
+    WaitForAsyncUtils.waitForFxEvents();
+
     verifyThat(".dialog-pane", isVisible());
   }
 

@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.util.List;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
 import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
@@ -17,10 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import org.testfx.util.WaitForAsyncUtils;
 
 @ExtendWith(ApplicationExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -67,11 +67,10 @@ class MyRecipesControllerTest {
         assertEquals(expected, actual);
     }
 
-    
-
     @Test
     void testNewRecipeButtonRedirectsToEditRecipeView(FxRobot robot) {
         robot.clickOn("#btnNewrecipe");
+        WaitForAsyncUtils.waitForFxEvents();
 
         assertEquals("Create New Recipe", stage.getTitle(),
                 "Stage title should change to 'Create New Recipe' after clicking New Recipe button");
