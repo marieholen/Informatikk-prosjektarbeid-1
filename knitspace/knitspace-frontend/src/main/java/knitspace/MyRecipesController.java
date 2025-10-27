@@ -2,6 +2,7 @@ package knitspace;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
 import knitspace.exception.ApiException;
@@ -24,11 +27,15 @@ import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
 import knitspace.model.User;
 
+
 /**
  * Controller for {@code MyRecipes.fxml}.
  * Handles user interaction on the "My recipes" page.
  */
 public class MyRecipesController {
+  @FXML
+  private Button btnNewrecipe;
+
   private final RecipeClient recipeClient;
 
   @FXML private ScrollPane recipesScrollPane;
@@ -92,10 +99,11 @@ public class MyRecipesController {
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/EditRecipeView.fxml"));
       Parent root = loader.load();
 
-      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-      stage.setScene(new Scene(root));
-      stage.setTitle("Create New Recipe");
-      stage.show();
+      Platform.runLater(() -> {
+        Stage stage = (Stage) btnNewrecipe.getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.setTitle("Create New Recipe");
+      });
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -218,5 +226,23 @@ public class MyRecipesController {
     card.getChildren().add(row);
 
     return card;
+  }
+  @FXML TextField searchField;
+
+  /**
+   * Checks if the given recipe matches the current search query typed into the search field.
+   *
+   *
+   * @param recipe the recipe to check
+   * @return {@code true} if the recipe title contains the search text 
+   *         (case-insensitive), {@code false} otherwise
+  */
+  boolean matchesSearchField(Recipe recipe) {
+    String searchText = searchField.getText();
+
+    if (searchText != null && !searchText.isBlank()) {
+      return recipe.title().toLowerCase().contains(searchText.toLowerCase());
+    }
+    return true;
   }
 }

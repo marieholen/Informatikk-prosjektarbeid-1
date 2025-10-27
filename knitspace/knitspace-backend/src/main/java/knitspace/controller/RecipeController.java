@@ -7,11 +7,13 @@ import knitspace.model.Recipe;
 import knitspace.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 /**
  * REST Controller for Recipe operations.
@@ -42,4 +44,56 @@ public class RecipeController {
       return ResponseEntity.badRequest().build();
     }
   }
+
+  /**
+   * Deletes a recipe by its ID.
+   *
+   * @param recipeId the UUID of the recipe to delete, as a String
+   * @return 204 No Content if deleted successfully,
+   *         404 Not Found if the recipe does not exist,
+   *         400 Bad Request if the provided ID is not a valid UUID
+   */
+  @DeleteMapping("/{recipeId}")
+  public ResponseEntity<Void> deleteRecipe(@PathVariable("recipeId") String recipeId) {
+    try {
+      UUID id = UUID.fromString(recipeId);
+      boolean deleted = recipeService.deleteRecipeById(id);
+      if (deleted) {
+        return ResponseEntity.noContent().build(); 
+      } else {
+        return ResponseEntity.notFound().build(); 
+      }
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().build(); 
+    }
+  }
+
+  /**
+   * Updates an existing recipe.
+   *
+   * @param recipeId the UUID of the recipe to update, as a String
+   * @param updatedRecipe the Recipe data to update with
+   * @return 204 No Content if updated successfully,
+   *         404 Not Found if the recipe does not exist,
+   *         400 Bad Request if the provided ID is not a valid UUID
+   */
+  @PutMapping("/{recipeId}")
+  public ResponseEntity<Void> updateRecipe(
+      @PathVariable("recipeId") String recipeId,
+      @RequestBody Recipe updatedRecipe) {
+    try {
+      UUID id = UUID.fromString(recipeId);
+      boolean updated = recipeService.updateRecipeById(id, updatedRecipe);
+      
+      if (updated) {
+        return ResponseEntity.noContent().build();
+      } else {
+        return ResponseEntity.notFound().build();
+      }
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.badRequest().build();
+    }
+  }
+
+  
 }
