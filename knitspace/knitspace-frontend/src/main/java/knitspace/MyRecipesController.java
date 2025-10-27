@@ -19,16 +19,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
-import knitspace.enums.NeedleSize;
-import knitspace.enums.ProjectStatus;
-import knitspace.enums.SkillLevel;
-import knitspace.enums.YarnType;
 import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
 import knitspace.model.User;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 
 /**
  * Controller for {@code MyRecipes.fxml}.
@@ -38,7 +32,7 @@ public class MyRecipesController {
   private final RecipeClient recipeClient;
 
   @FXML private ScrollPane recipesScrollPane;
-  @FXML private VBox recipesVBox;
+  @FXML private VBox recipesVerticalBox;
 
   /**
    * Constructor for MyRecipesController.
@@ -59,10 +53,7 @@ public class MyRecipesController {
   @FXML
   private void initialize() {
     setupScrollPane();
-    // Only display recipes if recipeClient is available (not null)
-    if (recipeClient != null) {
-      displayRecipes();
-    }
+    displayRecipes();
   }
 
   /**
@@ -80,13 +71,10 @@ public class MyRecipesController {
    */
   void displayRecipes() {
     List<Recipe> recipes = loadRecipes();
+    recipesVerticalBox.getChildren().clear();
 
-    if (recipesVBox != null) {
-      recipesVBox.getChildren().clear();
-
-      for (Recipe recipe : recipes) {
-        recipesVBox.getChildren().add(createRecipeCard(recipe));
-      }
+    for (Recipe recipe : recipes) {
+      recipesVerticalBox.getChildren().add(createRecipeCard(recipe));
     }
   }
 
@@ -131,11 +119,6 @@ public class MyRecipesController {
   List<Recipe> loadRecipes() {
     User currentUser = SessionManager.getCurrentUser();
 
-    // Return empty list if recipeClient is null (i. ex. during ttesting)
-    if (recipeClient == null) {
-      return new ArrayList<>();
-    }
-
     try {
       List<Recipe> recipesForUser = recipeClient.getRecipesForUser(currentUser);
       return applyFilters(recipesForUser);
@@ -171,7 +154,7 @@ public class MyRecipesController {
 
   /**
    * Creates a styled recipe card. Containing recipe details and a new button called "Details".
-   * 
+   *
    * @param recipe the recipe to display.
    * @return a VBox representing the recipe card.
    */
@@ -221,7 +204,7 @@ public class MyRecipesController {
           status.getStyle() + "-fx-background-color: rgba(211, 138, 138, 0.7);");
       default -> {
         // Spotbugs require handling default case.
-        // No styling if unknown status!
+        // No styling if unknown status.
       }
     }
 
