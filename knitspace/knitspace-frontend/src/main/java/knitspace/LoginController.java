@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import knitspace.client.UserClient;
 import knitspace.exception.ApiException;
+import knitspace.meta.SessionManager;
 import knitspace.model.User;
 
 /**
@@ -92,6 +93,10 @@ public class LoginController {
     fut.thenAccept(user -> Platform.runLater(() -> {
       setUiBusy(false);
       try {
+        User userToBeLoggedIn = fut.get();
+
+        SessionManager.setCurrentUser(userToBeLoggedIn);
+
         goToMyRecipes();
       } catch (Exception e) {
         showAlert("Navigation error", "Could not open MyRecipes." + e.getMessage());
