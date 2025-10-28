@@ -21,6 +21,9 @@ public class ViewRecipeController {
   Button editButton;
 
   @FXML
+  Button backButton;
+
+  @FXML
   private Label titleLabel;
 
   @FXML
@@ -145,8 +148,17 @@ public class ViewRecipeController {
     // TODO: implement later. Currently a stub for TestFX tests.
   }
 
+  /**
+   * Handles back button click event. Loads MyRecipes.
+   */
   @FXML
-  private void handleBackButton() {
-    // TODO: implement later. Stub for TestFX tests
+  private void handleBackButton() throws IOException {
+    Stage stage = (Stage) backButton.getScene().getWindow();
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/knitspace/MyRecipes.fxml"));
+    Parent root = fxmlLoader.load();
+
+    Scene scene = new Scene(root);
+    stage.setScene(scene);
+    stage.setTitle("Your Recipes!");
   }
 }
