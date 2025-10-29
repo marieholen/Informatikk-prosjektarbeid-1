@@ -116,5 +116,8 @@ class MyRecipesControllerTest {
         
         assertNotNull(robot.lookup("#loginButton").query(),
                 "Login.fxml should be loaded");
+
+        assertEquals(null, SessionManager.getCurrentUser(), 
+                "Session should be cleared on logout");
     }
 }

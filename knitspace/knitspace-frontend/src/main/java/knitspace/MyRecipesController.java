@@ -85,6 +85,8 @@ public class MyRecipesController {
   private void handleLogout(ActionEvent event) {
     System.out.println(getClass().getResource("/knitspace/Login.fxml"));
     try {
+      SessionManager.setCurrentUser(null);
+
       FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/Login.fxml"));
       Parent root = loader.load();
 
