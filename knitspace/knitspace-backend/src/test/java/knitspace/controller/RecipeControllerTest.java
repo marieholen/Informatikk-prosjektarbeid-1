@@ -24,11 +24,6 @@ import knitspace.enums.YarnType;
 import knitspace.model.Recipe;
 import knitspace.service.RecipeService;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 /**
@@ -138,35 +133,6 @@ public class RecipeControllerTest {
     }
 
     @Test
-    void testUpdateRecipeOk() throws Exception {
-        UUID recipeId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-
-        Recipe updatedRecipe = new Recipe(
-            userId,
-            "Updated test scarf",
-            "An updated scarf for testing",
-            SkillLevel.EXPERT,
-            YarnType.COTTON,
-            NeedleSize.SIZE_8_5,
-            ProjectStatus.FINISHED
-        );
-
-        when(recipeService.updateRecipe(any(UUID.class), any(Recipe.class))).thenReturn(updatedRecipe);
-
-        mockMvc.perform(put("/api/recipes/" + recipeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\":\"" + userId + "\",\"title\":\"Updated test scarf\",\"description\":\"An updated scarf for testing\",\"skillLevel\":\"EXPERT\",\"yarnType\":\"COTTON\",\"needleSize\":\"SIZE_8_5\",\"projectStatus\":\"FINISHED\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Updated test scarf"))
-                .andExpect(jsonPath("$.description").value("An updated scarf for testing"))
-                .andExpect(jsonPath("$.skillLevel").value("EXPERT"))
-                .andExpect(jsonPath("$.yarnType").value("COTTON"))
-                .andExpect(jsonPath("$.needleSize").value("SIZE_8_5"))
-                .andExpect(jsonPath("$.projectStatus").value("FINISHED"));
-    }
-
-    @Test
     void testUpdateRecipeBadRequest() throws Exception {
     UUID recipeId = UUID.randomUUID();
 
@@ -177,40 +143,6 @@ public class RecipeControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content("{\"userId\":\"invalid\",\"title\":\"\",\"description\":\"\"}"))
         .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void testUpdateRecipeThrowsException() throws Exception {
-        UUID recipeId = UUID.randomUUID();
-
-        doThrow(new RuntimeException("Unexpected error"))
-            .when(recipeService).updateRecipe(any(UUID.class), any(Recipe.class));
-
-        mockMvc.perform(put("/api/recipes/" + recipeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\":\"" + UUID.randomUUID() + "\",\"title\":\"Updated title\",\"description\":\"Updated description\",\"skillLevel\":\"EXPERT\",\"yarnType\":\"COTTON\",\"needleSize\":\"SIZE_8_5\",\"projectStatus\":\"FINISHED\"}"))
-                .andExpect(status().isInternalServerError());
-    }
-
-    @Test
-    void testUpdateRecipeInternalServerError() throws Exception {
-        UUID recipeId = UUID.randomUUID();
-
-        doThrow(new RuntimeException("Unexpected server error"))
-            .when(recipeService).updateRecipe(any(UUID.class), any(Recipe.class));
-
-        mockMvc.perform(put("/api/recipes/" + recipeId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\":\"" + UUID.randomUUID() + "\",\"title\":\"Updated title\",\"description\":\"Updated description\",\"skillLevel\":\"EXPERT\",\"yarnType\":\"COTTON\",\"needleSize\":\"SIZE_8_5\",\"projectStatus\":\"FINISHED\"}"))
-                .andExpect(status().isInternalServerError());
-    }
-    void shouldReturnNoContentWhenRecipeIsDeleted() throws Exception {
-    UUID recipeId = UUID.randomUUID();
-
-    when(recipeService.deleteRecipeById(recipeId)).thenReturn(true);
-
-    mockMvc.perform(delete("/api/recipes/" + recipeId))
-            .andExpect(status().isNoContent());
     }
 
     @Test

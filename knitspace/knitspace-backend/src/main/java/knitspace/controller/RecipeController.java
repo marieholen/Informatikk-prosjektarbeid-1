@@ -64,28 +64,6 @@ public class RecipeController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     } 
   }
-
-  /**
-   * Update an existing recipe.
-   *
-   * @param recipeId The id of the recipe to update.
-   * @param recipe The updated recipe data.
-   * @return 200 OK with updated recipe, 400 Bad Request on failure,
-   *          and 500 Internal Server Error on server error.
-   */
-  @PutMapping("/{recipeId}")
-  public ResponseEntity<Recipe> updateRecipe(
-      @PathVariable String recipeId, @RequestBody Recipe recipe) {
-    try {
-      UUID id = UUID.fromString(recipeId);
-      Recipe updated = recipeService.updateRecipe(id, recipe);
-      return ResponseEntity.ok(updated);
-    } catch (IllegalArgumentException e) {
-      return ResponseEntity.badRequest().build();
-    } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-  }  
   
   /** Deletes a recipe by its ID.
   *
