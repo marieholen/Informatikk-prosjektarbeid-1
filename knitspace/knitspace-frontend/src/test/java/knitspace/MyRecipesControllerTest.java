@@ -10,11 +10,18 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
 import knitspace.meta.SessionManager;
+import knitspace.enums.ProjectStatus;
+import knitspace.enums.SkillLevel;
+import knitspace.enums.YarnType;
+import knitspace.enums.NeedleSize;
 import knitspace.model.Recipe;
 import knitspace.model.User;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
@@ -24,7 +31,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import javafx.scene.control.TextField;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.testfx.util.WaitForAsyncUtils;
@@ -49,6 +60,12 @@ class MyRecipesControllerTest {
     @Start
     void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/MyRecipes.fxml"));
+
+        FxRobot robot = new FxRobot();
+        Platform.runLater(() -> {
+            robot.clickOn("OK");
+        });
+
         Scene scene = new Scene(loader.load());
         this.stage = stage;
         stage.setScene(scene);
@@ -105,7 +122,7 @@ class MyRecipesControllerTest {
     controller.searchField.setText("socks");
     assertFalse(controller.matchesSearchField(recipe), "Non-matching text should return false");
     }
-
+  
     @Test
     void testLogOutButtonRedirectsToLogin(FxRobot robot) {
         robot.clickOn("#btnLogout");
@@ -119,5 +136,31 @@ class MyRecipesControllerTest {
 
         assertEquals(null, SessionManager.getCurrentUser(), 
                 "Session should be cleared on logout");
+  
+    @ParameterizedTest 
+    @EnumSource(ProjectStatus.class) 
+    void testThatCreateRecipeCardSwitchStatementWorksCorrectly(ProjectStatus status, FxRobot robot) { 
+        MyRecipesController myController = new MyRecipesController(recipeClient);
+        Recipe testRecipe = new Recipe(
+            "status_" + status.getLabel(),
+            "userid",
+            "some title",
+            "some description", 
+            SkillLevel.BEGINNER, 
+            YarnType.WOOL, 
+            NeedleSize.SIZE_2_0,
+            status 
+        );
+
+        VBox card = myController.createRecipeCard(testRecipe);
+
+        assertNotNull(card, "Card should not be null for project status: " + status.toString());
+        
+        HBox row = (HBox) card.getChildren().get(0);
+        Label statusLabel = (Label) row.getChildren().get(2);
+        assertEquals(status.getLabel(),
+            statusLabel.getText(),
+            "Card status should equal ProjectStatus status!"
+        );
     }
 }
