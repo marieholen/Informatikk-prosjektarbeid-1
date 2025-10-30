@@ -136,6 +136,7 @@ class MyRecipesControllerTest {
 
         assertEquals(null, SessionManager.getCurrentUser(), 
                 "Session should be cleared on logout");
+    }
   
     @ParameterizedTest 
     @EnumSource(ProjectStatus.class) 
