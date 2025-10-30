@@ -1,5 +1,6 @@
 package knitspace.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,6 +50,25 @@ public class RecipeService {
       return Optional.empty();
     }
     return recipes.isEmpty() ? Optional.empty() : Optional.of(recipes);
+  }
+
+  /**
+   * Saves a new recipe to the repository after validating required fields.
+   *
+   * @param recipe the recipe to save
+   * @return the saved recipe
+   * @throws IOException if an I/O error occurs during saving
+   * @throws IllegalArgumentException if any required field is missing or invalid
+   */
+  public Recipe saveRecipe(Recipe recipe) throws IOException {
+    if (recipe.getUserId() == null || recipe.getTitle() == null || recipe.getTitle().isBlank() 
+        || recipe.getDescription() == null || recipe.getDescription().isBlank()
+        || recipe.getNeedleSize().getLabel() == null || recipe.getYarnType().getLabel() == null
+        || recipe.getSkillLevel().getDescription() == null 
+        || recipe.getProjectStatus().getLabel() == null) {
+      throw new IllegalArgumentException("Every field must be filled out.");
+    }
+    return recipeRepository.save(recipe);
   }
 
   /**

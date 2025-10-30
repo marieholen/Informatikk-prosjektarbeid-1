@@ -1,15 +1,18 @@
 package knitspace.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import knitspace.model.Recipe;
 import knitspace.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +45,26 @@ public class RecipeController {
           .orElseGet(() -> ResponseEntity.noContent().build());
     } catch (IllegalArgumentException e) {
       return ResponseEntity.badRequest().build();
+    }
+  }
+
+  /**
+   * Create a new recipe.
+   *
+   * @param recipe The recipe data.
+   * @return 201 (CREATED) if the created recipe if successful,
+   *         409 (CONFLICT) if recipe data is invalid,
+   *         500 (INTERNAL SERVER ERROR) on server error
+   */
+  @PostMapping
+  public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
+    try {
+      Recipe savedRecipe = recipeService.saveRecipe(recipe);
+      return ResponseEntity.status(HttpStatus.CREATED).body(savedRecipe);
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    } catch (IOException e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
 

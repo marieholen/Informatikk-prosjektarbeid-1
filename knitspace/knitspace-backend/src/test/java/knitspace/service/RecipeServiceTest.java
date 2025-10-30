@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.never;
 
@@ -206,5 +207,41 @@ public class RecipeServiceTest {
         assertThat(result).isFalse();
         verify(recipeRepository, never()).save(any());
     }
+
+  @Test
+  void saveRecipeReturnsSavedRecipeWhenValid() throws Exception {
+    UUID userId = UUID.randomUUID();
+    Recipe recipe = new Recipe(userId, "Valid Title", "Valid Description",
+        SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    when(recipeRepository.save(recipe)).thenReturn(recipe);
+
+    Recipe result = recipeService.saveRecipe(recipe);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTitle()).isEqualTo("Valid Title");
+    assertThat(result.getDescription()).isEqualTo("Valid Description");
+  }
+
+  @Test
+  void saveRecipeThrowsExceptionWhenTitleIsBlank() {
+    UUID userId = UUID.randomUUID();
+    Recipe recipe = new Recipe(userId, "", "Valid Description",
+        SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    assertThatThrownBy(() -> recipeService.saveRecipe(recipe))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Every field must be filled out.");
+  }
+
+  @Test
+  void saveRecipeThrowsExceptionWhenUserIdIsNull() {
+    Recipe recipe = new Recipe(null, "Valid Title", "Valid Description",
+        SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    assertThatThrownBy(() -> recipeService.saveRecipe(recipe))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Every field must be filled out.");
+  }
 
 }
