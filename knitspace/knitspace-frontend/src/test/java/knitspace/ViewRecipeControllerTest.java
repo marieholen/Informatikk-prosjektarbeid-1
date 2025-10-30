@@ -1,5 +1,10 @@
 package knitspace;
 
+import static org.mockito.Mockito.*;
+
+import java.io.IOException;
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +34,10 @@ import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
 import knitspace.enums.SkillLevel;
 import knitspace.enums.YarnType;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
+import knitspace.client.RecipeClient;
+import knitspace.exception.ApiException;
 import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
@@ -38,6 +47,10 @@ import knitspace.model.User;
 public class ViewRecipeControllerTest {
 
   private ViewRecipeController controller;
+
+
+  @Mock
+  private RecipeClient mockClient;
 
   @Mock
   private Recipe mockRecipe;
@@ -57,12 +70,15 @@ public class ViewRecipeControllerTest {
 
   @BeforeEach
   void setupMocks() {
+    lenient().when(mockRecipe.recipeId()).thenReturn(UUID.randomUUID().toString());
     lenient().when(mockRecipe.title()).thenReturn("Test Title");
     lenient().when(mockRecipe.description()).thenReturn("Test Description");
     lenient().when(mockRecipe.skillLevel()).thenReturn(SkillLevel.BEGINNER);
     lenient().when(mockRecipe.yarnType()).thenReturn(YarnType.WOOL);
     lenient().when(mockRecipe.needleSize()).thenReturn(NeedleSize.SIZE_8_0);
     lenient().when(mockRecipe.projectStatus()).thenReturn(ProjectStatus.IN_PROGRESS);
+
+    Platform.runLater(() -> controller.setAndLoadRecipe(mockRecipe));
   }
 
   @Test
@@ -98,6 +114,35 @@ public class ViewRecipeControllerTest {
     verifyThat(".dialog-pane", isVisible());
   }
 
+
+  @Test
+  void testDeleteRecipeCallsClient(FxRobot robot) throws Exception {
+    controller.recipeClient = mockClient;
+
+    Platform.runLater(() -> controller.setAndLoadRecipe(mockRecipe));
+    WaitForAsyncUtils.waitForFxEvents();
+
+    robot.clickOn("#deleteButton");
+    WaitForAsyncUtils.waitForFxEvents();
+
+    verify(mockClient).deleteRecipe(UUID.fromString(mockRecipe.recipeId()));
+  }
+
+  @Test
+  void testDeleteRecipeShowsAlertOnFailure(FxRobot robot) throws Exception {
+    controller.recipeClient = mockClient;
+
+    doThrow(new ApiException("Recipe not found (404)"))
+        .when(mockClient).deleteRecipe(any(UUID.class));
+
+    Platform.runLater(() -> controller.setAndLoadRecipe(mockRecipe));
+    WaitForAsyncUtils.waitForFxEvents();
+
+    robot.clickOn("#deleteButton");
+    WaitForAsyncUtils.waitForFxEvents();
+
+    verifyThat(".dialog-pane", isVisible());
+   
   @Test
   public void testHandleBackButtonClick(FxRobot robot) throws ApiException {
     robot.clickOn("#backButton");
@@ -109,3 +154,6 @@ public class ViewRecipeControllerTest {
     verifyThat("#myRecipesLabel", isVisible());
   }
 }
+
+}
+

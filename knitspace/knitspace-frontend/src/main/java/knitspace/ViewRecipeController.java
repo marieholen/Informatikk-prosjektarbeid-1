@@ -1,15 +1,21 @@
 package knitspace;
 
 import java.io.IOException;
+import java.util.Optional;
+import java.util.UUID;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import knitspace.client.RecipeClient;
+import knitspace.exception.ApiException;
 import knitspace.model.Recipe;
 
 /**
@@ -21,6 +27,10 @@ public class ViewRecipeController {
   Button editButton;
 
   @FXML
+  Button deleteButton;
+
+  RecipeClient recipeClient = new RecipeClient();
+  
   Button backButton;
 
   @FXML
@@ -143,9 +153,38 @@ public class ViewRecipeController {
     return statusLabel;
   }
 
+  /** 
+   * Handles the Delete-button click. 
+   * Shows a confirmation dialog, deletes via RecipeClient and redirects to MyRecipes.fxml. 
+   */
   @FXML
-  private void handleDeleteButton() {
-    // TODO: implement later. Currently a stub for TestFX tests.
+  public void handleDeleteButton() {
+    if (selectedRecipe == null) {
+      showAlert("Error", "No recipes selected.");
+      return;
+    }
+
+    try {
+      recipeClient.deleteRecipe(UUID.fromString(selectedRecipe.recipeId()));
+      loadMyRecipesView();
+    } catch (ApiException | IOException e) {
+      showAlert("Delete Error", "Could not delete recipe: " + e.getMessage());
+    }
+  }
+
+  public void setRecipeClient(RecipeClient client) {
+    this.recipeClient = client;
+  }
+
+  /** Helper to load MyRecipes.fxml scene. */
+  public void loadMyRecipesView() throws IOException {
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/MyRecipes.fxml"));
+    Parent root = loader.load();
+    Platform.runLater(() -> {
+      Stage stage = (Stage) titleLabel.getScene().getWindow();
+      stage.setScene(new Scene(root));
+      stage.setTitle("My Recipes");
+    });
   }
 
   /**
@@ -161,4 +200,5 @@ public class ViewRecipeController {
     stage.setScene(scene);
     stage.setTitle("Your Recipes!");
   }
+
 }
