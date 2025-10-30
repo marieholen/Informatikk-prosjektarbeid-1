@@ -9,13 +9,13 @@
 **So that** I can read the recipe whenever I need it.
 
 ## Acceptance Criteria
-- [ ] The "Open PDF" butten is implemented so that the PDF opens on a browser.
+- [ ] The "Open PDF" button is implemented so that the PDF opens on a browser.
 - [ ] Shows some kind of message if there is no existing PDF for the selected recipe.
 
 ## Scenarios
 - Scenario: Viewing PDF file for my recipe
 - **Given** I am a user
-- **And** I want to see the PFD for a recipe i have created
+- **And** I want to see the PDF for a recipe I have created
 - **When** I click "Open PDF"
 - **Then** I should be able to see the PDF file
 
