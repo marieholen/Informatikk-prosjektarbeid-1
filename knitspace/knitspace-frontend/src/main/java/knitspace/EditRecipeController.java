@@ -1,5 +1,6 @@
 package knitspace;
 
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,6 +17,7 @@ import knitspace.model.Recipe;
  */
 public class EditRecipeController {
   @FXML
+
   private TextField titleField;
 
   @FXML

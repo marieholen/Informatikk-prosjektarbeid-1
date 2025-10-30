@@ -144,4 +144,32 @@ public class MyRecipesControllerTest extends ApplicationTest {
         assertDoesNotThrow(() -> newRecipe.invoke(controller));
     }
 
+    @Test
+    void matchesSearchFieldFilterRecipesBasedOnTitle() throws Exception {
+        MyRecipesController controller = new MyRecipesController(recipeClient);
+
+        Recipe recipe = new Recipe("recipeId", "userId", "Jumper", "Warm", null, null, null, null);
+
+        Method method = MyRecipesController.class.getDeclaredMethod("matchesSearchField", Recipe.class);
+        method.setAccessible(true);
+
+        var searchField = MyRecipesController.class.getDeclaredField("searchField");
+        searchField.setAccessible(true);
+        javafx.scene.control.TextField mockSearchField = new javafx.scene.control.TextField();
+        searchField.set(controller, mockSearchField);
+
+        mockSearchField.setText("");
+        boolean result1 = (boolean) method.invoke(controller, recipe);
+        assertEquals(true, result1, "Empty searchfield should return true for all recipes");
+
+        mockSearchField.setText("per");
+        boolean result2 = (boolean) method.invoke(controller, recipe);
+        assertEquals(true, result2, "Searches that match the title (regardless of case) should return true");
+
+        mockSearchField.setText("coat");
+        boolean result3 = (boolean) method.invoke(controller, recipe);
+        assertEquals(false, result3, "Searches that do not match the title should return false");
+
+    }
+
 }
