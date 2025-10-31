@@ -122,7 +122,22 @@ class MyRecipesControllerTest {
     controller.searchField.setText("socks");
     assertFalse(controller.matchesSearchField(recipe), "Non-matching text should return false");
     }
+  
+    @Test
+    void testLogOutButtonRedirectsToLogin(FxRobot robot) {
+        robot.clickOn("#btnLogout");
+        WaitForAsyncUtils.waitForFxEvents();
 
+        assertEquals("Log out", stage.getTitle(),
+                "Stage title should change to 'Log out' after clicking Log out button");
+        
+        assertNotNull(robot.lookup("#loginButton").query(),
+                "Login.fxml should be loaded");
+
+        assertEquals(null, SessionManager.getCurrentUser(), 
+                "Session should be cleared on logout");
+    }
+  
     @ParameterizedTest 
     @EnumSource(ProjectStatus.class) 
     void testThatCreateRecipeCardSwitchStatementWorksCorrectly(ProjectStatus status, FxRobot robot) { 
