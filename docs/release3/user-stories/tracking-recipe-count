@@ -1,0 +1,30 @@
+## Story Information
+**Title:** Track recipe count and completion ratio
+**Feature:** Visual recipe data & gamification
+
+## Description
+**As an** unmotivated user,
+**I want** to see the number of recipes I have created and the percentage I have completed,
+**So that** I can visually track my progress and feel more motivated through a sense of achievement through a more **gamified** interface.
+
+## Acceptance Criteria
+- [ ] The app displays the total number of recipes the user has created.
+- [ ] The app shows the percentage or ratio of recipes completed by the user.
+
+## Scenarios
+- Scenario: Viewing recipe progress
+  - **Given** I am a user
+  - **And** I have created multiple recipes
+  - **When** I look at MyRecipes
+  - **Then** I should see the total number of recipes I have created
+  - **And** I should see the percentage of those recipes that are marked as completed
+
+- Scenario: Counter updates when a new recipe is created
+  - **Given** I am in MyRecipes
+  - **When** I create a new recipe
+  - **Then** the total recipe count should increase by one
+
+- Scenario: Progress updates when a recipe is completed
+  - **Given** I am in MyRecipes
+  - **When** I mark one recipe as completed
+  - **Then** the percentage of recipes completed should update to reflect this change
