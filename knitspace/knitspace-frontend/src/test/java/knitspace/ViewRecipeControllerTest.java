@@ -1,10 +1,7 @@
 package knitspace;
 
 import static org.mockito.Mockito.*;
-
-import java.io.IOException;
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -136,9 +133,6 @@ public class ViewRecipeControllerTest {
   @Test
   public void testHandleBackButtonClick(FxRobot robot) throws ApiException {
     robot.clickOn("#backButton");
-    WaitForAsyncUtils.waitForFxEvents();
-
-    robot.clickOn("OK");
     WaitForAsyncUtils.waitForFxEvents();
 
     verifyThat("#myRecipesLabel", isVisible());

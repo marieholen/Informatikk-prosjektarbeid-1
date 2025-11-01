@@ -28,6 +28,7 @@ public class ViewRecipeController {
 
   RecipeClient recipeClient = new RecipeClient();
   
+  @FXML
   Button backButton;
 
   @FXML
