@@ -135,6 +135,9 @@ public class ViewRecipeControllerTest {
     robot.clickOn("#backButton");
     WaitForAsyncUtils.waitForFxEvents();
 
+    robot.clickOn("OK");
+    WaitForAsyncUtils.waitForFxEvents();
+
     verifyThat("#myRecipesLabel", isVisible());
   }
 }
