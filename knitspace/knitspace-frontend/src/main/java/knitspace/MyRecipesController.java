@@ -1,5 +1,6 @@
 package knitspace;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
@@ -12,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -27,7 +29,6 @@ import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
 import knitspace.model.User;
 
-
 /**
  * Controller for {@code MyRecipes.fxml}.
  * Handles user interaction on the "My recipes" page.
@@ -38,9 +39,12 @@ public class MyRecipesController {
 
   private final RecipeClient recipeClient;
 
-  @FXML private ScrollPane recipesScrollPane;
-  @FXML private VBox recipesVerticalBox;
-  @FXML TextField searchField;
+  @FXML
+  private ScrollPane recipesScrollPane;
+  @FXML
+  private VBox recipesVerticalBox;
+  @FXML
+  TextField searchField;
 
   /**
    * Constructor for MyRecipesController.
@@ -65,7 +69,8 @@ public class MyRecipesController {
   }
 
   /**
-   * Configures the scroll pane so that the content fits both vertically and horizontally.
+   * Configures the scroll pane so that the content fits both vertically and
+   * horizontally.
    */
   private void setupScrollPane() {
     recipesScrollPane.setFitToHeight(true);
@@ -108,6 +113,30 @@ public class MyRecipesController {
 
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  /**
+   * Opens the ViewRecipe view for the selected recipe. Used when the "Details"
+   * button is pressed.
+   *
+   * @param event  the triggered action event.
+   * @param recipe the selected recipe to display the details for.
+   */
+  private void openRecipeDetails(ActionEvent event, Recipe recipe) {
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ViewRecipe.fxml"));
+    try {
+      Parent root = fxmlLoader.load();
+
+      ViewRecipeController viewRecipeController = fxmlLoader.getController();
+
+      viewRecipeController.setAndLoadRecipe(recipe);
+
+      Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+      stage.setScene(new Scene(root));
+    } catch (IOException e) {
+      Alert alert = new Alert(AlertType.ERROR, "Error when loading recipe detail window!:(");
+      alert.showAndWait();
     }
   }
 
@@ -176,7 +205,8 @@ public class MyRecipesController {
   }
 
   /**
-   * Creates a styled recipe card. Containing recipe details and a new button called "Details".
+   * Creates a styled recipe card. Containing recipe details and a new button
+   * called "Details".
    *
    * @param recipe the recipe to display.
    * @return a VBox representing the recipe card.
@@ -192,8 +222,7 @@ public class MyRecipesController {
             + "-fx-border-color: lightgrey;"
             + " -fx-border-radius: 5;"
             + "-fx-background-radius: 5;"
-            + " -fx-padding: 15;"
-    );
+            + " -fx-padding: 15;");
 
     Label title = new Label(recipe.title());
     title.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
@@ -203,16 +232,14 @@ public class MyRecipesController {
             + "  |  "
             + recipe.needleSize()
             + "  |  "
-            + recipe.yarnType()
-    );
+            + recipe.yarnType());
     details.setStyle("-fx-text-fill: gray;");
 
     Label status = new Label(recipe.projectStatus().getLabel());
     status.setStyle(
         "-fx-text-fill: white;"
             + " -fx-padding: 3 8 3 8;"
-            + " -fx-background-radius: 10;"
-    );
+            + " -fx-background-radius: 10;");
 
     switch (recipe.projectStatus()) {
       case IN_PROGRESS -> status.setStyle(
@@ -231,26 +258,30 @@ public class MyRecipesController {
       }
     }
 
+    final Button detailsButton = new Button("Details");
+    detailsButton.setOnAction(e -> openRecipeDetails(e, recipe));
+
     HBox row = new HBox(10);
     row.setAlignment(Pos.CENTER_LEFT);
 
     Region spacer = new Region();
     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    row.getChildren().addAll(title, details, status, spacer);
+    row.getChildren().addAll(title, details, status, spacer, detailsButton);
     card.getChildren().add(row);
 
     return card;
   }
 
   /**
-   * Checks if the given recipe matches the current search query typed into the search field.
+   * Checks if the given recipe matches the current search query typed into the
+   * search field.
    *
    *
    * @param recipe the recipe to check
-   * @return {@code true} if the recipe title contains the search text 
+   * @return {@code true} if the recipe title contains the search text
    *         (case-insensitive), {@code false} otherwise
-  */
+   */
   boolean matchesSearchField(Recipe recipe) {
     String searchText = searchField.getText();
 
