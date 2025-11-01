@@ -5,9 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.util.List;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+
 import knitspace.client.RecipeClient;
 import knitspace.meta.SessionManager;
 import knitspace.enums.ProjectStatus;
@@ -16,7 +14,6 @@ import knitspace.enums.YarnType;
 import knitspace.enums.NeedleSize;
 import knitspace.model.Recipe;
 import knitspace.model.User;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +27,7 @@ import org.testfx.framework.junit5.Start;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -54,9 +52,9 @@ class MyRecipesControllerTest {
     void setup() {
         SessionManager.setCurrentUser(null);
         controller = new MyRecipesController(recipeClient);
-        controller.searchField = new TextField(); 
+        controller.searchField = new TextField();
     }
-    
+
     @Start
     void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/MyRecipes.fxml"));
@@ -109,20 +107,20 @@ class MyRecipesControllerTest {
 
     @Test
     void testMatchesSearchField() {
-    MyRecipesController controller = new MyRecipesController();
-    controller.searchField = new TextField();
-    Recipe recipe = new Recipe("recipeId", "userId", "Wool Sweater", "A warm sweater", null, null, null, null);
+        MyRecipesController controller = new MyRecipesController();
+        controller.searchField = new TextField();
+        Recipe recipe = new Recipe("recipeId", "userId", "Wool Sweater", "A warm sweater", null, null, null, null);
 
-    controller.searchField.setText("");
-    assertTrue(controller.matchesSearchField(recipe), "Blank search should match all recipes");
+        controller.searchField.setText("");
+        assertTrue(controller.matchesSearchField(recipe), "Blank search should match all recipes");
 
-    controller.searchField.setText("wool");
-    assertTrue(controller.matchesSearchField(recipe), "Matching text should return true");
+        controller.searchField.setText("wool");
+        assertTrue(controller.matchesSearchField(recipe), "Matching text should return true");
 
-    controller.searchField.setText("socks");
-    assertFalse(controller.matchesSearchField(recipe), "Non-matching text should return false");
+        controller.searchField.setText("socks");
+        assertFalse(controller.matchesSearchField(recipe), "Non-matching text should return false");
     }
-  
+
     @Test
     void testLogOutButtonRedirectsToLogin(FxRobot robot) {
         robot.clickOn("#btnLogout");
@@ -130,38 +128,63 @@ class MyRecipesControllerTest {
 
         assertEquals("Log out", stage.getTitle(),
                 "Stage title should change to 'Log out' after clicking Log out button");
-        
+
         assertNotNull(robot.lookup("#loginButton").query(),
                 "Login.fxml should be loaded");
 
-        assertEquals(null, SessionManager.getCurrentUser(), 
+        assertEquals(null, SessionManager.getCurrentUser(),
                 "Session should be cleared on logout");
     }
-  
-    @ParameterizedTest 
-    @EnumSource(ProjectStatus.class) 
-    void testThatCreateRecipeCardSwitchStatementWorksCorrectly(ProjectStatus status, FxRobot robot) { 
+
+    @ParameterizedTest
+    @EnumSource(ProjectStatus.class)
+    void testThatCreateRecipeCardSwitchStatementWorksCorrectly(ProjectStatus status, FxRobot robot) {
         MyRecipesController myController = new MyRecipesController(recipeClient);
         Recipe testRecipe = new Recipe(
-            "status_" + status.getLabel(),
-            "userid",
-            "some title",
-            "some description", 
-            SkillLevel.BEGINNER, 
-            YarnType.WOOL, 
-            NeedleSize.SIZE_2_0,
-            status 
-        );
+                "status_" + status.getLabel(),
+                "userid",
+                "some title",
+                "some description",
+                SkillLevel.BEGINNER,
+                YarnType.WOOL,
+                NeedleSize.SIZE_2_0,
+                status);
 
         VBox card = myController.createRecipeCard(testRecipe);
 
         assertNotNull(card, "Card should not be null for project status: " + status.toString());
-        
+
         HBox row = (HBox) card.getChildren().get(0);
         Label statusLabel = (Label) row.getChildren().get(2);
         assertEquals(status.getLabel(),
-            statusLabel.getText(),
-            "Card status should equal ProjectStatus status!"
-        );
+                statusLabel.getText(),
+                "Card status should equal ProjectStatus status!");
+    }
+
+    @Test
+    void testDetailsButtonOpensViewRecipe(FxRobot robot) {
+        User user = new User("user1", "tester", "password");
+        SessionManager.setCurrentUser(user);
+
+        MyRecipesController myController = new MyRecipesController(recipeClient);
+        Recipe recipe = new Recipe("r1", "user1", "Title1", "Desc1",
+                SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.PLANNED);
+
+        VBox card = myController.createRecipeCard(recipe);
+
+        robot.interact(() -> {
+            VBox recipesBox = robot.lookup("#recipesVerticalBox").queryAs(VBox.class);
+            recipesBox.getChildren().add(card);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        HBox row = (HBox) card.getChildren().get(0);
+        Button detailsButton = (Button) row.getChildren().get(4);
+
+        robot.clickOn(detailsButton);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertNotNull(stage.getScene().getRoot().lookup("#titleLabel"),
+                "ViewRecipe.fxml should be loaded and contain #titleLabel");
     }
 }
