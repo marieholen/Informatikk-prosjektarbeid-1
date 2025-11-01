@@ -9,11 +9,14 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import knitspace.client.UserClient;
 import knitspace.exception.ApiException;
+import knitspace.meta.SessionManager;
+import knitspace.model.User;
 
 /**
  * Controller for the Create Account page in the frontend application.
@@ -29,8 +32,9 @@ public class CreateAccountController {
   private PasswordField confirmPasswordField;
   @FXML
   private Button signupButton;
-
-  UserClient userClient;
+  @FXML
+  private Hyperlink loginLink;
+  private UserClient userClient;
 
   /**
    * Default constructor - creates UserClient instance.
@@ -55,6 +59,7 @@ public class CreateAccountController {
   @FXML
   private void initialize() {
     signupButton.setOnAction(this::handleSignup);
+    loginLink.setOnAction(this::handleLogIn);
   }
 
   /**
@@ -84,13 +89,18 @@ public class CreateAccountController {
    * Creates a new user account.
    * This method will be called by handleSignup after validation.
    * Makes an API call to the backend service to create the account.
+   * If creation is successfull it updates SessionManagers current user.
+   * Then redirects to myRecipes.
    *
    * @param username The username for the new account
    * @param password The password for the new account
    */
   private void createUserAccount(String username, String password) {
     try {
-      userClient.createAccount(username, password);
+      User createdUser = userClient.createAccount(username, password);
+
+      SessionManager.setCurrentUser(createdUser);
+
       goToMyRecipes(signupButton);
 
     } catch (ApiException e) {
@@ -167,5 +177,33 @@ public class CreateAccountController {
       alert.setContentText(message);
       alert.showAndWait();
     });
+  }
+
+  /**
+   * Handles navigation to the login page when the login link is clicked.
+   */
+  @FXML
+  void handleLogIn(ActionEvent event) {
+    goToLogin(loginLink);
+  }
+
+  /**
+  * Navigates the user to the login page.
+  *
+  * @param anyNodeInCurrentScene a reference to any node in the current scene,
+  *                              used to obtain the current {@link Stage}.
+ */
+
+  private void goToLogin(Node anyNodeInCurrentScene) {
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/Login.fxml"));
+      Scene scene = new Scene(loader.load());
+
+      Stage stage = (Stage) anyNodeInCurrentScene.getScene().getWindow();
+      stage.setScene(scene);
+    } catch (Exception e) {
+      e.printStackTrace();
+      showErrorPopup("Navigation error", "Could not open the Login page.");
+    }
   }
 }

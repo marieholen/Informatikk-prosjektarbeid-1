@@ -11,4 +11,6 @@ module knitspace {
 
   opens knitspace to javafx.graphics, javafx.fxml;
   opens knitspace.model to com.fasterxml.jackson.databind;
+
+  exports knitspace.enums to com.fasterxml.jackson.databind;
 }

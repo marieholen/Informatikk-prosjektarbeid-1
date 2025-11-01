@@ -22,6 +22,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+
 
 /**
  * Unit tests for RecipeService.
@@ -118,4 +122,126 @@ public class RecipeServiceTest {
 
         assertThat(result).isEmpty();
     }
+
+    @Test
+    void deleteRecipeByIdReturnsTrueWhenRecipeExists() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+    Recipe recipe = new Recipe(recipeId, UUID.randomUUID(), "title", "desc",
+            SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    when(recipeRepository.findById(recipeId)).thenReturn(recipe);
+
+    boolean result = recipeService.deleteRecipeById(recipeId);
+
+    assertThat(result).isTrue();
+    verify(recipeRepository).deleteById(recipeId);
+    }
+
+    @Test
+    void deleteRecipeByIdReturnsFalseWhenRecipeNotFound() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeRepository.findById(recipeId)).thenReturn(null);
+
+    boolean result = recipeService.deleteRecipeById(recipeId);
+
+    assertThat(result).isFalse();
+    verify(recipeRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void deleteRecipeByIdReturnsFalseWhenExceptionThrown() throws Exception {
+    UUID recipeId = UUID.randomUUID();
+
+    when(recipeRepository.findById(recipeId)).thenThrow(new IOException("disk error!"));
+
+    boolean result = recipeService.deleteRecipeById(recipeId);
+
+    assertThat(result).isFalse();
+    verify(recipeRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void updateRecipeByIdReturnsTrueWhenRecipeExistsAndIdsMatch() throws Exception {
+        UUID recipeId = UUID.randomUUID();
+        Recipe existingRecipe = new Recipe(recipeId, UUID.randomUUID(), "old title", "old desc",
+                SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_3_0, ProjectStatus.PLANNED);
+        Recipe updatedRecipe = new Recipe(recipeId, UUID.randomUUID(), "new title", "new desc",
+                SkillLevel.EXPERT, YarnType.COTTON, NeedleSize.SIZE_5_0, ProjectStatus.FINISHED);
+
+        when(recipeRepository.findById(recipeId)).thenReturn(existingRecipe);
+
+        boolean result = recipeService.updateRecipeById(recipeId, updatedRecipe);
+
+        assertThat(result).isTrue();
+        verify(recipeRepository).save(updatedRecipe);
+    }
+
+    @Test
+    void updateRecipeByIdReturnsFalseWhenRecipeNotFound() throws Exception {
+        UUID recipeId = UUID.randomUUID();
+        Recipe updatedRecipe = new Recipe(recipeId, UUID.randomUUID(), "title", "desc",
+                SkillLevel.INTERMEDIATE, YarnType.ACRYLIC, NeedleSize.SIZE_4_0, ProjectStatus.IN_PROGRESS);
+
+        when(recipeRepository.findById(recipeId)).thenReturn(null);
+
+        boolean result = recipeService.updateRecipeById(recipeId, updatedRecipe);
+
+        assertThat(result).isFalse();
+        verify(recipeRepository, never()).save(any());
+    }
+
+    @Test
+    void updateRecipeByIdReturnsFalseWhenRecipeIdsMismatch() throws Exception {
+        UUID recipeId = UUID.randomUUID();
+        UUID differentId = UUID.randomUUID();
+        Recipe existingRecipe = new Recipe(recipeId, UUID.randomUUID(), "title", "desc",
+                SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.PLANNED);
+        Recipe updatedRecipe = new Recipe(differentId, UUID.randomUUID(), "new title", "new desc",
+                SkillLevel.EXPERT, YarnType.COTTON, NeedleSize.SIZE_6_0, ProjectStatus.FINISHED);
+
+        when(recipeRepository.findById(recipeId)).thenReturn(existingRecipe);
+
+        boolean result = recipeService.updateRecipeById(recipeId, updatedRecipe);
+
+        assertThat(result).isFalse();
+        verify(recipeRepository, never()).save(any());
+    }
+
+  @Test
+  void saveRecipeReturnsSavedRecipeWhenValid() throws Exception {
+    UUID userId = UUID.randomUUID();
+    Recipe recipe = new Recipe(userId, "Valid Title", "Valid Description",
+        SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    when(recipeRepository.save(recipe)).thenReturn(recipe);
+
+    Recipe result = recipeService.saveRecipe(recipe);
+
+    assertThat(result).isNotNull();
+    assertThat(result.getTitle()).isEqualTo("Valid Title");
+    assertThat(result.getDescription()).isEqualTo("Valid Description");
+  }
+
+  @Test
+  void saveRecipeThrowsExceptionWhenTitleIsBlank() {
+    UUID userId = UUID.randomUUID();
+    Recipe recipe = new Recipe(userId, "", "Valid Description",
+        SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    assertThatThrownBy(() -> recipeService.saveRecipe(recipe))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Every field must be filled out.");
+  }
+
+  @Test
+  void saveRecipeThrowsExceptionWhenUserIdIsNull() {
+    Recipe recipe = new Recipe(null, "Valid Title", "Valid Description",
+        SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_5_0, ProjectStatus.PLANNED);
+
+    assertThatThrownBy(() -> recipeService.saveRecipe(recipe))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("Every field must be filled out.");
+  }
+
 }
