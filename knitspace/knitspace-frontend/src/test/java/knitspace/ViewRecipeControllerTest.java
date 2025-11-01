@@ -11,10 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.testfx.api.FxAssert.verifyThat;
 import org.testfx.api.FxRobot;
@@ -22,26 +19,18 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
 import org.testfx.util.WaitForAsyncUtils;
-import java.util.List;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import knitspace.MyRecipesController;
 import knitspace.client.RecipeClient;
 import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
 import knitspace.enums.SkillLevel;
 import knitspace.enums.YarnType;
-import javafx.application.Platform;
-import javafx.scene.control.Label;
-import knitspace.client.RecipeClient;
 import knitspace.exception.ApiException;
-import knitspace.exception.ApiException;
-import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
-import knitspace.model.User;
 
 @ExtendWith({MockitoExtension.class, ApplicationExtension.class})
 public class ViewRecipeControllerTest {
@@ -142,6 +131,7 @@ public class ViewRecipeControllerTest {
     WaitForAsyncUtils.waitForFxEvents();
 
     verifyThat(".dialog-pane", isVisible());
+  }
    
   @Test
   public void testHandleBackButtonClick(FxRobot robot) throws ApiException {
@@ -153,7 +143,5 @@ public class ViewRecipeControllerTest {
 
     verifyThat("#myRecipesLabel", isVisible());
   }
-}
-
 }
 
