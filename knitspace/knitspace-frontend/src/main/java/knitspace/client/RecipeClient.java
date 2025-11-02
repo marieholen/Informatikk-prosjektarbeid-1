@@ -84,4 +84,35 @@ public class RecipeClient extends ApiClient {
     }
   }
 
+  /**
+   * Updates an existing recipe.
+   *
+   * @param recipe The recipe to update.
+   * @throws ApiException If the API call fails.
+   */
+  public void updateRecipe(Recipe recipe) throws ApiException {
+    try {
+      HttpRequest request = createRequestBuilder(RECIPES_ENDPOINT + "/" + recipe.getId())
+          .PUT(HttpRequest.BodyPublishers.ofString(serialize(recipe)))
+          .header("Content-Type", "application/json")
+          .build();
+
+      System.out.println("Sending update (PUT) request to " + RECIPES_ENDPOINT + "/" + recipe.getId());
+      HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+      System.out.println("Received response with status code: " + response.statusCode());
+
+      int status = response.statusCode();
+      if (status == 204) {
+        return;
+      } else if (status == 400) {
+        throw new ApiException("Bad Request! (400)");
+      } else if (status == 404) {
+        throw new ApiException("Recipe could not be found! (404)");
+      } else {
+        throw new ApiException("Unexpected response code: " + status);
+      }
+    } catch (Exception e) {
+      throw new ApiException("Failed to update recipe: " + e.getMessage(), e);
+    }
+  }
 }
