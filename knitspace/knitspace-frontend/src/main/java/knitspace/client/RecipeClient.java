@@ -92,12 +92,12 @@ public class RecipeClient extends ApiClient {
    */
   public void updateRecipe(Recipe recipe) throws ApiException {
     try {
-      HttpRequest request = createRequestBuilder(RECIPES_ENDPOINT + "/" + recipe.getId())
+      HttpRequest request = createRequestBuilder(RECIPES_ENDPOINT + "/" + recipe.recipeId())
           .PUT(HttpRequest.BodyPublishers.ofString(serialize(recipe)))
           .header("Content-Type", "application/json")
           .build();
 
-      System.out.println("Sending update (PUT) request to " + RECIPES_ENDPOINT + "/" + recipe.getId());
+      System.out.println("Sending update (PUT) request to " + RECIPES_ENDPOINT + "/" + recipe.recipeId());
       HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
       System.out.println("Received response with status code: " + response.statusCode());
 

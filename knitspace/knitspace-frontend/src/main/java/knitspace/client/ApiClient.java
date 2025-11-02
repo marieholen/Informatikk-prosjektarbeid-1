@@ -1,5 +1,6 @@
 package knitspace.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -59,6 +60,38 @@ public class ApiClient {
     } else {
       throw new ApiException(
           "HTTP " + response.statusCode() + ": " + response.body(), response.statusCode());
+    }
+  }
+
+  /**
+   * Serializes an object to JSON string.
+   * 
+   * @param object The object to serialize
+   * @return JSON string representation
+   * @throws ApiException If serialization fails
+   */
+  protected String serialize(Object object) throws ApiException {
+    try {
+      return objectMapper.writeValueAsString(object);
+    } catch (JsonProcessingException e) {
+      throw new ApiException("Failed to serialize object: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Deserializes a JSON string to an object of the given class (clazz).
+   * 
+   * @param <T> The type of object to deserialize to
+   * @param json The JSON string to deserialize
+   * @param clazz The class of the object
+   * @return The deserialized objcet
+   * @throws ApiException If deserialization fails
+   */
+  protected <T> T deserialize(String json, Class<T> clazz) throws ApiException {
+    try {
+      return objectMapper.readValue(json, clazz);
+    } catch (JsonProcessingException e) {
+      throw new ApiException("Failed to deserialize JSON: " + e.getMessage(), e);
     }
   }
 }
