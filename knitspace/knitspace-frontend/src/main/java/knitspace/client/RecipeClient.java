@@ -115,4 +115,45 @@ public class RecipeClient extends ApiClient {
       throw new ApiException("Failed to update recipe: " + e.getMessage(), e);
     }
   }
+
+  /**
+   * Creates a new recipe.
+   * 
+   * @param recipe Recipe to be created.
+   * @return The created recipe instance.
+   * @throws ApiException If the API call fails.
+   */
+  public Recipe createRecipe(Recipe recipe) throws ApiException {
+    try {
+      HttpRequest request = createRequestBuilder(RECIPES_ENDPOINT)
+          .POST(HttpRequest.BodyPublishers.ofString(serialize(recipe)))
+          .header("Content-Type", "application/json")
+          .build();
+
+      System.out.println("Sending Create (POST) request to " + RECIPES_ENDPOINT);
+      HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+      System.out.println("Received response with status code: " + response.statusCode());
+
+      int statusCode = response.statusCode();
+
+      switch (statusCode) {
+        case 201:
+          return deserialize(response.body(), Recipe.class);
+
+        case 400:
+          throw new ApiException("Bad Request! (400)");
+
+        case 409:
+          throw new ApiException("Conflict between sent data and existing data! (409)");
+
+        case 500:
+          throw new ApiException("Internal server error! (500)");
+
+        default:
+          throw new ApiException("Unexpected response  with status: " + statusCode + ", body: " + response.body());
+      }
+    } catch (Exception e) {
+      throw new ApiException("Failed to create recipe: " + e.getMessage(), e);
+    }
+  }
 }
