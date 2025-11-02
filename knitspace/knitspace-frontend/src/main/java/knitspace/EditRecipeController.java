@@ -1,15 +1,20 @@
 package knitspace;
 
-
+import java.util.UUID;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import knitspace.client.RecipeClient;
 import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
 import knitspace.enums.SkillLevel;
 import knitspace.enums.YarnType;
+import knitspace.exception.ApiException;
+import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
 
 /**
@@ -39,6 +44,24 @@ public class EditRecipeController {
   private Button saveButton;
 
   private Recipe currentRecipe;
+
+  private final RecipeClient recipeClient;
+
+  /**
+   * Constructor for EditRecipeController.
+   */
+  public EditRecipeController() {
+    this.recipeClient = new RecipeClient();
+  }
+
+  /**
+   * Constructor for used in testing when mocking.
+   * 
+   * @param recipeClient RecipeClient to use for API calls
+   */
+  public EditRecipeController(RecipeClient recipeClient) {
+    this.recipeClient = recipeClient;
+  }
 
   /**
    * Initializes the edit recipe view.
@@ -124,6 +147,8 @@ public class EditRecipeController {
   * Clear all input fields for creating a new recipe.
   */
   public void loadFromMyRecipes() {
+    this.currentRecipe = null;
+
     titleField.clear();
     descriptionField.clear();
     difficultyComboBox.setValue(null);
@@ -138,12 +163,166 @@ public class EditRecipeController {
     // TODO: implement later. Currently a stub for TestFX tests.
   }
 
+  /**
+   * Called when save button is clicked.
+   * Validates user inputs, creates or updates recipe.
+   * Navigates back to MyRecipe view.
+   * 
+   * @param event Triggered actionevent
+   */
   @FXML
   private void handleSaveButton(ActionEvent event) {
-    // TODO: implement later. Currently a stub for TestFX tests.
+    try {
+      if (!checkFormInputOk()) {
+        return;
+      }
+
+      String title = titleField.getText();
+      String description = descriptionField.getText();
+      SkillLevel skillLevel = getSelectedSkillLevel();
+      YarnType yarnType = getSelectedYarnType();
+      NeedleSize needleSize = getSelectedNeedleSize();
+      ProjectStatus projectStatus = getSelectedProjectStatus();
+
+      if (this.currentRecipe == null) {
+        Recipe recipeToCreate = new Recipe(
+          UUID.randomUUID().toString(),
+          SessionManager.getCurrentUser().userId(),
+          title,
+          description,
+          skillLevel,
+          yarnType,
+          needleSize,
+          projectStatus
+        );
+
+        recipeClient.createRecipe(recipeToCreate);
+        showAlert("Success", "Recipe created successfully!");
+
+      } else {
+        System.out.println(currentRecipe.recipeId());
+        Recipe recipeToUpdate = new Recipe(
+          currentRecipe.recipeId(),
+          currentRecipe.userId(),
+          title,
+          description,
+          skillLevel,
+          yarnType,
+          needleSize,
+          projectStatus
+        );
+
+        recipeClient.updateRecipe(recipeToUpdate);
+        showAlert("Success", "Recipe updated successfully!");
+      }
+
+    } catch (Exception e) {
+      showAlert("Error", "Could not save recipe: " + e.getMessage());
+      e.printStackTrace();
+    }
   }
 
   public Button getSaveButton() {
     return saveButton;
+  }
+
+  /**
+   * Displays an alert dialog with the given title and message.
+   *
+   * @param title   The title of the alert.
+   * @param message The message of the alert.
+   */
+  private void showAlert(String title, String message) {
+    Alert alert = new Alert(AlertType.INFORMATION);
+    alert.setTitle(title);
+    alert.setHeaderText(null);
+    alert.setContentText(message);
+    alert.showAndWait();
+  }
+
+  /**
+   * Validates the form fields.
+   *
+   * @return true if the validation passes, false otherwise
+   */
+  private boolean checkFormInputOk() {
+    if (titleField.getText() == null || titleField.getText().trim().isEmpty()) {
+      showAlert("Validation Error", "Title is required");
+      return false;
+    }
+
+    if (difficultyComboBox.getValue() == null) {
+      showAlert("Validation Error", "You have to select a difficulty!");
+      return false;
+    }
+
+    if (yarnTypeComboBox.getValue() == null) {
+      showAlert("Validation Error", "You have to select a yarn type!");
+      return false;
+    }
+
+    if (needleSizeComboBox.getValue() == null) {
+      showAlert("Validation Error", "You have to select a needle size!");
+      return false;
+    }
+
+    if (statusComboBox.getValue() == null) {
+      showAlert("Validation Error", "You have to set a recipe status!");
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Returns the {@link Skillevel} currently selected in the combo box.
+   * 
+   * @return the selected {@link Skillevel}, or {@code null} if none is selected.
+   */
+  private SkillLevel getSelectedSkillLevel() {
+      String selected = difficultyComboBox.getValue();
+      for (SkillLevel level : SkillLevel.values()) {
+          if (level.getDescription().equals(selected)) return level;
+      }
+      return null;
+  }
+
+  /**
+   * Returns the {@link YarnType} currently selected in the combo box.
+   * 
+   * @return the selected {@link YarnType}, or {@code null} if none is selected.
+   */
+  private YarnType getSelectedYarnType() {
+      String selected = yarnTypeComboBox.getValue();
+      for (YarnType type : YarnType.values()) {
+          if (type.getLabel().equals(selected)) return type;
+      }
+      return null;
+  }
+
+  /**
+   * Returns the {@link NeedleSize} currently selected in the combo box.
+   * 
+   * @return the selected {@link NeedleSize}, or {@code null} if none is selected.
+   */
+  private NeedleSize getSelectedNeedleSize() {
+      String selected = needleSizeComboBox.getValue();
+      for (NeedleSize size : NeedleSize.values()) {
+          if (size.getLabel().equals(selected)) return size;
+      }
+      return null;
+  }
+
+  /**
+   * Returns the {@link ProjectStatus} currently selected in the combo box.
+   * 
+   * @return the selected {@link ProjectStatus}, or {@code null} if none is selected.
+   */
+  private ProjectStatus getSelectedProjectStatus() {
+      String selected = statusComboBox.getValue();
+      for (ProjectStatus status : ProjectStatus.values()) {
+          if (status.getDescription().equals(selected)) return status;
+      }
+      return null;
   }
 }
