@@ -1,11 +1,15 @@
 package knitspace;
 
 import javafx.scene.control.ComboBox;
+import knitspace.client.RecipeClient;
 import knitspace.enums.ProjectStatus;
 import knitspace.enums.SkillLevel;
 import knitspace.enums.YarnType;
 import knitspace.enums.NeedleSize;
+import knitspace.exception.ApiException;
 import knitspace.model.Recipe;
+import knitspace.model.User;
+import knitspace.meta.SessionManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,12 +17,18 @@ import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+import org.mockito.Mock;
 
 @ExtendWith(ApplicationExtension.class)
 class EditRecipeControllerTest {
+
+    @Mock
+    private RecipeClient recipeClient;
 
     private EditRecipeController controller;
     private Field titleField;
@@ -30,7 +40,8 @@ class EditRecipeControllerTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        controller = new EditRecipeController();
+        recipeClient = mock(RecipeClient.class);
+        controller = spy(new EditRecipeController(recipeClient));
 
         titleField = EditRecipeController.class.getDeclaredField("titleField");
         titleField.setAccessible(true);
@@ -55,6 +66,11 @@ class EditRecipeControllerTest {
         statusField = EditRecipeController.class.getDeclaredField("statusComboBox");
         statusField.setAccessible(true);
         statusField.set(controller, new ComboBox<>());
+
+        User mockUser = new User("testID", "testUsername", "testPassword");
+        SessionManager.setCurrentUser(mockUser);
+
+        doNothing().when(controller).showAlert(anyString(), anyString());
     }
 
     @Test
@@ -149,4 +165,140 @@ class EditRecipeControllerTest {
         assertEquals(null, ((ComboBox<String>) statusField.get(controller)).getValue());
     }
 
+    @Test
+    void testCheckFormInputOkWhenAllFieldsValidReturnsTrue() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
+        ((TextField) descriptionField.get(controller)).setText("This is a valid description!:-)");
+        ((ComboBox<String>) difficultyField.get(controller)).setValue("Beginner");
+        ((ComboBox<String>) yarnTypeField.get(controller)).setValue("Cotton");
+        ((ComboBox<String>) needleSizeField.get(controller)).setValue("2.0 mm");
+        ((ComboBox<String>) statusField.get(controller)).setValue("In Progress");
+
+        assertTrue(controller.checkFormInputOk());
+    }
+
+    @Test
+    void testIsValidTitle() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
+        assertTrue(controller.isValidTitle());
+        
+        ((TextField) titleField.get(controller)).setText("");
+        assertFalse(controller.isValidTitle());
+
+        ((TextField) titleField.get(controller)).setText(" ");
+        assertFalse(controller.isValidTitle());
+        
+        ((TextField) titleField.get(controller)).setText(null);
+        assertFalse(controller.isValidTitle());
+    }
+
+    @Test
+    void testIsValidDescription() throws IllegalAccessException {
+        ((TextField) descriptionField.get(controller)).setText("This is a valid description!:-)");
+        assertTrue(controller.isValidDescription());
+        
+        ((TextField) descriptionField.get(controller)).setText("");
+        assertFalse(controller.isValidDescription());
+
+        ((TextField) descriptionField.get(controller)).setText(" ");
+        assertFalse(controller.isValidDescription());
+        
+        ((TextField) descriptionField.get(controller)).setText(null);
+        assertFalse(controller.isValidDescription());
+    }
+
+    @Test
+    void testGetValidationErrorMessageWithEmptyTitle() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("");
+        
+        assertEquals("Title cannot be empty or null!", controller.getValidationErrorMessage());
+    }
+
+    @Test
+    void testGetValidationErrorMessageWithEmptyDescription() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
+        ((TextField) descriptionField.get(controller)).setText("");
+        
+        assertEquals("Description cannot be empty or null!!", controller.getValidationErrorMessage());
+    }
+
+    @Test
+    void testGetValidationErrorMessageWithNoDifficulty() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
+        ((TextField) descriptionField.get(controller)).setText("This is a valid description!:-)");
+        ((ComboBox<String>) difficultyField.get(controller)).setValue(null);
+        
+        assertEquals("Please select a difficulty level.", controller.getValidationErrorMessage());
+    }
+
+    @Test
+    void testGetValidationErrorMessageWithNoYarnType() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
+        ((TextField) descriptionField.get(controller)).setText("This is a valid description!:-)");
+        ((ComboBox<String>) difficultyField.get(controller)).setValue("Beginner");
+        
+        assertEquals("Please select a yarn type.", controller.getValidationErrorMessage());
+    }
+
+    @Test
+    void testGetValidationErrorMessageWithNoNeedleSize() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
+        ((TextField) descriptionField.get(controller)).setText("This is a valid description!:-)");
+        ((ComboBox<String>) difficultyField.get(controller)).setValue("Beginner");
+        ((ComboBox<String>) yarnTypeField.get(controller)).setValue("Cotton");
+        
+        assertEquals("Please select a needle size.", controller.getValidationErrorMessage());
+    }
+
+    @Test
+    void testGetValidationErrorMessageWithNoStatusS() throws IllegalAccessException {
+        ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
+        ((TextField) descriptionField.get(controller)).setText("This is a valid description!:-)");
+        ((ComboBox<String>) difficultyField.get(controller)).setValue("Beginner");
+        ((ComboBox<String>) yarnTypeField.get(controller)).setValue("Cotton");
+        ((ComboBox<String>) needleSizeField.get(controller)).setValue("2.0 mm");
+        
+        assertEquals("Please select a project status.", controller.getValidationErrorMessage());
+    }
+
+    @Test
+    void testHandleSaveButtonCreateNewRecipeSucess() throws Exception {
+        controller.loadFromMyRecipes();
+
+        ((TextField) titleField.get(controller)).setText("Test Recipe Title");
+        ((TextField) descriptionField.get(controller)).setText("Test Recipe Description");
+        ((ComboBox<String>) difficultyField.get(controller)).setValue("Beginner");
+        ((ComboBox<String>) yarnTypeField.get(controller)).setValue("Cotton");
+        ((ComboBox<String>) needleSizeField.get(controller)).setValue("2.0 mm");
+        ((ComboBox<String>) statusField.get(controller)).setValue("In Progress");
+
+        Method handleSaveButton = EditRecipeController.class.getDeclaredMethod("handleSaveButton", ActionEvent.class);
+        handleSaveButton.setAccessible(true);
+        ActionEvent mockEvent = mock(ActionEvent.class);
+        handleSaveButton.invoke(controller, mockEvent);
+
+        verify(recipeClient).createRecipe(any(Recipe.class));
+    }
+
+    @Test
+    void testHandleSaveButtonUpdateRecipeSucess() throws Exception {
+        Recipe testRecipe = new Recipe(
+            "testRecipeId",
+            "testUserId",
+            "Test Recipe Title",
+            "Test Recipe Description",
+            SkillLevel.BEGINNER,
+            YarnType.COTTON,
+            NeedleSize.SIZE_2_0,
+            ProjectStatus.ABANDONED
+        );
+
+        controller.loadFromViewRecipe(testRecipe);
+        Method handleSaveButton = EditRecipeController.class.getDeclaredMethod("handleSaveButton", ActionEvent.class);
+        handleSaveButton.setAccessible(true);
+        ActionEvent mockEvent = mock(ActionEvent.class);
+        handleSaveButton.invoke(controller, mockEvent);
+
+        verify(recipeClient).updateRecipe(any(Recipe.class));
+    }
 }
