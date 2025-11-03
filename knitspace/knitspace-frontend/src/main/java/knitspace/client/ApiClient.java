@@ -65,7 +65,7 @@ public class ApiClient {
 
   /**
    * Serializes an object to JSON string.
-   * 
+   *
    * @param object The object to serialize
    * @return JSON string representation
    * @throws ApiException If serialization fails
@@ -80,7 +80,7 @@ public class ApiClient {
 
   /**
    * Deserializes a JSON string to an object of the given class (clazz).
-   * 
+   *
    * @param <T> The type of object to deserialize to
    * @param json The JSON string to deserialize
    * @param clazz The class of the object

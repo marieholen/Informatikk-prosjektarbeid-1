@@ -97,9 +97,14 @@ public class RecipeClient extends ApiClient {
           .header("Content-Type", "application/json")
           .build();
 
-      System.out.println("Sending update (PUT) request to " + RECIPES_ENDPOINT + "/" + recipe.recipeId());
-      HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-      System.out.println("Received response with status code: " + response.statusCode());
+      System.out.println(
+          "Sending update (PUT) request to " + RECIPES_ENDPOINT + "/" + recipe.recipeId());
+
+      HttpResponse<String> response = httpClient.send(
+          request, HttpResponse.BodyHandlers.ofString());
+
+      System.out.println(
+          "Received response with status code: " + response.statusCode());
 
       int status = response.statusCode();
       if (status == 204) {
@@ -118,7 +123,7 @@ public class RecipeClient extends ApiClient {
 
   /**
    * Creates a new recipe.
-   * 
+   *
    * @param recipe Recipe to be created.
    * @return The created recipe instance.
    * @throws ApiException If the API call fails.
@@ -130,8 +135,10 @@ public class RecipeClient extends ApiClient {
           .header("Content-Type", "application/json")
           .build();
 
-      System.out.println("Sending Create (POST) request to " + RECIPES_ENDPOINT);
-      HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+      System.out.println(
+          "Sending Create (POST) request to " + RECIPES_ENDPOINT);
+      HttpResponse<String> response = httpClient.send(
+          request, HttpResponse.BodyHandlers.ofString());
       System.out.println("Received response with status code: " + response.statusCode());
 
       int statusCode = response.statusCode();
@@ -150,7 +157,8 @@ public class RecipeClient extends ApiClient {
           throw new ApiException("Internal server error! (500)");
 
         default:
-          throw new ApiException("Unexpected response  with status: " + statusCode + ", body: " + response.body());
+          throw new ApiException(
+              "Unexpected response  with status: " + statusCode + ", body: " + response.body());
       }
     } catch (Exception e) {
       throw new ApiException("Failed to create recipe: " + e.getMessage(), e);

@@ -56,7 +56,7 @@ public class EditRecipeController {
 
   /**
    * Constructor for used in testing when mocking.
-   * 
+   *
    * @param recipeClient RecipeClient to use for API calls
    */
   public EditRecipeController(RecipeClient recipeClient) {
@@ -166,7 +166,7 @@ public class EditRecipeController {
   /**
    * Called when save button is clicked.
    * Validates user inputs, creates or updates recipe.
-   * 
+   *
    * @param event Triggered actionevent
    */
   @FXML
@@ -174,12 +174,12 @@ public class EditRecipeController {
     try {
       if (!checkFormInputOk()) {
         String errorMessage = getValidationErrorMessage();
-            showAlert("Validation Error", errorMessage);
-            return;
+        showAlert("Validation Error", errorMessage);
+        return;
       }
 
       String title = titleField.getText();
-      String description = descriptionField.getText();
+      String description = titleField.getText();
       SkillLevel skillLevel = getSelectedSkillLevel();
       YarnType yarnType = getSelectedYarnType();
       NeedleSize needleSize = getSelectedNeedleSize();
@@ -187,14 +187,14 @@ public class EditRecipeController {
 
       if (this.currentRecipe == null) {
         Recipe recipeToCreate = new Recipe(
-          UUID.randomUUID().toString(),
-          SessionManager.getCurrentUser().userId(),
-          title,
-          description,
-          skillLevel,
-          yarnType,
-          needleSize,
-          projectStatus
+            UUID.randomUUID().toString(),
+            SessionManager.getCurrentUser().userId(),
+            title,
+            description,
+            skillLevel,
+            yarnType,
+            needleSize,
+            projectStatus
         );
 
         recipeClient.createRecipe(recipeToCreate);
@@ -203,14 +203,14 @@ public class EditRecipeController {
       } else {
         System.out.println(currentRecipe.recipeId());
         Recipe recipeToUpdate = new Recipe(
-          currentRecipe.recipeId(),
-          currentRecipe.userId(),
-          title,
-          description,
-          skillLevel,
-          yarnType,
-          needleSize,
-          projectStatus
+            currentRecipe.recipeId(),
+            currentRecipe.userId(),
+            title,
+            description,
+            skillLevel,
+            yarnType,
+            needleSize,
+            projectStatus
         );
 
         recipeClient.updateRecipe(recipeToUpdate);
@@ -247,111 +247,123 @@ public class EditRecipeController {
    * @return true if the validation passes, false otherwise
    */
   boolean checkFormInputOk() {
-    return isValidTitle() &&
-           isValidDescription() &&
-           isDifficultySelected() &&
-           isYarnTypeSelected() &&
-           isNeedleSizeSelected() &&
-           isStatusSelected();
+    return isValidTitle()
+           && isValidDescription()
+           && isDifficultySelected()
+           && isYarnTypeSelected()
+           && isNeedleSizeSelected()
+           && isStatusSelected();
   }
 
-   boolean isValidTitle() {
-        return titleField.getText() != null && !titleField.getText().trim().isEmpty();
-    }
+  boolean isValidTitle() {
+    return titleField.getText() != null && !titleField.getText().trim().isEmpty();
+  }
 
-    boolean isValidDescription() {
-      return descriptionField.getText() != null && !descriptionField.getText().trim().isBlank();
-    }
+  boolean isValidDescription() {
+    return descriptionField.getText() != null && !descriptionField.getText().trim().isBlank();
+  }
     
-    boolean isDifficultySelected() {
-        return difficultyComboBox.getValue() != null;
-    }
+  boolean isDifficultySelected() {
+    return difficultyComboBox.getValue() != null;
+  }
     
-    boolean isYarnTypeSelected() {
-        return yarnTypeComboBox.getValue() != null;
-    }
+  boolean isYarnTypeSelected() {
+    return yarnTypeComboBox.getValue() != null;
+  }
     
-    boolean isNeedleSizeSelected() {
-        return needleSizeComboBox.getValue() != null;
-    }
+  boolean isNeedleSizeSelected() {
+    return needleSizeComboBox.getValue() != null;
+  }
     
-    boolean isStatusSelected() {
-        return statusComboBox.getValue() != null;
-    }
-
+  boolean isStatusSelected() {
+    return statusComboBox.getValue() != null;
+  }
+  
+  /**
+   * Checks if input fields are valid, if not returns an error message.
+   *
+   * @return Validation error message, null if no validation error
+   */
   String getValidationErrorMessage() {
-        if (!isValidTitle()) {
-            return "Title cannot be empty or null!";
-        }
-        if (!isValidDescription()) {
-          return "Description cannot be empty or null!!";
-        }
-        if (!isDifficultySelected()) {
-            return "Please select a difficulty level.";
-        }
-        if (!isYarnTypeSelected()) {
-            return "Please select a yarn type.";
-        }
-        if (!isNeedleSizeSelected()) {
-            return "Please select a needle size.";
-        }
-        if (!isStatusSelected()) {
-            return "Please select a project status.";
-        }
-        return null;
+    if (!isValidTitle()) {
+      return "Title cannot be empty or null!";
     }
-
+    if (!isValidDescription()) {
+      return "Description cannot be empty or null!!";
+    }
+    if (!isDifficultySelected()) {
+      return "Please select a difficulty level.";
+    }
+    if (!isYarnTypeSelected()) {
+      return "Please select a yarn type.";
+    }
+    if (!isNeedleSizeSelected()) {
+      return "Please select a needle size.";
+    }
+    if (!isStatusSelected()) {
+      return "Please select a project status.";
+    }
+    return null;
+  }
 
 
   /**
    * Returns the {@link Skillevel} currently selected in the combo box.
-   * 
+   *
    * @return the selected {@link Skillevel}, or {@code null} if none is selected.
    */
   private SkillLevel getSelectedSkillLevel() {
-      String selected = difficultyComboBox.getValue();
-      for (SkillLevel level : SkillLevel.values()) {
-          if (level.getDescription().equals(selected)) return level;
+    String selected = difficultyComboBox.getValue();
+    for (SkillLevel level : SkillLevel.values()) {
+      if (level.getDescription().equals(selected)) {
+        return level;
       }
-      return null;
+    }
+    return null;
   }
 
   /**
    * Returns the {@link YarnType} currently selected in the combo box.
-   * 
+   *
    * @return the selected {@link YarnType}, or {@code null} if none is selected.
    */
   private YarnType getSelectedYarnType() {
-      String selected = yarnTypeComboBox.getValue();
-      for (YarnType type : YarnType.values()) {
-          if (type.getLabel().equals(selected)) return type;
+    String selected = yarnTypeComboBox.getValue();
+    for (YarnType type : YarnType.values()) {
+      if (type.getLabel().equals(selected)) {
+        return type;
       }
-      return null;
+    }
+    return null;
   }
 
   /**
    * Returns the {@link NeedleSize} currently selected in the combo box.
-   * 
+   *
    * @return the selected {@link NeedleSize}, or {@code null} if none is selected.
    */
   private NeedleSize getSelectedNeedleSize() {
-      String selected = needleSizeComboBox.getValue();
-      for (NeedleSize size : NeedleSize.values()) {
-          if (size.getLabel().equals(selected)) return size;
+    String selected = needleSizeComboBox.getValue();
+    for (NeedleSize size : NeedleSize.values()) {
+      if (size.getLabel().equals(selected)) {
+        return size;
       }
-      return null;
+    }
+    return null;
   }
 
   /**
    * Returns the {@link ProjectStatus} currently selected in the combo box.
-   * 
+   *
    * @return the selected {@link ProjectStatus}, or {@code null} if none is selected.
    */
   private ProjectStatus getSelectedProjectStatus() {
-      String selected = statusComboBox.getValue();
-      for (ProjectStatus status : ProjectStatus.values()) {
-          if (status.getDescription().equals(selected)) return status;
+    String selected = statusComboBox.getValue();
+    for (ProjectStatus status : ProjectStatus.values()) {
+      if (status.getDescription().equals(selected)) {
+        return status;
       }
-      return null;
+    }
+    return null;
   }
 }
