@@ -166,15 +166,16 @@ public class EditRecipeController {
   /**
    * Called when save button is clicked.
    * Validates user inputs, creates or updates recipe.
-   * Navigates back to MyRecipe view.
    * 
    * @param event Triggered actionevent
    */
   @FXML
-  private void handleSaveButton(ActionEvent event) {
+  void handleSaveButton(ActionEvent event) {
     try {
       if (!checkFormInputOk()) {
-        return;
+        String errorMessage = getValidationErrorMessage();
+            showAlert("Validation Error", errorMessage);
+            return;
       }
 
       String title = titleField.getText();
@@ -232,7 +233,7 @@ public class EditRecipeController {
    * @param title   The title of the alert.
    * @param message The message of the alert.
    */
-  private void showAlert(String title, String message) {
+  void showAlert(String title, String message) {
     Alert alert = new Alert(AlertType.INFORMATION);
     alert.setTitle(title);
     alert.setHeaderText(null);
@@ -245,34 +246,62 @@ public class EditRecipeController {
    *
    * @return true if the validation passes, false otherwise
    */
-  private boolean checkFormInputOk() {
-    if (titleField.getText() == null || titleField.getText().trim().isEmpty()) {
-      showAlert("Validation Error", "Title is required");
-      return false;
-    }
-
-    if (difficultyComboBox.getValue() == null) {
-      showAlert("Validation Error", "You have to select a difficulty!");
-      return false;
-    }
-
-    if (yarnTypeComboBox.getValue() == null) {
-      showAlert("Validation Error", "You have to select a yarn type!");
-      return false;
-    }
-
-    if (needleSizeComboBox.getValue() == null) {
-      showAlert("Validation Error", "You have to select a needle size!");
-      return false;
-    }
-
-    if (statusComboBox.getValue() == null) {
-      showAlert("Validation Error", "You have to set a recipe status!");
-      return false;
-    }
-
-    return true;
+  boolean checkFormInputOk() {
+    return isValidTitle() &&
+           isValidDescription() &&
+           isDifficultySelected() &&
+           isYarnTypeSelected() &&
+           isNeedleSizeSelected() &&
+           isStatusSelected();
   }
+
+   boolean isValidTitle() {
+        return titleField.getText() != null && !titleField.getText().trim().isEmpty();
+    }
+
+    boolean isValidDescription() {
+      return descriptionField.getText() != null && !descriptionField.getText().trim().isBlank();
+    }
+    
+    boolean isDifficultySelected() {
+        return difficultyComboBox.getValue() != null;
+    }
+    
+    boolean isYarnTypeSelected() {
+        return yarnTypeComboBox.getValue() != null;
+    }
+    
+    boolean isNeedleSizeSelected() {
+        return needleSizeComboBox.getValue() != null;
+    }
+    
+    boolean isStatusSelected() {
+        return statusComboBox.getValue() != null;
+    }
+
+  String getValidationErrorMessage() {
+        if (!isValidTitle()) {
+            return "Title cannot be empty or null!";
+        }
+        if (!isValidDescription()) {
+          return "Description cannot be empty or null!!";
+        }
+        if (!isDifficultySelected()) {
+            return "Please select a difficulty level.";
+        }
+        if (!isYarnTypeSelected()) {
+            return "Please select a yarn type.";
+        }
+        if (!isNeedleSizeSelected()) {
+            return "Please select a needle size.";
+        }
+        if (!isStatusSelected()) {
+            return "Please select a project status.";
+        }
+        return null;
+    }
+
+
 
   /**
    * Returns the {@link Skillevel} currently selected in the combo box.
