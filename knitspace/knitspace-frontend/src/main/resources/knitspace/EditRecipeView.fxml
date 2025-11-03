@@ -54,9 +54,14 @@
                     onAction="#handleUploadPdf" />
             <Button fx:id="saveButton"
                     mnemonicParsing="false"
-                    style="-fx-background-color: #b0c99f; -fx-padding: 8 16; -fx-background-radius: 5;"
+                    style="-fx-background-color: #b3d79bff; -fx-padding: 8 16; -fx-background-radius: 5;"
                     text="Save"
                     onAction="#handleSaveButton" />
+            <Button fx:id="backButton"
+                    mnemonicParsing="false"
+                    style="-fx-background-color: #e4aba0ff; -fx-padding: 8 16; -fx-background-radius: 5;"
+                    text="Back"
+                    onAction="#handleBackButton" />
          </children>
       </HBox>
    </children>
