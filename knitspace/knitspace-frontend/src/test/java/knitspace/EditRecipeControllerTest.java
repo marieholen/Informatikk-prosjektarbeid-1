@@ -11,6 +11,18 @@ import org.testfx.framework.junit5.ApplicationExtension;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import org.mockito.MockedConstruction;
+import static org.mockito.Mockito.*;
+import javafx.application.Platform;
+
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(ApplicationExtension.class)
@@ -84,5 +96,45 @@ class EditRecipeControllerTest {
 
         assertFalse(difficultyBox.getItems().isEmpty());
         assertFalse(yarnBox.getItems().isEmpty());
+    }
+
+    @Test
+    void testHandleBackButtonSuccessPath() throws Exception {
+    try (MockedConstruction<FXMLLoader> mocked = mockConstruction(
+            FXMLLoader.class,
+            (mock, context) -> when(mock.load()).thenReturn(new Pane()))) {
+
+        Platform.runLater(() -> {
+            try {
+                Button backButton = new Button("Back");
+                Stage stage = new Stage();
+                Pane root = new Pane(backButton);
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+
+                Field buttonField = EditRecipeController.class.getDeclaredField("backButton");
+                buttonField.setAccessible(true);
+                buttonField.set(controller, backButton);
+
+                controller.handleBackButton(new ActionEvent());
+
+                assertEquals("My Recipes", stage.getTitle());
+
+            } catch (Exception e) {
+                fail("Unexpected exception: " + e.getMessage());
+            }
+        });
+
+        org.testfx.util.WaitForAsyncUtils.waitForFxEvents();
+    }
+    }
+
+
+
+    @Test
+    void testHandleBackButtonCatchPath() {
+        assertDoesNotThrow(() ->
+            controller.handleBackButton(new ActionEvent())
+        );
     }
 }

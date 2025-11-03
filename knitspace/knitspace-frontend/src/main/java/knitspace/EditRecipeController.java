@@ -1,11 +1,15 @@
 package knitspace;
 
-
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
 import knitspace.enums.SkillLevel;
@@ -37,6 +41,9 @@ public class EditRecipeController {
 
   @FXML
   private Button saveButton;
+
+  @FXML
+  private Button backButton;
 
   private Recipe currentRecipe;
 
@@ -146,4 +153,25 @@ public class EditRecipeController {
   public Button getSaveButton() {
     return saveButton;
   }
+
+  /**
+   * Handles navigation back to the MyRecipes-view when the Back button is clicked. 
+   *
+   * @param event the ActionEvent triggered by clicking the Back button
+   */
+  @FXML
+  void handleBackButton(ActionEvent event) {
+    try {
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/knitspace/MyRecipes.fxml"));
+      Parent root = loader.load();
+
+      Stage stage = (Stage) backButton.getScene().getWindow();
+      stage.setScene(new Scene(root));
+      stage.setTitle("My Recipes");
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
 }
