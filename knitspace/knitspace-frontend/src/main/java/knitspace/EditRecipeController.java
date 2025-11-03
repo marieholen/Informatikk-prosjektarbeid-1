@@ -1,24 +1,20 @@
 package knitspace;
 
+import java.io.IOException;
 import java.util.UUID;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import knitspace.client.RecipeClient;
-import java.io.IOException;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import knitspace.client.RecipeClient;
 import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
 import knitspace.enums.SkillLevel;
@@ -192,7 +188,7 @@ public class EditRecipeController {
       }
 
       String title = titleField.getText();
-      String description = titleField.getText();
+      String description = descriptionField.getText();
       SkillLevel skillLevel = getSelectedSkillLevel();
       YarnType yarnType = getSelectedYarnType();
       NeedleSize needleSize = getSelectedNeedleSize();
@@ -268,26 +264,56 @@ public class EditRecipeController {
            && isStatusSelected();
   }
 
+  /**
+   * Checks if title field is valid.
+   *
+   * @return True if valid, False if title is either null or nothing
+   */
   boolean isValidTitle() {
-    return titleField.getText() != null && !titleField.getText().trim().isEmpty();
+    return titleField.getText() != null && !titleField.getText().trim().isBlank();
   }
 
+  /**
+   * Checks if description field is valid.
+   *
+   * @return True if valid, False if description is either null or nothing
+   */
   boolean isValidDescription() {
     return descriptionField.getText() != null && !descriptionField.getText().trim().isBlank();
   }
-    
+  
+  /**
+   * Checks if a difficulty has been selected.
+   *
+   * @return True if one is selected, False if none is selected
+   */
   boolean isDifficultySelected() {
     return difficultyComboBox.getValue() != null;
   }
-    
+  
+  /**
+   * Checks if a yarn type has been selected.
+   *
+   * @return True if one is selected, False if none is selected
+   */
   boolean isYarnTypeSelected() {
     return yarnTypeComboBox.getValue() != null;
   }
-    
+  
+  /**
+   * Checks if a needle size has been selected.
+   *
+   * @return True if one is selected, False if none is selected
+   */
   boolean isNeedleSizeSelected() {
     return needleSizeComboBox.getValue() != null;
   }
-    
+  
+  /**
+   * Checks if a project status has been selected.
+   *
+   * @return True if one is selected, False if none is selected
+   */
   boolean isStatusSelected() {
     return statusComboBox.getValue() != null;
   }
@@ -379,6 +405,7 @@ public class EditRecipeController {
     }
     return null;
   }
+
   /**
    * Handles navigation back to the MyRecipes-view when the Back button is clicked. 
    *

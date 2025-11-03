@@ -261,7 +261,7 @@ class EditRecipeControllerTest {
     }
 
     @Test
-    void testGetValidationErrorMessageWithNoStatusS() throws IllegalAccessException {
+    void testGetValidationErrorMessageWithNoStatus() throws IllegalAccessException {
         ((TextField) titleField.get(controller)).setText("This is a valid title!:-)");
         ((TextField) descriptionField.get(controller)).setText("This is a valid description!:-)");
         ((ComboBox<String>) difficultyField.get(controller)).setValue("Beginner");
@@ -291,7 +291,7 @@ class EditRecipeControllerTest {
     }
 
     @Test
-    void testHandleSaveButtonUpdateRecipeSucess() throws Exception {
+    void testHandleSaveButtonUpdateRecipeSuccess() throws Exception {
         Recipe testRecipe = new Recipe(
             "testRecipeId",
             "testUserId",
