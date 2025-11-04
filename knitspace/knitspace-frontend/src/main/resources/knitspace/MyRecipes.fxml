@@ -115,26 +115,26 @@
                            <Font size="14.0" />
                         </font>
                      </Label>
-                     <Label fx:id="num_recipes_label1" alignment="CENTER" prefHeight="53.0" prefWidth="144.0" text="0" textAlignment="CENTER">
+                     <Label fx:id="numRecipesLabel" alignment="CENTER" prefHeight="53.0" prefWidth="144.0" text="0" textAlignment="CENTER">
                         <font>
                            <Font size="36.0" />
                         </font>
                      </Label>
                   </children>
                </VBox>
-               <Label fx:id="myRecipesLabel11" prefHeight="53.0" prefWidth="91.0">
+               <Label fx:id="myRecipesLabel11" prefHeight="53.0" prefWidth="70.0">
                   <font>
                      <Font name="Arial Hebrew Scholar" size="36.0" />
                   </font>
                </Label>
-               <VBox prefHeight="106.0" prefWidth="105.0">
+               <VBox prefHeight="78.0" prefWidth="122.0">
                   <children>
-                     <Label fx:id="" alignment="CENTER" prefHeight="53.0" prefWidth="110.0" text="Completion (%)" textAlignment="RIGHT">
+                     <Label fx:id="" alignment="CENTER" prefHeight="25.0" prefWidth="150.0" text="Completion (%)" textAlignment="RIGHT">
                         <font>
                            <Font size="14.0" />
                         </font>
                      </Label>
-                     <Label fx:id="completion_ratio_label1" alignment="CENTER" prefHeight="53.0" prefWidth="104.0" text="0%" textAlignment="RIGHT">
+                     <Label fx:id="completionRatioLabel" alignment="CENTER" prefHeight="53.0" prefWidth="140.0" text="0%" textAlignment="RIGHT" textOverrun="CLIP">
                         <font>
                            <Font name="Arial Hebrew Scholar" size="36.0" />
                         </font>
