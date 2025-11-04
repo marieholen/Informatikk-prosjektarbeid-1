@@ -115,17 +115,17 @@ public class MyRecipesController {
   }
 
   private void fillCompletionRatioMetric(List<Recipe> recipes) {
-    double completionRatio = 0.0;
-    try {
-      completionRatio = recipes.stream()
-          .filter(r -> r.projectStatus() == ProjectStatus.FINISHED)
+    double completionRatio = recipes.stream()
+        .filter(r -> r.projectStatus() == ProjectStatus.FINISHED)
         .count() / (double) recipes.size() * 100;
-    } catch (Exception e) {
-      
-    }
 
     String ratioText = String.format("%.0f%%", completionRatio);
-    completionRatioLabel.setText(ratioText);
+
+    if (ratioText.equals("NaN%")) {
+      completionRatioLabel.setText("0%");
+    } else {
+      completionRatioLabel.setText(ratioText);
+    }
   }
 
   /**
