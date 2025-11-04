@@ -25,13 +25,13 @@ public class ApiClient {
    */
   public ApiClient() {
     this(HttpClient.newBuilder()
-      .connectTimeout(Duration.ofSeconds(30))
-      .build());
+        .connectTimeout(Duration.ofSeconds(30))
+        .build());
   }
 
   /**
    * Test constructor to allow mocking.
-   * 
+   *
    * @param httpClient mock httpClient
    */
   protected ApiClient(HttpClient httpClient) {
