@@ -24,6 +24,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
+import knitspace.enums.ProjectStatus;
 import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
@@ -41,10 +42,18 @@ public class MyRecipesController {
 
   @FXML
   private ScrollPane recipesScrollPane;
+
   @FXML
   private VBox recipesVerticalBox;
+
   @FXML
   TextField searchField;
+
+  @FXML
+  private Label numRecipesLabel;
+
+  @FXML
+  private Label completionRatioLabel;
 
   /**
    * Constructor for MyRecipesController.
@@ -65,7 +74,11 @@ public class MyRecipesController {
   @FXML
   private void initialize() {
     setupScrollPane();
-    displayRecipes();
+
+    List<Recipe> recipes = loadRecipes();
+
+    displayRecipes(recipes);
+    fillAggregateMetrics(recipes);
   }
 
   /**
@@ -82,13 +95,37 @@ public class MyRecipesController {
    *
    * @see createRecipeCard
    */
-  void displayRecipes() {
-    List<Recipe> recipes = loadRecipes();
+  void displayRecipes(List<Recipe> recipes) {
     recipesVerticalBox.getChildren().clear();
 
     for (Recipe recipe : recipes) {
       recipesVerticalBox.getChildren().add(createRecipeCard(recipe));
     }
+  }
+
+  void fillAggregateMetrics(List<Recipe> recipes) {
+    fillTotalRecipesMetric(recipes);
+    fillCompletionRatioMetric(recipes);
+  }
+
+  @FXML
+  private void fillTotalRecipesMetric(List<Recipe> recipes) {
+    int totalRecipes = recipes.size();
+    numRecipesLabel.setText(String.valueOf(totalRecipes));
+  }
+
+  private void fillCompletionRatioMetric(List<Recipe> recipes) {
+    double completionRatio = 0.0;
+    try {
+      completionRatio = recipes.stream()
+          .filter(r -> r.projectStatus() == ProjectStatus.FINISHED)
+        .count() / (double) recipes.size() * 100;
+    } catch (Exception e) {
+      
+    }
+
+    String ratioText = String.format("%.0f%%", completionRatio);
+    completionRatioLabel.setText(ratioText);
   }
 
   /**
