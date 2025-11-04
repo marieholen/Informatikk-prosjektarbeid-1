@@ -18,10 +18,26 @@ public class ApiClient {
 
   protected static final String BASE_URL = "http://localhost:8080"; // Configure as needed
   protected static final ObjectMapper objectMapper = new ObjectMapper();
-  protected static final HttpClient httpClient = HttpClient.newBuilder()
-      .connectTimeout(Duration.ofSeconds(30))
-      .build();
+  protected final HttpClient httpClient;
 
+  /**
+   * Default ApiClient constructor.
+   */
+  public ApiClient() {
+    this(HttpClient.newBuilder()
+      .connectTimeout(Duration.ofSeconds(30))
+      .build());
+  }
+
+  /**
+   * Test constructor to allow mocking.
+   * 
+   * @param httpClient mock httpClient
+   */
+  protected ApiClient(HttpClient httpClient) {
+    this.httpClient = httpClient;
+  }
+  
   /**
    * Creates a basic HTTP request builder with common headers.
    *

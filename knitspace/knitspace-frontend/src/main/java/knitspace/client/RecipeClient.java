@@ -1,6 +1,7 @@
 package knitspace.client;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
@@ -16,6 +17,20 @@ import knitspace.model.User;
  */
 public class RecipeClient extends ApiClient {
   private static final String RECIPES_ENDPOINT = "/api/recipes";
+
+  /**
+   * Default constructor for RecipeClient.
+   */
+  public RecipeClient() {
+    super();
+  }
+
+  /**
+   * Constructor to allow mocking.
+   */
+  protected RecipeClient(HttpClient httpClient) {
+    super(httpClient);
+  }
 
   /**
    * Fetches all recipes for a given user.
