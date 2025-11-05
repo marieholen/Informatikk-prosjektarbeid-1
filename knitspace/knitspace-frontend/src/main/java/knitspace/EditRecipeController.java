@@ -180,8 +180,7 @@ public class EditRecipeController {
   }
 
   /**
-   * Handle uploadiung of a recipe PDF file.
-   * opens a FileChooser, validates the file, and copies the file to the application directory.
+   * Handle selecting a PDF to upload.
    *
    * @param event the action event when clicking the upload PDF button.
    */
@@ -207,6 +206,12 @@ public class EditRecipeController {
     handleUploadPdfSelected(selected.toPath());
   }
 
+  /**
+   * Handles attaching a selected PDF file to the current recipe.
+   * Method called agfter PDF has been created
+   *
+   * @param selectedPath The path to eh PDF file selected by user
+   */
   public void handleUploadPdfSelected(Path selectedPath) {
     if (!looksLikePdf(selectedPath)) {
       showAlert("Error", "File not a valid PDF.");
