@@ -37,6 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.testfx.util.WaitForAsyncUtils;
+import java.util.Arrays;
 
 @ExtendWith(ApplicationExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -186,5 +187,107 @@ class MyRecipesControllerTest {
 
         assertNotNull(stage.getScene().getRoot().lookup("#titleLabel"),
                 "ViewRecipe.fxml should be loaded and contain #titleLabel");
+    }
+
+    @Test
+    void testFillAggregateMetrics_AllFinished() {
+        MyRecipesController c = new MyRecipesController();
+        // prepare labels via reflection
+        try {
+            java.lang.reflect.Field f1 = MyRecipesController.class.getDeclaredField("numRecipesLabel");
+            f1.setAccessible(true);
+            f1.set(c, new Label());
+            java.lang.reflect.Field f2 = MyRecipesController.class.getDeclaredField("completionRatioLabel");
+            f2.setAccessible(true);
+            f2.set(c, new Label());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        Recipe r1 = new Recipe("r1", "user1", "T1", "D1", null, null, null, ProjectStatus.FINISHED);
+        Recipe r2 = new Recipe("r2", "user1", "T2", "D2", null, null, null, ProjectStatus.FINISHED);
+        Recipe r3 = new Recipe("r3", "user1", "T3", "D3", null, null, null, ProjectStatus.FINISHED);
+
+        c.fillAggregateMetrics(Arrays.asList(r1, r2, r3));
+
+        try {
+            java.lang.reflect.Field f1 = MyRecipesController.class.getDeclaredField("numRecipesLabel");
+            f1.setAccessible(true);
+            Label numLabel = (Label) f1.get(c);
+            java.lang.reflect.Field f2 = MyRecipesController.class.getDeclaredField("completionRatioLabel");
+            f2.setAccessible(true);
+            Label ratioLabel = (Label) f2.get(c);
+
+            assertEquals("3", numLabel.getText(), "Total recipes should be 3");
+            assertEquals("100%", ratioLabel.getText(), "Completion ratio should be 100% for all finished");
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Test
+    void testFillAggregateMetrics_NoneFinished() {
+        MyRecipesController c = new MyRecipesController();
+        try {
+            java.lang.reflect.Field f1 = MyRecipesController.class.getDeclaredField("numRecipesLabel");
+            f1.setAccessible(true);
+            f1.set(c, new Label());
+            java.lang.reflect.Field f2 = MyRecipesController.class.getDeclaredField("completionRatioLabel");
+            f2.setAccessible(true);
+            f2.set(c, new Label());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        Recipe r1 = new Recipe("r1", "user1", "T1", "D1", null, null, null, ProjectStatus.PLANNED);
+        Recipe r2 = new Recipe("r2", "user1", "T2", "D2", null, null, null, ProjectStatus.IN_PROGRESS);
+
+        c.fillAggregateMetrics(Arrays.asList(r1, r2));
+
+        try {
+            java.lang.reflect.Field f1 = MyRecipesController.class.getDeclaredField("numRecipesLabel");
+            f1.setAccessible(true);
+            Label numLabel = (Label) f1.get(c);
+            java.lang.reflect.Field f2 = MyRecipesController.class.getDeclaredField("completionRatioLabel");
+            f2.setAccessible(true);
+            Label ratioLabel = (Label) f2.get(c);
+
+            assertEquals("2", numLabel.getText(), "Total recipes should be 2");
+            assertEquals("0%", ratioLabel.getText(), "Completion ratio should be 0% when none finished");
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    @Test
+    void testFillAggregateMetrics_EmptyList() {
+        MyRecipesController c = new MyRecipesController();
+        try {
+            java.lang.reflect.Field f1 = MyRecipesController.class.getDeclaredField("numRecipesLabel");
+            f1.setAccessible(true);
+            f1.set(c, new Label());
+            java.lang.reflect.Field f2 = MyRecipesController.class.getDeclaredField("completionRatioLabel");
+            f2.setAccessible(true);
+            f2.set(c, new Label());
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        c.fillAggregateMetrics(Arrays.asList());
+
+        try {
+            java.lang.reflect.Field f1 = MyRecipesController.class.getDeclaredField("numRecipesLabel");
+            f1.setAccessible(true);
+            Label numLabel = (Label) f1.get(c);
+            java.lang.reflect.Field f2 = MyRecipesController.class.getDeclaredField("completionRatioLabel");
+            f2.setAccessible(true);
+            Label ratioLabel = (Label) f2.get(c);
+
+            assertEquals("0", numLabel.getText(), "Total recipes should be 0 for empty list");
+            assertEquals("0%", ratioLabel.getText(),
+                    "Completion ratio is NaN% for empty list with current implementation");
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
