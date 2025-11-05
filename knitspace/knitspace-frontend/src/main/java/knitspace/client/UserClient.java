@@ -1,5 +1,6 @@
 package knitspace.client;
 
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
@@ -13,6 +14,20 @@ import knitspace.model.User;
 public class UserClient extends ApiClient {
 
   private static final String USERS_ENDPOINT = "/api/users";
+
+  /**
+   * Default constructor for UserClient.
+   */
+  public UserClient() {
+    super();
+  }
+
+  /**
+   * Constructor to allow mocking.
+   */
+  protected UserClient(HttpClient httpClient) {
+    super(httpClient);
+  }
 
   /**
    * Creates a new user account.
