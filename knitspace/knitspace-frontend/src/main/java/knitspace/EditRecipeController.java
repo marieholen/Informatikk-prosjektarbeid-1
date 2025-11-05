@@ -1,11 +1,18 @@
 package knitspace;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -13,13 +20,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
 import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
 import knitspace.enums.SkillLevel;
 import knitspace.enums.YarnType;
-import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
 
@@ -51,6 +58,11 @@ public class EditRecipeController {
 
   @FXML
   private Button backButton;
+
+  @FXML 
+  private Button uploadPdfButton;
+
+  private Path storedPdfPath;
 
   private Recipe currentRecipe;
 
@@ -164,12 +176,138 @@ public class EditRecipeController {
     yarnTypeComboBox.setValue(null);
     needleSizeComboBox.setValue(null);
     statusComboBox.setValue(null);
-    // storedPdfPath = null;
+    storedPdfPath = null;
   }
 
+  /**
+   * Handle selecting a PDF to upload.
+   *
+   * @param event the action event when clicking the upload PDF button.
+   */
   @FXML
-  private void handleUploadPdf(ActionEvent event) {
-    // TODO: implement later. Currently a stub for TestFX tests.
+  public void handleUploadPdf(ActionEvent event) {
+    FileChooser chooser = new FileChooser();
+    chooser.setTitle("Select recipe PDF");
+    chooser.getExtensionFilters().add(
+        new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf")
+    );
+  
+    File docs = Paths.get(System.getProperty("user.home"), "Documents").toFile();
+    if (docs.exists()) {
+      chooser.setInitialDirectory(docs);
+    }
+  
+    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    File selected = chooser.showOpenDialog(stage);
+    if (selected == null) {
+      return;
+    }
+
+    handleUploadPdfSelected(selected.toPath());
+  }
+
+  /**
+   * Handles attaching a selected PDF file to the current recipe.
+   * Method called agfter PDF has been created
+   *
+   * @param selectedPath The path to eh PDF file selected by user
+   */
+  public void handleUploadPdfSelected(Path selectedPath) {
+    if (!looksLikePdf(selectedPath)) {
+      showAlert("Error", "File not a valid PDF.");
+      return;
+    }
+
+    try {
+      Path appDir = Paths.get(System.getProperty("user.dir"), "..", "..",
+              "knitspace", "knitspace-backend", "data", "pdfs")
+          .normalize()
+          .toAbsolutePath();
+      Files.createDirectories(appDir);
+
+      final String pdfName;
+      if (currentRecipe != null && currentRecipe.recipeId() != null 
+          && !currentRecipe.recipeId().isBlank()) {
+        pdfName = currentRecipe.recipeId() + ".pdf";
+      } else {
+        pdfName = "tmp-" + UUID.randomUUID() + ".pdf";
+      }
+
+      Path dest = appDir.resolve(pdfName);
+      if ((currentRecipe == null || currentRecipe.recipeId() == null 
+            || currentRecipe.recipeId().isBlank())
+            && storedPdfPath != null
+            && storedPdfPath.getFileName().toString().startsWith("tmp-")
+            && Files.exists(storedPdfPath)) {
+        try { 
+          Files.delete(storedPdfPath); 
+        } catch (IOException e) {
+          System.err.println("Warning: could not delete previous temporary PDF: " + e.getMessage());
+        }
+      }
+      Files.copy(selectedPath, dest, StandardCopyOption.REPLACE_EXISTING);
+
+      storedPdfPath = dest;
+      uploadPdfButton.setText("Your PDF");
+      showAlert("Success", "PDF attached.");
+    } catch (IOException ex) {
+      showAlert("Error", "Could not save recipe PDF: " + ex.getMessage());
+      ex.printStackTrace();
+    }
+  }
+
+  /**
+   * Renames a temporarily stored PDF to match the given recipe ID.
+   * Method is used after a recipe has been created and given a unique ID
+   *
+   * @param recipeId The given ID for the recipe that will become the pdf filename
+   */
+  public void renameUploadedPdf(String recipeId) {
+    try {
+      if (storedPdfPath == null || recipeId == null || recipeId.isBlank()) {
+        return;
+      }
+      Path appDir = Paths.get(System.getProperty("user.dir"), "..", "..",
+              "knitspace", "knitspace-backend", "data", "pdfs")
+          .normalize()
+          .toAbsolutePath();
+
+      Path finalPath = appDir.resolve(recipeId + ".pdf");
+
+      if (!Files.exists(storedPdfPath)) {
+        return;
+      }
+      if (storedPdfPath.equals(finalPath)) {
+        return;
+      }
+
+      Files.createDirectories(appDir);
+      Files.move(storedPdfPath, finalPath, StandardCopyOption.REPLACE_EXISTING);
+
+      storedPdfPath = finalPath;
+      uploadPdfButton.setText(finalPath.getFileName().toString());
+    } catch (IOException ioEx) {
+      showAlert("Error", "Recipe saved, but renaming the PDF failed: " + ioEx.getMessage());
+      ioEx.printStackTrace();
+    }
+  }
+
+  /**
+   * Checks if the given file is a valid PDF.
+   *
+   * @param path The path to the file that will be checked
+   * @return Returns true if file is a PDF, otherwise returns false
+   */
+  private boolean looksLikePdf(Path path) {
+    try (InputStream in = Files.newInputStream(path)) {
+      byte[] header = new byte[5];
+      if (in.read(header) == 5) {
+        return "%PDF-".equals(new String(header, StandardCharsets.US_ASCII));
+      }
+    } catch (IOException e) { 
+      // Intentionally ignored: if the file can't be read, treat it as not a valid PDF
+    }
+    return false;
   }
 
   /**
@@ -207,6 +345,8 @@ public class EditRecipeController {
         );
 
         recipeClient.createRecipe(recipeToCreate);
+        this.currentRecipe = recipeToCreate;
+        renameUploadedPdf(recipeToCreate.recipeId());
         showAlert("Success", "Recipe created successfully!");
 
       } else {
@@ -223,6 +363,7 @@ public class EditRecipeController {
         );
 
         recipeClient.updateRecipe(recipeToUpdate);
+        renameUploadedPdf(recipeToUpdate.recipeId());
         showAlert("Success", "Recipe updated successfully!");
       }
 

@@ -1,5 +1,7 @@
 package knitspace;
 
+import java.io.IOException;
+
 import javafx.scene.control.ComboBox;
 import knitspace.client.RecipeClient;
 import knitspace.enums.ProjectStatus;
@@ -10,13 +12,19 @@ import knitspace.exception.ApiException;
 import knitspace.model.Recipe;
 import knitspace.model.User;
 import knitspace.meta.SessionManager;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
 
@@ -26,19 +34,35 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import javafx.fxml.FXMLLoader;
-import org.mockito.MockedConstruction;
-import javafx.application.Platform;
 
+import org.mockito.MockedConstruction;
+
+import javafx.application.Platform;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import org.mockito.Mock;
+
+import org.junit.jupiter.api.io.TempDir;
+
+import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
+
+import javafx.collections.FXCollections;
+import javafx.stage.FileChooser;
+
+import org.testfx.util.WaitForAsyncUtils;
 
 @ExtendWith(ApplicationExtension.class)
 class EditRecipeControllerTest {
 
     @Mock
     private RecipeClient recipeClient;
+
+    @TempDir
+    java.nio.file.Path tempRoot;
 
     private EditRecipeController controller;
     private Field titleField;
@@ -47,6 +71,9 @@ class EditRecipeControllerTest {
     private Field yarnTypeField;
     private Field needleSizeField;
     private Field statusField; 
+    private Field storedPdfPathField;
+    private Field uploadPdfButtonField;
+    private String originalUserDir;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -81,6 +108,25 @@ class EditRecipeControllerTest {
         SessionManager.setCurrentUser(mockUser);
 
         doNothing().when(controller).showAlert(anyString(), anyString());
+
+        originalUserDir = System.getProperty("user.dir");
+        System.setProperty("user.dir", tempRoot.toString());
+
+        storedPdfPathField = EditRecipeController.class.getDeclaredField("storedPdfPath");
+        storedPdfPathField.setAccessible(true);
+
+        uploadPdfButtonField = EditRecipeController.class.getDeclaredField("uploadPdfButton");
+        uploadPdfButtonField.setAccessible(true);
+        uploadPdfButtonField.set(controller, new Button("Upload"));
+
+        cleanPdfsDir();
+    }
+
+    @AfterEach
+    void restoreUser() {
+        if (originalUserDir != null) {
+            System.setProperty("user.dir", originalUserDir);
+        }
     }
 
     @Test
@@ -348,5 +394,194 @@ class EditRecipeControllerTest {
         assertDoesNotThrow(() ->
             controller.handleBackButton(new ActionEvent())
         );
+    }
+
+    private Path pdfsDir() {
+        return tempRoot.resolve("..").resolve("..")
+                .resolve("knitspace").resolve("knitspace-backend")
+                .resolve("data").resolve("pdfs").normalize().toAbsolutePath();
+    }
+
+    private Path writeFakePdf(Path where) throws IOException {
+        byte[] bytes = ("%PDF- " + UUID.randomUUID()).getBytes(StandardCharsets.US_ASCII);
+        Files.createDirectories(where.getParent());
+        return Files.write(where, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
+    private Path writeNotpdf(Path where) throws IOException {
+        byte[] bytes = "NOT_PDF".getBytes(StandardCharsets.US_ASCII);
+        Files.createDirectories(where.getParent());
+        return Files.write(where, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
+    @Test
+    void testHandleUploadPdfSelectedWhenCreatingNewRecipe() throws Exception {
+        Path source = writeFakePdf(tempRoot.resolve("src.pdf"));
+        controller.handleUploadPdfSelected(source);
+
+        Path dir = pdfsDir();
+        assertTrue(Files.exists(dir), "pdfs dir should exist");
+        try (var stream = Files.list(dir)) {
+            var files = stream.toList();
+            assertEquals(1, files.size(), "One file should be copied");
+            String name = files.get(0).getFileName().toString();
+            assertTrue(name.startsWith("tmp-") && name.endsWith(".pdf"), "should start with tmp- and end with .pdf");
+        }
+
+        Button btn = (Button) uploadPdfButtonField.get(controller);
+        assertEquals("Your PDF", btn.getText());
+
+        Path stored = (Path) storedPdfPathField.get(controller);
+        assertNotNull(stored);
+        assertTrue(stored.getFileName().toString().startsWith("tmp-"));
+
+    }
+
+    @Test
+    void handleUploadPdfSelectedWhenEditingExistingRecipe() throws Exception {
+        Recipe r = new Recipe("Recipe1", "user", "a", "b",
+                    SkillLevel.BEGINNER, YarnType.COTTON, NeedleSize.SIZE_2_0, ProjectStatus.IN_PROGRESS);
+        controller.loadFromViewRecipe(r);
+
+        Path source = writeFakePdf(tempRoot.resolve("src2.pdf"));
+        controller.handleUploadPdfSelected(source);
+
+        Path target = pdfsDir().resolve("Recipe1.pdf");
+        assertTrue(Files.exists(target), "Should be named with recipeId.pdf");
+
+        Path stored = (Path) storedPdfPathField.get(controller);
+        assertEquals(target, stored);
+    }
+
+    @Test
+    void handleUploadPdfSelectedWhenReplacingPreviousTmp() throws Exception {
+        Path src1 = writeFakePdf(tempRoot.resolve("first.pdf"));
+        controller.handleUploadPdfSelected(src1);
+    
+        Path dir = pdfsDir();
+        Path firstTmp;
+        try (var stream = Files.list(dir)) {
+            firstTmp = stream.findFirst().orElseThrow();
+        }
+        assertTrue(firstTmp.getFileName().toString().startsWith("tmp-"));
+    
+        Path src2 = writeFakePdf(tempRoot.resolve("second.pdf"));
+        controller.handleUploadPdfSelected(src2);
+    
+        try (var stream = Files.list(dir)) {
+            var files = stream.toList();
+            assertEquals(1, files.size(), "previous tmp should be deleted, only the new one remains");
+            assertTrue(files.get(0).getFileName().toString().startsWith("tmp-"));
+            assertNotEquals(firstTmp.getFileName().toString(), files.get(0).getFileName().toString());
+        }
+    }
+
+    @Test
+    void handleUploadPdfSelectedWithInvalidPdf() throws Exception {
+        Path notPdf = writeNotpdf(tempRoot.resolve("not.pdf"));
+
+        controller.handleUploadPdfSelected(notPdf);
+
+        Path dir = pdfsDir();
+        if (Files.exists(dir)) {
+            try (var s = Files.list(dir)) {
+                assertTrue(s.findAny().isEmpty(), "no pdf should be copied");
+            }
+        }
+
+        assertNull(storedPdfPathField.get(controller));
+    }
+
+    @Test
+    void testLooksLikePdf() throws Exception {
+        Method looks = EditRecipeController.class.getDeclaredMethod("looksLikePdf", Path.class);
+        looks.setAccessible(true);
+
+        Path good = writeFakePdf(tempRoot.resolve("good.pdf"));
+        Path bad = writeNotpdf(tempRoot.resolve("bad.pdf"));
+
+        assertTrue((boolean) looks.invoke(controller, good));
+        assertFalse((boolean) looks.invoke(controller, bad));
+    }
+
+
+
+    @Test
+    void testHandleUploadPdf_UserCancels() throws Exception {
+        AtomicReference<Stage> fxStageRef = new AtomicReference<>();
+        AtomicReference<Button> triggerRef = new AtomicReference<>();
+
+        Platform.runLater(() -> {
+            Button trigger = new Button("Upload PDF");
+            Stage stage = new Stage();
+            stage.setScene(new Scene(trigger));
+            stage.show();
+            triggerRef.set(trigger);
+            fxStageRef.set(stage);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+
+        try (MockedConstruction<FileChooser> mocked = mockConstruction(
+                FileChooser.class,
+                (mock, ctx) -> {
+                    when(mock.getExtensionFilters()).thenReturn(FXCollections.observableArrayList());
+                    when(mock.showOpenDialog(any())).thenReturn(null);
+                })) {
+
+            Platform.runLater(() -> controller.handleUploadPdf(new ActionEvent(triggerRef.get(), triggerRef.get())));
+            WaitForAsyncUtils.waitForFxEvents();
+
+            Path dir = pdfsDir();
+            if (Files.exists(dir)) {
+                try (var s = Files.list(dir)) {
+                    assertTrue(s.findAny().isEmpty(), "No file should be copied when user cancels");
+                }
+            }
+
+            assertNull(storedPdfPathField.get(controller));
+
+            Button btn = (Button) uploadPdfButtonField.get(controller);
+            assertEquals("Upload", btn.getText());
+        } finally {
+            Platform.runLater(() -> {
+                Stage stage = fxStageRef.get();
+                if (stage != null) stage.close();
+            });
+            WaitForAsyncUtils.waitForFxEvents();
+        }
+    }
+
+    @Test
+    void testRenameUploadedPdf() throws Exception {
+        Path dir = pdfsDir();
+        Files.createDirectories(dir);
+        Path tmp = dir.resolve("tmp-xyz.pdf");
+        writeFakePdf(tmp);
+
+        storedPdfPathField.set(controller, tmp);
+
+        String rid = "RID-12345";
+        controller.renameUploadedPdf(rid);
+
+        Path finalPath = dir.resolve(rid + ".pdf");
+        assertFalse(Files.exists(tmp), "tmp should be moved (deleted at source)");
+        assertTrue(Files.exists(finalPath), "final file should exist");
+
+        Path storedNow = (Path) storedPdfPathField.get(controller);
+        assertEquals(finalPath, storedNow);
+
+        Button btn = (Button) uploadPdfButtonField.get(controller);
+        assertEquals(finalPath.getFileName().toString(), btn.getText());
+    }
+
+    private void cleanPdfsDir() throws IOException {
+        Path dir = pdfsDir();
+        if (Files.exists(dir)) {
+            try (var s = Files.walk(dir)) {
+                s.sorted(Comparator.reverseOrder())
+                    .forEach(p -> { try { Files.delete(p);} catch (IOException ignored) {}});
+            }
+        }
+        Files.createDirectories(dir);
     }
 }
