@@ -186,25 +186,28 @@ public class EditRecipeController {
    * @param event the action event when clicking the upload PDF button.
    */
   @FXML
-  private void handleUploadPdf(ActionEvent event) {
+  public void handleUploadPdf(ActionEvent event) {
     FileChooser chooser = new FileChooser();
     chooser.setTitle("Select recipe PDF");
     chooser.getExtensionFilters().add(
         new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf")
     );
-
+  
     File docs = Paths.get(System.getProperty("user.home"), "Documents").toFile();
     if (docs.exists()) {
       chooser.setInitialDirectory(docs);
     }
-
+  
     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
     File selected = chooser.showOpenDialog(stage);
     if (selected == null) {
       return;
     }
 
-    Path selectedPath = selected.toPath();
+    handleUploadPdfSelected(selected.toPath());
+  }
+
+  public void handleUploadPdfSelected(Path selectedPath) {
     if (!looksLikePdf(selectedPath)) {
       showAlert("Error", "File not a valid PDF.");
       return;
@@ -254,7 +257,7 @@ public class EditRecipeController {
    *
    * @param recipeId The given ID for the recipe that will become the pdf filename
    */
-  private void renameUploadedPdf(String recipeId) {
+  public void renameUploadedPdf(String recipeId) {
     try {
       if (storedPdfPath == null || recipeId == null || recipeId.isBlank()) {
         return;
