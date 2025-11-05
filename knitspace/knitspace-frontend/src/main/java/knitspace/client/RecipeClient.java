@@ -1,6 +1,7 @@
 package knitspace.client;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
@@ -16,6 +17,20 @@ import knitspace.model.User;
  */
 public class RecipeClient extends ApiClient {
   private static final String RECIPES_ENDPOINT = "/api/recipes";
+
+  /**
+   * Default constructor for RecipeClient.
+   */
+  public RecipeClient() {
+    super();
+  }
+
+  /**
+   * Constructor to allow mocking.
+   */
+  protected RecipeClient(HttpClient httpClient) {
+    super(httpClient);
+  }
 
   /**
    * Fetches all recipes for a given user.
@@ -84,4 +99,84 @@ public class RecipeClient extends ApiClient {
     }
   }
 
+  /**
+   * Updates an existing recipe.
+   *
+   * @param recipe The recipe to update.
+   * @throws ApiException If the API call fails.
+   */
+  public void updateRecipe(Recipe recipe) throws ApiException {
+    try {
+      HttpRequest request = createRequestBuilder(RECIPES_ENDPOINT + "/" + recipe.recipeId())
+          .PUT(HttpRequest.BodyPublishers.ofString(serialize(recipe)))
+          .header("Content-Type", "application/json")
+          .build();
+
+      System.out.println(
+          "Sending update (PUT) request to " + RECIPES_ENDPOINT + "/" + recipe.recipeId());
+
+      HttpResponse<String> response = httpClient.send(
+          request, HttpResponse.BodyHandlers.ofString());
+
+      System.out.println(
+          "Received response with status code: " + response.statusCode());
+
+      int status = response.statusCode();
+      if (status == 204) {
+        return;
+      } else if (status == 400) {
+        throw new ApiException("Bad Request! (400)");
+      } else if (status == 404) {
+        throw new ApiException("Recipe could not be found! (404)");
+      } else {
+        throw new ApiException("Unexpected response code: " + status);
+      }
+    } catch (Exception e) {
+      throw new ApiException("Failed to update recipe: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Creates a new recipe.
+   *
+   * @param recipe Recipe to be created.
+   * @return The created recipe instance.
+   * @throws ApiException If the API call fails.
+   */
+  public Recipe createRecipe(Recipe recipe) throws ApiException {
+    try {
+      HttpRequest request = createRequestBuilder(RECIPES_ENDPOINT)
+          .POST(HttpRequest.BodyPublishers.ofString(serialize(recipe)))
+          .header("Content-Type", "application/json")
+          .build();
+
+      System.out.println(
+          "Sending Create (POST) request to " + RECIPES_ENDPOINT);
+      HttpResponse<String> response = httpClient.send(
+          request, HttpResponse.BodyHandlers.ofString());
+      System.out.println("Received response with status code: " + response.statusCode());
+
+      int statusCode = response.statusCode();
+
+      switch (statusCode) {
+        case 201:
+          return deserialize(response.body(), Recipe.class);
+
+        case 400:
+          throw new ApiException("Bad Request! (400)");
+
+        case 409:
+          throw new ApiException("Conflict between sent data and existing data! (409)");
+
+        case 500:
+          throw new ApiException("Internal server error! (500)");
+
+        default:
+          throw new ApiException(
+              "Unexpected response  with status: " + statusCode + ", body: " + response.body());
+      }
+    } catch (Exception e) {
+      throw new ApiException("Failed to create recipe: " + e.getMessage(), e);
+    }
+  }
 }

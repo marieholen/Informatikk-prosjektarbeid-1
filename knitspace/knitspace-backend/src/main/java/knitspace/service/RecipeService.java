@@ -105,7 +105,7 @@ public class RecipeService {
         return false;
       }
 
-      if (existingRecipe.getRecipeId() != updatedRecipe.getRecipeId()) {
+      if (!existingRecipe.getRecipeId().equals(updatedRecipe.getRecipeId())) {
         return false;
       }
       
