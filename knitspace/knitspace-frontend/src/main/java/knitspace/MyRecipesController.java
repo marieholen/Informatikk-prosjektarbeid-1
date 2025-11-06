@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -24,7 +25,10 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import knitspace.client.RecipeClient;
+import knitspace.enums.NeedleSize;
 import knitspace.enums.ProjectStatus;
+import knitspace.enums.SkillLevel;
+import knitspace.enums.YarnType;
 import knitspace.exception.ApiException;
 import knitspace.meta.SessionManager;
 import knitspace.model.Recipe;
@@ -37,6 +41,18 @@ import knitspace.model.User;
 public class MyRecipesController {
   @FXML
   private Button btnNewrecipe;
+
+  @FXML
+  private ComboBox<SkillLevel> skillFilter;
+
+  @FXML
+  private ComboBox<YarnType> yarnFilter;
+
+  @FXML
+  private ComboBox<NeedleSize> needleFilter;
+
+  @FXML
+  private ComboBox<ProjectStatus> statusFilter;
 
   private final RecipeClient recipeClient;
 
@@ -74,11 +90,124 @@ public class MyRecipesController {
   @FXML
   private void initialize() {
     setupScrollPane();
-
     List<Recipe> recipes = loadRecipes();
 
     displayRecipes(recipes);
+    initializeComboBoxes();
+    setupFilterListeners();
+    refreshRecipeList();
     fillAggregateMetrics(recipes);
+  }
+
+  /**
+   * Initializes all combo boxes with their respective enum values.
+   */
+  private void initializeComboBoxes() {
+    initializeSkillLevelComboBox();
+    initializeYarnTypeComboBox();
+    initializeNeedleSizeComboBox();
+    initializeProjectStatusComboBox();
+  }
+
+  /**
+   * Initializes the skill level combo box with all available skill levels.
+   */
+  private void initializeSkillLevelComboBox() {
+    if (skillFilter != null) {
+      skillFilter.getItems().clear();
+      skillFilter.getItems().add(null); // "All" option
+      skillFilter.getItems().addAll(SkillLevel.values());
+      skillFilter.setValue(null);
+    }
+  }
+
+  /**
+   * Initializes the yarn type combo box with all available yarn types.
+   */
+  private void initializeYarnTypeComboBox() {
+    if (yarnFilter != null) {
+      yarnFilter.getItems().clear();
+      yarnFilter.getItems().add(null); // "All" option
+      yarnFilter.getItems().addAll(YarnType.values());
+      yarnFilter.setValue(null);
+    }
+  }
+
+  /**
+   * Initializes the needle size combo box with all available needle sizes.
+   */
+  private void initializeNeedleSizeComboBox() {
+    if (needleFilter != null) {
+      needleFilter.getItems().clear();
+      needleFilter.getItems().add(null); // "All" option
+      needleFilter.getItems().addAll(NeedleSize.values());
+      needleFilter.setValue(null);
+    }
+  }
+
+  /**
+   * Initializes the project status combo box with all available project statuses.
+   */
+  private void initializeProjectStatusComboBox() {
+    if (statusFilter != null) {
+      statusFilter.getItems().clear();
+      statusFilter.getItems().add(null); // "All" option
+      statusFilter.getItems().addAll(ProjectStatus.values());
+      statusFilter.setValue(null);
+    }
+  }
+
+  /**
+   * Sets up listeners for combo box changes to trigger recipe filtering.
+   */
+  private void setupFilterListeners() {
+    if (skillFilter != null) {
+      skillFilter.setOnAction(e -> refreshRecipeList());
+    }
+    if (yarnFilter != null) {
+      yarnFilter.setOnAction(e -> refreshRecipeList());
+    }
+    if (needleFilter != null) {
+      needleFilter.setOnAction(e -> refreshRecipeList());
+    }
+    if (statusFilter != null) {
+      statusFilter.setOnAction(e -> refreshRecipeList());
+    }
+    if (searchField != null) {
+      searchField.textProperty().addListener((obs, oldText, newText) -> refreshRecipeList());
+    }
+  }
+
+  /**
+   * Refreshes the recipe list by reloading and applying current filters.
+   */
+  private void refreshRecipeList() {
+    List<Recipe> recipes = loadRecipes();
+    updateRecipeDisplay(recipes);
+  }
+
+  /**
+   * Updates the UI to display the given list of recipes.
+   *
+   * @param recipes List of recipes to display
+   */
+  private void updateRecipeDisplay(List<Recipe> recipes) {
+    if (recipesVerticalBox == null) {
+      return;
+    }
+
+    recipesVerticalBox.getChildren().clear();
+
+    if (recipes.isEmpty()) {
+      Label noRecipesLabel = new Label("No recipes found");
+      noRecipesLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666;");
+      recipesVerticalBox.getChildren().add(noRecipesLabel);
+      return;
+    }
+
+    for (Recipe recipe : recipes) {
+      recipesVerticalBox.getChildren().add(createRecipeCard(recipe));
+    }
   }
 
   /**
@@ -218,13 +347,89 @@ public class MyRecipesController {
   }
 
   /**
-   * Applies filters to the list of recipes. **TODO: IMPLEMENT PROPERLY**
+   * Applies filters to the list of recipes based on combo box selections and search field.
    *
    * @param recipes List of recipes to filter.
    * @return Filtered list of recipes.
    */
   private List<Recipe> applyFilters(List<Recipe> recipes) {
-    return recipes;
+    return recipes.stream()
+        .filter(this::matchesSearchField)
+        .filter(this::matchesSkillLevelFilter)
+        .filter(this::matchesYarnTypeFilter)
+        .filter(this::matchesNeedleSizeFilter)
+        .filter(this::matchesProjectStatusFilter)
+        .toList();
+  }
+
+  /**
+   * Checks if the given recipe matches the current search query typed into the search field.
+   *
+   * @param recipe the recipe to check
+   * @return {@code true} if the recipe title contains the search text 
+   *         (case-insensitive), {@code false} otherwise
+   */
+  private boolean matchesSearchField(Recipe recipe) {
+    if (searchField == null) {
+      return true;
+    }
+    String searchText = searchField.getText();
+    if (searchText == null || searchText.isBlank()) {
+      return true;
+    }
+    return recipe.title().toLowerCase().contains(searchText.toLowerCase());
+  }
+
+  /**
+   * Checks if the given recipe matches the selected skill level filter.
+   *
+   * @param recipe the recipe to check
+   * @return {@code true} if the recipe matches the filter or no filter is selected
+   */
+  private boolean matchesSkillLevelFilter(Recipe recipe) {
+    if (skillFilter == null || skillFilter.getValue() == null) {
+      return true;
+    }
+    return recipe.skillLevel().equals(skillFilter.getValue());
+  }
+
+  /**
+   * Checks if the given recipe matches the selected yarn type filter.
+   *
+   * @param recipe the recipe to check
+   * @return {@code true} if the recipe matches the filter or no filter is selected
+   */
+  private boolean matchesYarnTypeFilter(Recipe recipe) {
+    if (yarnFilter == null || yarnFilter.getValue() == null) {
+      return true;
+    }
+    return recipe.yarnType().equals(yarnFilter.getValue());
+  }
+
+  /**
+   * Checks if the given recipe matches the selected needle size filter.
+   *
+   * @param recipe the recipe to check
+   * @return {@code true} if the recipe matches the filter or no filter is selected
+   */
+  private boolean matchesNeedleSizeFilter(Recipe recipe) {
+    if (needleFilter == null || needleFilter.getValue() == null) {
+      return true;
+    }
+    return recipe.needleSize().equals(needleFilter.getValue());
+  }
+
+  /**
+   * Checks if the given recipe matches the selected project status filter.
+   *
+   * @param recipe the recipe to check
+   * @return {@code true} if the recipe matches the filter or no filter is selected
+   */
+  private boolean matchesProjectStatusFilter(Recipe recipe) {
+    if (statusFilter == null || statusFilter.getValue() == null) {
+      return true;
+    }
+    return recipe.projectStatus().equals(statusFilter.getValue());
   }
 
   /**
@@ -238,7 +443,7 @@ public class MyRecipesController {
     alert.setTitle(title);
     alert.setHeaderText(null);
     alert.setContentText(message);
-    alert.showAndWait();
+    alert.show();
   }
 
   /**
@@ -308,23 +513,5 @@ public class MyRecipesController {
     card.getChildren().add(row);
 
     return card;
-  }
-
-  /**
-   * Checks if the given recipe matches the current search query typed into the
-   * search field.
-   *
-   *
-   * @param recipe the recipe to check
-   * @return {@code true} if the recipe title contains the search text
-   *         (case-insensitive), {@code false} otherwise
-   */
-  boolean matchesSearchField(Recipe recipe) {
-    String searchText = searchField.getText();
-
-    if (searchText != null && !searchText.isBlank()) {
-      return recipe.title().toLowerCase().contains(searchText.toLowerCase());
-    }
-    return true;
   }
 }

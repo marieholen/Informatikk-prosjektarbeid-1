@@ -1,43 +1,45 @@
 package knitspace;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.when;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 
-import knitspace.client.RecipeClient;
-import knitspace.meta.SessionManager;
-import knitspace.enums.ProjectStatus;
-import knitspace.enums.SkillLevel;
-import knitspace.enums.YarnType;
-import knitspace.enums.NeedleSize;
-import knitspace.model.Recipe;
-import knitspace.model.User;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testfx.api.FxRobot;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
+import org.testfx.util.WaitForAsyncUtils;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.testfx.util.WaitForAsyncUtils;
-import java.util.Arrays;
+import knitspace.client.RecipeClient;
+import knitspace.enums.NeedleSize;
+import knitspace.enums.ProjectStatus;
+import knitspace.enums.SkillLevel;
+import knitspace.enums.YarnType;
+import knitspace.meta.SessionManager;
+import knitspace.model.Recipe;
+import knitspace.model.User;
 
 @ExtendWith(ApplicationExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -108,18 +110,82 @@ class MyRecipesControllerTest {
 
     @Test
     void testMatchesSearchField() {
+        try {
+            MyRecipesController controller = new MyRecipesController();
+            Field sfField = MyRecipesController.class.getDeclaredField("searchField");
+            sfField.setAccessible(true);
+            TextField tf = new TextField();
+            sfField.set(controller, tf);
+
+            Recipe recipe = new Recipe("recipeId", "userId", "Wool Sweater", "A warm sweater", null, null, null, null);
+
+            Method method = MyRecipesController.class.getDeclaredMethod("matchesSearchField", Recipe.class);
+            method.setAccessible(true);
+
+            tf.setText("");
+            assertTrue((boolean) method.invoke(controller, recipe), "Blank search should match all recipes");
+
+            tf.setText("wool");
+            assertTrue((boolean) method.invoke(controller, recipe), "Matching text should return true");
+
+            tf.setText("socks");
+            assertFalse((boolean) method.invoke(controller, recipe), "Non-matching text should return false");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void testApplyFilters_combinedFilters() throws Exception {
         MyRecipesController controller = new MyRecipesController();
-        controller.searchField = new TextField();
-        Recipe recipe = new Recipe("recipeId", "userId", "Wool Sweater", "A warm sweater", null, null, null, null);
 
-        controller.searchField.setText("");
-        assertTrue(controller.matchesSearchField(recipe), "Blank search should match all recipes");
+        Field sfField = MyRecipesController.class.getDeclaredField("searchField");
+        sfField.setAccessible(true);
+        TextField sf = new TextField();
+        sfField.set(controller, sf);
 
-        controller.searchField.setText("wool");
-        assertTrue(controller.matchesSearchField(recipe), "Matching text should return true");
+        Field skillField = MyRecipesController.class.getDeclaredField("skillFilter");
+        skillField.setAccessible(true);
+        ComboBox<SkillLevel> skillCb = new ComboBox<>();
+        skillCb.setValue(SkillLevel.BEGINNER);
+        skillField.set(controller, skillCb);
 
-        controller.searchField.setText("socks");
-        assertFalse(controller.matchesSearchField(recipe), "Non-matching text should return false");
+        Field yarnField = MyRecipesController.class.getDeclaredField("yarnFilter");
+        yarnField.setAccessible(true);
+        ComboBox<YarnType> yarnCb = new ComboBox<>();
+        yarnCb.setValue(YarnType.WOOL);
+        yarnField.set(controller, yarnCb);
+
+        Field needleField = MyRecipesController.class.getDeclaredField("needleFilter");
+        needleField.setAccessible(true);
+        ComboBox<NeedleSize> needleCb = new ComboBox<>();
+        needleCb.setValue(NeedleSize.SIZE_2_0);
+        needleField.set(controller, needleCb);
+
+        Field statusField = MyRecipesController.class.getDeclaredField("statusFilter");
+        statusField.setAccessible(true);
+        ComboBox<ProjectStatus> statusCb = new ComboBox<>();
+        statusCb.setValue(ProjectStatus.IN_PROGRESS);
+        statusField.set(controller, statusCb);
+
+        Recipe rMatch = new Recipe("1", "u", "Match Title", "d", SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.IN_PROGRESS);
+        Recipe rSkill = new Recipe("2", "u", "Match Title", "d", SkillLevel.ADVANCED, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.IN_PROGRESS);
+        Recipe rYarn = new Recipe("3", "u", "Match Title", "d", SkillLevel.BEGINNER, YarnType.COTTON, NeedleSize.SIZE_2_0, ProjectStatus.IN_PROGRESS);
+        Recipe rNeedle = new Recipe("4", "u", "Match Title", "d", SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_3_0, ProjectStatus.IN_PROGRESS);
+        Recipe rStatus = new Recipe("5", "u", "Match Title", "d", SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.FINISHED);
+        Recipe rSearchMismatch = new Recipe("6", "u", "Other Title", "d", SkillLevel.BEGINNER, YarnType.WOOL, NeedleSize.SIZE_2_0, ProjectStatus.IN_PROGRESS);
+
+        List<Recipe> all = List.of(rMatch, rSkill, rYarn, rNeedle, rStatus, rSearchMismatch);
+
+        sf.setText("Match");
+
+        Method m = MyRecipesController.class.getDeclaredMethod("applyFilters", List.class);
+        m.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        List<Recipe> filtered = (List<Recipe>) m.invoke(controller, all);
+
+        assertEquals(1, filtered.size(), "Only one recipe should match all filters");
+        assertEquals(rMatch, filtered.get(0));
     }
 
     @Test
