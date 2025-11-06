@@ -207,7 +207,7 @@ public class ViewRecipeController {
    * Opens pdf in users pdf viewer.
    */
   @FXML
-  private void handleOpenPdf() {
+  public void handleOpenPdf() {
     try {
       if (selectedRecipe == null || selectedRecipe.recipeId() == null
           || selectedRecipe.recipeId().isBlank()) {
