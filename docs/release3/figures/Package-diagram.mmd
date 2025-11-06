@@ -1,0 +1,50 @@
+graph TD
+    %% Backend packages
+    subgraph knitspace-backend
+        backend_controller["knitspace.controller"]
+        backend_enums["knitspace.enums"]
+        backend_model["knitspace.model"]
+        backend_repository["knitspace.repository"]
+        backend_service["knitspace.service"]
+        backend_app["KnitspaceBackendApplication"]
+    end
+
+    %% Frontend packages
+    subgraph knitspace-frontend
+        frontend_app["App.java"]
+        frontend_client["knitspace.client"]
+        frontend_model["knitspace.model"]
+        frontend_meta["knitspace.meta"]
+        frontend_enums["knitspace.enums"]
+        frontend_exception["knitspace.exception"]
+        frontend_controllers["JavaFX Controllers"]
+    end
+
+    %% External frameworks
+    springboot["Spring Boot"]
+    javafx["JavaFX"]
+    fxml["FXML"]
+    database["Database"]
+    json["JSON"]
+    rest["REST API"]
+
+    %% Backend dependencies
+    backend_controller --> backend_service
+    backend_service --> backend_repository
+    backend_service --> backend_model
+    backend_controller --> backend_model
+    backend_repository --> database
+    backend_app --> springboot
+    backend_model --> json
+
+    %% Frontend dependencies
+    frontend_controllers --> frontend_model
+    frontend_app --> javafx
+    frontend_app --> fxml
+    frontend_client --> rest
+    frontend_controllers --> frontend_client
+    frontend_model --> json
+
+    %% Frontend <-> Backend connection
+    frontend_client --> backend_controller
+    rest -.-> backend_service
