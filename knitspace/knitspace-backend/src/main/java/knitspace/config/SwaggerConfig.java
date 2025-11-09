@@ -21,4 +21,4 @@ public class SwaggerConfig {
                 new Server().url("http://localhost:8080").description("Local Server")
             ));
     }
-}
+
