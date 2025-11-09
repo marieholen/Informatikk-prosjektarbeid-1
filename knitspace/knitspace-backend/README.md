@@ -6,18 +6,18 @@ This is the backend service that supports the Knitspace application. The backend
 - Apply logic such as validation and update rules
 - Store data in JSON files
 
+To run the backend, type mvn spring-boot:run within the knitspace-backend directory
+
 The main directories within knitspace-backend are:
 - data/
 - src/
 - pom.xml/
 
-To run the backend, type mvn spring-boot:run within the knitspace-backend directory
-
 ** src/ **
 Within src are the main classes for the backend which are: config/, controller/, enums/, model/, repository/ and service/. Furthermore, there are tests for the controller and service classes which ensures that the API endpoints behave as expected and that rules work correctly in isolation.
 
 config/
-Contains Swagger API documentation that displays all our endpoints in a web browser with the following link: http://localhost:8080/swagger-ui/index.html
+Includes SwaggerConfig.java containing Swagger API documentation that displays all our endpoints in a web browser with the following link: http://localhost:8080/swagger-ui/index.html
 
 controller/
 Defines REST API endpoints. Translates HTTP requests into service calls and returns structured responses.
