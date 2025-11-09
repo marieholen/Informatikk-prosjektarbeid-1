@@ -13,10 +13,11 @@ The environmental impact of KnitSpace is inherently low due to its architecture.
 KnitSpace is thought of as an open source tool, and the modular architecture allows community-driven development, which reduces long-term costs for maintenance. The use of well developed and stable technologies (Java 17, Maven, Spring-boot...) minimises economic risk as the app is built on technologies that won't have sudden rewrites or compatibility breaks.
 
 ## Individual:
-Users gain an immediate organization tool for their crafts, which can reduce individual frustration of things like incomplete or chaotic project tracking. Progress tracking and data management is purely local, so the app itself ensures complete privacy control. It  promotes lifelong learning through a supportive framework for people with knitting as a hobby. As knitting is a creative hobby it also promotes creative satisfaction.
+Users gain an immediate organization tool for their crafts, which can reduce individual frustration of things like incomplete or chaotic project tracking. Progress tracking and data management is purely local, so the app itself ensures complete privacy control. It promotes lifelong learning through a supportive framework for people with knitting as a hobby. As knitting is a creative hobby it also promotes creative satisfaction.
 
 ## Technical
 The multi-module structure using maven provides clear separation of logic, which makes bug-fixes and error handling clear work. The modular architecture also supports incremental module-by-module development, which makes both maintenance and continuous development easier. As the application is build for local use with no external storage and handling scalability will not be an issue.
 
 ## Summary:
 KnitSpace achieves sustainability by empowering the individual crafter as a digital companion. Its primary sustainability strength lies in replacing physical materials with a low-impact digital tool, which reduces paper waste. It provides a private organised workspace for knitting projects, which fosters both creative satisfaction and skill development. Its local nature ensures inherent data privacy, and its modular design ensures straightforward maintenance.
+

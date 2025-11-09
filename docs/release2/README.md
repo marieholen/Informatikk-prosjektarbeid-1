@@ -1,4 +1,4 @@
-# Release documentation for release two
+# Release documentation for release 2
 This is the second release of our project, KnitSpace. The main focus for this release was on modularization, three-layer architecture, data persistence, testing and documentation. 
 
 KnitSpace now supports full user interaction, recipe management, and persistent storage using JSON files. Each user can register, log in, and manage their own collection of knitting recipes. 

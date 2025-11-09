@@ -1,0 +1,138 @@
+classDiagram
+  direction LR
+
+  namespace Frontend {
+    class App {
+      +start(stage)
+    }
+    class LoginController {
+      +handleLogin(event)
+      +navigateToMyRecipes()
+      +handleCreateAccount(event)
+    }
+    class CreateAccountController {
+      +handleSignup(event)
+      +navigateToMyRecipes(node)
+    }
+    class MyRecipesController {
+      +displayRecipes()
+      +handleNewRecipe(event)
+      +handleLogout(event)
+      +openRecipeDetails(event, recipe)
+    }
+    class ViewRecipeController {
+      +setAndLoadRecipe(recipe)
+      +handleDeleteButton()
+      +handleBackButton()
+      +handleEditButtonClick()
+    }
+    class EditRecipeController {
+      +loadFromViewRecipe(recipe)
+      +loadFromMyRecipes()
+      +handleUploadPdf(event)
+      +handleSaveButton(event)
+      +handleBackButton(event)
+    }
+    class SessionManager {  
+      +setCurrentUser(user)
+      +getCurrentUser() User
+    }
+    class UserClient {
+      +login(username, password) User
+      +createAccount(username, password) User
+    }
+    class RecipeClient {
+      +getRecipesForUser(user) List~Recipe~
+      +deleteRecipe(recipeId)
+      %% +updateRecipe(recipe)
+      %% +createRecipe(recipe)
+    }
+    class Recipe {
+      +recipeId : String
+      +userId : String
+      +title : String
+      +description : String
+      +skillLevel : SkillLevel
+      +yarnType : YarnType
+      +needleSize : NeedleSize
+      +projectStatus : ProjectStatus
+    }
+    class User {
+      +userId : String
+      +username : String
+      +password : String
+    }
+  }
+
+  namespace Backend {
+    class UserController {
+      +login(user)
+      +createUser(user)
+    }
+    class UserService {
+      +authenticateUser(username, password)
+      +createUser(username, password)
+    }
+    class UserRepository {
+      +findAll()
+      +existsByUsername(username)
+      +save(user)
+    }
+    class UserEntity {
+      +userId : UUID
+      +username : String
+    }
+    class RecipeController {
+      +fetchUserRecipes(userId)
+      +createRecipe(recipe)
+      +updateRecipe(recipeId, updatedRecipe)
+      +deleteRecipe(recipeId)
+    }
+    class RecipeService {
+      +getRecipesByUserId(userId)
+      +saveRecipe(recipe)
+      +updateRecipeById(recipeId, updatedRecipe)
+      +deleteRecipeById(recipeId)
+    }
+    class RecipeRepository {
+      +findAll()
+      +findById(recipeId)
+      +findByUserId(userId)
+      +save(recipe)
+      +deleteById(recipeId)
+    }
+    class RecipeEntity {
+      +recipeId : UUID
+      +title : String
+    }
+  }
+
+  %% Relationships
+  App --> LoginController : load("Login.fxml")
+  LoginController --> UserClient : login()
+  LoginController --> SessionManager : setCurrentUser()
+  CreateAccountController --> UserClient : createAccount()
+  CreateAccountController --> SessionManager : setCurrentUser()
+  MyRecipesController ..> SessionManager : getCurrentUser()
+  MyRecipesController --> RecipeClient : getRecipesForUser()
+
+  ViewRecipeController --> EditRecipeController : editRecipe()
+  ViewRecipeController --> RecipeClient : deleteRecipe()
+  ViewRecipeController ..> MyRecipesController : navigate back
+
+  EditRecipeController --> RecipeClient : save/update recipe
+  EditRecipeController ..> MyRecipesController : navigate back
+
+  UserClient --> User
+  RecipeClient --> Recipe
+
+  UserClient ..> UserController : REST /api/users
+  RecipeClient ..> RecipeController : REST /api/recipes
+
+  UserController --> UserService : delegate
+  UserService --> UserRepository : business logic
+  UserRepository --> UserEntity : persist
+
+  RecipeController --> RecipeService : delegate
+  RecipeService --> RecipeRepository : business logic
+  RecipeRepository --> RecipeEntity : persist
