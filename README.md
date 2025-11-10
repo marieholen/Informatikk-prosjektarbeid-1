@@ -4,7 +4,7 @@ This is group 29's project in IT1901. This repo contains a multi-module JavaFX a
 
 [open in Eclipse Che](https://che.stud.ntnu.no/#https://git.ntnu.no/IT1901-2025-groups/gr2529)
 
-NB: When running in a minimal environment like Eclipse Che online you might get errors when running all tests, as the environment does not support opening pdfs via `java.awt.Desktop.Action.BROWSE`, as well as creating files using `java.nio.file.Files.createDirectories`-method because of missing permissions. 
+NB: When running in a minimal environment like Eclipse Che online you might get errors when running all tests, as the environment does not support opening pdfs via `java.awt.Desktop.Action.BROWSE`, as well as creating files using `java.nio.file.Files.createDirectories`-method because of missing permissions. If you want to run all tests except the failing one you can run `mvn test -Dtest='!EditRecipeControllerTest'`
 
 ## Technologies used
 - [**Java 17**](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
