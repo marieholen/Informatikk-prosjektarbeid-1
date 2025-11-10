@@ -20,3 +20,5 @@ The primary reason for using AI tools in our group was to increase efficiency an
 - In issue 221 (PR 247) It was used to generate test code for frontend testing, and it performed very well in that area.
 
 - In Issues 286, 287, and 289 PR (288, 294, and 293 ) AI was used to assist with improving the testability and structure of the codebase. Specifically, AI provided suggestions on how to make the RecipeClient/ApiClient and UserClient more test-friendly by introducing a default constructor for regular use and a specialized constructor to make it easier to mock HttpClient responses during testing.
+
+
