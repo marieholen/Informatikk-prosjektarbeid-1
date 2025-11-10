@@ -12,8 +12,6 @@ The aim of this is to ensure that all features work as expected. This way we can
 
 We tried to implement unit testing in this project. Unit testing is a method of testing where you check individual components of a program, typically small units like functions, methods, or classes, in isolation from the rest of the system. The idea is to confirm that each piece of code works exactly as intended before integrating it with other parts.
 
-It is worth mentioning that our frontend projects
-
 In our test coverage we ave aimed at maximal test-coverage, but been aware that test coverage is not a direct measure of code-quality. We have therefore often been more focused on testing the consequential tests of the projects. For example, the backend is more thoroughly tested. Apart from this, the repository classes in the backed do not need testing to the same degree, as they have been implemented with Lombok automatically.
 
 We have not implemented integration tests. Had we had more time on this project we would have done an effort to include integration testing. This too can help increase code-quality, as we can better 
