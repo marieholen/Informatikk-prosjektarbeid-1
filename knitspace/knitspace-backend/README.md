@@ -56,10 +56,10 @@ Contains the core data structures used throughout the backend:
 ---
 
 ## `data/`
-The data directory contains users.json and recipes.json which is where user-created users and recipes are stored. 
+The data directory contains `users.json` and `recipes.json` which is where user-created users and recipes are stored. 
 
-The users.json stores: userId, username and password, which are all needed to validate a user and give each user their own personalised recipes. 
-The recipes.json stores: recipeId, userId, title, description as well as the different enums, which separates the recipes from each other and find recipes more easily.
+The `users.json` stores: userId, username and password, which are all needed to validate a user and give each user their own personalised recipes. 
+The `recipes.json` stores: recipeId, userId, title, description as well as the different enums, which separates the recipes from each other and find recipes more easily.
 
 The data directory also contains the pdfs directory which stores the pdf of the recipe. The pdf file name is the recipeId of the given recipe with .pdf at the end.
 
