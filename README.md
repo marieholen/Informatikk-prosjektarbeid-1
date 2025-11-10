@@ -41,6 +41,25 @@ Knitspace consists of two main conponents: A JavaFX client (`knitspace-frontend`
 [Frontend documentation](knitspace/knitspace-frontend/README.md)
 
 ## Running the app
+
+## Direct read
+
+We have implemented a pipeline for running the project in one command. Note that a requirement for this is having powershell installed.
+
+**In macOS**
+
+```bash
+pwsh run.ps1
+```
+
+**On windows**
+
+```Powershell
+./run.ps1
+```
+
+## With `mvn` commands
+
 To run this app you have to first run and install the backend:
 
 ```bash
