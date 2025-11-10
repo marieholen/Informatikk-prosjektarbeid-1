@@ -8,12 +8,13 @@ Why we did not change the frontend framework:
 We chose to keep the frontend in JavaFX rather than switching to a web framework because the existing JavaFX structure already integrates with the backend and meets the requirements of the project. Changing frameworks would require rewriting controllers, navigation, and UI components, introducing additional technology such as a local web server, and significantly increasing development time with limited benefit. 
 
 To run the frontend:
-1. cd knitspace-frontend
-2. mvn javafx:run
+cd knitspace-frontend
+mvn javafx:run
 
 The main directories within knitspace-frontend are inside the knitspace/ directory which contains:
 - client/
     - Makes HTTP requests to the backend with RecipeClient and UserClient
+    - If the backend is down or not accessible, or if there are any errors the client side handles that as well
 - enums/
     - Shared value sets used to filter menus 
 - meta/
@@ -31,10 +32,7 @@ The main directories within knitspace-frontend are inside the knitspace/ directo
 - ViewRecipeController.java
     - Controller for ViewRecipe.fxml that displays recipe details and allows user to edit or delete recipe. Also allows user to open the pdf recipe
 
-knitspace-frontend also contains module-info which defines the dependencies required by the frontend
-- Requires javafx.controls, javafx.fxml and javafx.graphics to run the UI and load FXML
-- Requires java.net.http for sending REST API requests to the backend
-- Requires com.fasterxml.jackson.databind, com.fasterxml.jackson.core, com.fasterxml.jackson.annotation for converting JSON data to and from Java objects
+knitspace-frontend also contains module-info which defines the dependencies required by the frontend. The application relies on JavaFX modules for its graphical interface: javafx.controls for UI components like buttons and lists, and javafx.fxml for loading the view layouts defined in FXML files. Furthermore, to send and receive HTTP requests, we use java.net.http to let the frontend performs actions such as login and recipe creation. Lastly, to convert JSON data to and from Java objects we use Jackson. com.fasterxml.jackson.core provides reading and writing of JSON files, com.fasterxml.jackson.databind converts JSON into Java objects and Java Objects to JSON and com.fasterxml.jackson.annotation provides annotations to control how fields are named
 
 Lastly, the pom.xml file includes:
 - JavaFX dependencies
