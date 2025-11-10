@@ -85,7 +85,7 @@ All documentation for Release 3 can be found in `/docs/release3/`:
 #### UML diagrams
 - [`class-diagram.svg`](../release3/figures/class-diagram.svg) - key classes and relationships in Release 3. 
 - [`package-diagram.png`](../release3/figures/package-diagram.png) - documentation of main package structure. 
-- [`sequence-diagram.png`](../release3/figures/sequence-diagram.png) - interaction flow for a core use case. 
+- [`sequence-diagram.png`](../release3/figures/create-recipe_sequence-diagram.png) - interaction flow for a core use case. 
 
 #### Additional READMEs and API docs
 - [`README.md` in frontend module](../../knitspace/knitspace-frontend/README.md) - describes structure, views, and key controllers. 
