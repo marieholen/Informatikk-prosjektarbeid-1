@@ -341,7 +341,7 @@ public class MyRecipesController {
       List<Recipe> recipesForUser = recipeClient.getRecipesForUser(currentUser);
       return applyFilters(recipesForUser);
     } catch (ApiException e) {
-      showAlert("Client Error", "Could not load recipes: " + e.getMessage());
+      showAlert("MyRecipes", "You have no recipes yet:(");
       return new ArrayList<>();
     }
   }
@@ -515,3 +515,4 @@ public class MyRecipesController {
     return card;
   }
 }
+
