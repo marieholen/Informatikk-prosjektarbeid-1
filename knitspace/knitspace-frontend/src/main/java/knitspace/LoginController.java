@@ -124,8 +124,11 @@ public class LoginController {
     }
     if (cause instanceof ApiException) {
       ApiException a = (ApiException) cause;
-      return a.getMessage() != null ? a.getMessage() : "Invalid username or password.";
-    } else {
+      if (a.getMessage().contains("401") || a.getMessage() == null) {
+        return "Invalid username or password.";
+      } else {
+        return a.getMessage();
+      }
     }
     String msg = cause.getMessage();
     if (msg != null && msg.contains("401")) {
@@ -192,3 +195,4 @@ public class LoginController {
     alert.showAndWait();
   }
 }
+
