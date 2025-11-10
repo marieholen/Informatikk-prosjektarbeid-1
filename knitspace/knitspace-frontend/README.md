@@ -13,14 +13,11 @@ We chose to keep the frontend in JavaFX rather than switching to a web framework
 
 ## Running the app
 ```bash
-# Go to project root 
-cd knitspace
+# Go to the frontend directory (if user is not in knitspace-frontend, the user can't build or run the frontend)
+cd knitspace/knitspace-frontend
 
 # Build the project 
 mvn clean install
-
-# Go to frontend directory
-cd knitspace-frontend
 
 # Run the frontend 
 mvn javafx:run

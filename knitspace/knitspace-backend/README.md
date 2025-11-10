@@ -8,14 +8,11 @@ This is the backend service that supports the Knitspace application. The backend
 
 ## Running the app
 ```bash
-# Go to project root
-cd knitspace
+# Go to the backend directory (if user is not in the knitspace-backend, the user can't build or run the backend)
+cd knitspace/knitspace-backend
 
 # Build the project 
 mvn clean install
-
-# Go to backend directory
-cd knitspace-backend
 
 # Run the backend 
 mvn spring-boot:run
