@@ -1,6 +1,9 @@
 package knitspace;
 
+import java.awt.Desktop;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -199,4 +202,35 @@ public class ViewRecipeController {
     stage.setTitle("Your Recipes!");
   }
 
+  /**
+   * Handles opening the Open PDF button. 
+   * Opens pdf in users pdf viewer.
+   */
+  @FXML
+  public void handleOpenPdf() {
+    try {
+      if (selectedRecipe == null || selectedRecipe.recipeId() == null
+          || selectedRecipe.recipeId().isBlank()) {
+        showAlert("No Recipe", "There is no recipe to open PDF for");
+      }
+
+      Path appDir = Paths.get(System.getProperty("user.dir"), "..", "..",
+          "knitspace", "knitspace-backend", "data", "pdfs")
+          .normalize()
+          .toAbsolutePath();
+      
+      Path pdfPath = appDir.resolve(selectedRecipe.recipeId() + ".pdf");
+
+      if (!Desktop.isDesktopSupported()) {
+        showAlert("Unsupported", "Opening a browser not supported");
+        return;
+      }
+
+      Desktop.getDesktop().browse(pdfPath.toUri());
+      
+    } catch (Exception e) {
+      showAlert("Open PDF failed", "Could not open PDF: " + e.getMessage());
+      e.printStackTrace();
+    }
+  }
 }
