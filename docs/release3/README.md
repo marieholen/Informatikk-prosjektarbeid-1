@@ -58,7 +58,9 @@ We continued to follow an issue-driven workflow and organized the work into spri
 | **Sprint 1** | Oct 6 – Oct 16 | Documentation and quality setup | Javadoc added across project, SpotBugs fixes, initial REST project structure prepared |
 | **Sprint 2** | Sep 16 – Oct 23 | Migrate to REST + major feature logic | CRUD refactor, navigation improvements, filtering/search UI and backend endpoints |
 | **Sprint 3** | Oct 23 – Oct 30 | Feature polish + PDF support | PDF endpoint and functionality, recipe count, bug fixes | 
-| **Sprint 4** | Oct 30 – Nov 10 | Documentation and diagrams | Created all required diagrams + updated READMEs + sustainability/AI-tools/challenges/contribution docs |
+| **Sprint 4** | Oct 30 – Nov 06 | Documentation and diagrams | Created all required diagrams + updated READMEs + sustainability/AI-tools/challenges/contribution docs |
+
+The remaining time before the due was supposed to be a buffer to go through the entire project.
 
 ### Sprint Reflections
 - The REST migration took longer than expected and impacted many UI files. 
