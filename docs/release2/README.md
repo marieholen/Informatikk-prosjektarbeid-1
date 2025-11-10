@@ -61,9 +61,9 @@ All documentation for Release 2 is located in `/docs/release2/`, including:
 - [`ai-tools.md`](../release2/ai-tools.md) - use of AI tools.
 - [`persistence.md`](../release2/persistence.md) - Discussion of persistency metaphors
 
-Additional documentation: 
-- [`REAME.md` in persistency](../../knitspace/persistency/README.md) - Data handling and JSON storage. 
-- [`REAME.me`in core](../../knitspace/core/README.md) - Domain logic and main data models.
-- [`REAME.md` in ui](../../knitspace/ui/README.md) - JavaFX UI structure and controllers.
-- [`README.md` in source code](../../knitspace/ui/src/main/java/ui/README.md) - App features, user stories, and UI screenshots.
+Additional documentation (moved for release 3): 
+- [`REAME.md` in persistency](persistency/README.md) - Data handling and JSON storage. 
+- [`REAME.me`in core](core/README.md) - Domain logic and main data models.
+- [`REAME.md` in ui](ui/README.md) - JavaFX UI structure and controllers.
+- [`README.md` in source code](/ui/knitspace/README.md) - App features, user stories, and UI screenshots.
 - [`README.md` in root](../../README.md) - App overview, technologies, and Maven setup.

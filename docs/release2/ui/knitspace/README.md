@@ -26,9 +26,9 @@ The main code for the app is located in the `/ui` folder.
 ## Screenshots
 
 ### Main view
-![App overview](../images/main_view.png)
+![App overview](images/main-view.png)
 
 
 
 ### Additional views
-![App overview](../images/app_illustrations.png)
+![App overview](images/app-illustrations.png)
