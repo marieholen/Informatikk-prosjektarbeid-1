@@ -22,7 +22,7 @@ mvn spring-boot:run
 ```
 ---
 
-The main directories within knitspace-backend are:
+## Main Directories
 - `data/`
 - `src/`
 

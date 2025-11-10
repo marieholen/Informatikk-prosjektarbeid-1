@@ -4,14 +4,16 @@ This is the frontend application for KnitSpace.
 - It is built with JavaFX and provides the graphical user interface that allows users to log in, create and view knitting recipes, upload PDFs and manage their recipe collection
 - The frontend communicates with the KnitSpace backend through HTTP requests handled by UserClient and RecipeClient
 
-Why we did not change the frontend framework:
+---
+
+## Keeping JavaFX
 We chose to keep the frontend in JavaFX rather than switching to a web framework because the existing JavaFX structure already integrates with the backend and meets the requirements of the project. Changing frameworks would require rewriting controllers, navigation, and UI components, introducing additional technology such as a local web server, and significantly increasing development time with limited benefit. 
 
 ---
 
 ## Running the app
 ```bash
-# Go to project root
+# Go to project root 
 cd knitspace
 
 # Build the project 
@@ -49,9 +51,13 @@ The main directories within knitspace-frontend are inside the `knitspace/` direc
 
 ---
 
+## Module info
+
 knitspace-frontend also contains module-info which defines the dependencies required by the frontend. The application relies on JavaFX modules for its graphical interface: javafx.controls for UI components like buttons and lists, and javafx.fxml for loading the view layouts defined in FXML files. Furthermore, to send and receive HTTP requests, we use java.net.http to let the frontend performs actions such as login and recipe creation. Lastly, to convert JSON data to and from Java objects we use Jackson. com.fasterxml.jackson.core provides reading and writing of JSON files, com.fasterxml.jackson.databind converts JSON into Java objects and Java Objects to JSON and com.fasterxml.jackson.annotation provides annotations to control how fields are named
 
 ---
+
+## Pom File
 
 Lastly, the `pom.xml` file includes:
 - JavaFX dependencies
