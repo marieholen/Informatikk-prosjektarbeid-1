@@ -92,4 +92,6 @@ All documentation for Release 3 can be found in `/docs/release3/`:
 - [`README.md` in backend module](../../knitspace/knitspace-backend/README.md) - describes layers, key components, and the REST API endpoints. 
 - [`README.md` in root](../../README.md) - App overview, technologies, and Maven setup.
 
+## Regarding runnable product in `run.ps1`
 
+We only noticed the requirement for the runnable product right before the deadline, so this method, as described in the root-level readme mihgt be unstable or wrong. This has not been tested sufficiently.
